@@ -1,0 +1,516 @@
+/* Booking Confirmation Modal */
+
+.bcm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.bcm-modal {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 691px;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Glossy overlay elements */
+.bcm-glossy-left {
+  position: absolute;
+  left: 3.18px;
+  top: 5.49px;
+  width: 10px;
+  height: 40px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.bcm-glossy-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bcm-glossy-top {
+  position: absolute;
+  left: 9.75px;
+  top: 5.96px;
+  width: 265.846px;
+  height: 6px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.bcm-glossy-top img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bcm-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #252525;
+  padding: 0;
+  line-height: 0;
+}
+
+.bcm-close-btn:hover {
+  opacity: 0.7;
+}
+
+.bcm-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.bcm-text-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.bcm-title {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.2;
+  color: #252525;
+  margin: 0;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.bcm-description {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.4;
+  color: rgba(37, 37, 37, 0.5);
+  text-align: center;
+  margin: 0;
+  width: 100%;
+}
+
+.bcm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+.bcm-btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 9.766px;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 500;
+  font-size: 17.349px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: rgba(0, 0, 0, 0.15) 0px 1.702px 0px;
+  height: 51.269px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.347px;
+  gap: 8px;
+  position: relative;
+  overflow: visible;
+}
+
+.bcm-btn-glossy-top {
+  position: absolute;
+  top: 5.96px;
+  left: 9.75px;
+  width: 265.846px;
+  height: 6px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.bcm-btn-vector {
+    position: absolute;
+    left: 4px;
+  width: 10px;
+  height: 40px;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.bcm-btn-confirm {
+  background: #02b346;
+  box-shadow: inset -3.662px -3.662px 6.103px 0px rgba(0, 0, 0, 0.3);
+}
+
+.bcm-btn-confirm:hover {
+  background: #029a3a;
+  transform: translateY(-2px);
+}
+
+.bcm-btn-cancel {
+  background: #fdb73e;
+  box-shadow: inset -3.662px -3.662px 6.103px 0px rgba(0, 0, 0, 0.3);
+}
+
+.bcm-btn-cancel:hover {
+  background: #f5a800;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+
+/* Large screens - 1440px and above */
+@media (min-width: 1440px) {
+  .bcm-modal {
+    padding: 32px;
+  }
+
+  .bcm-btn {
+    font-size: 17.349px;
+    height: 51.269px;
+  }
+}
+
+/* Medium screens - 1024px to 1439px */
+@media (max-width: 1439px) and (min-width: 1024px) {
+  .bcm-modal {
+    padding: 28px;
+    max-width: 600px;
+  }
+
+  .bcm-title {
+    font-size: 22px;
+  }
+
+  .bcm-description {
+    font-size: 15px;
+  }
+
+  .bcm-btn {
+    font-size: 16px;
+    height: 48px;
+  }
+
+  .bcm-content {
+    margin-bottom: 32px;
+    gap: 20px;
+  }
+
+  .bcm-text-section {
+    gap: 16px;
+  }
+}
+
+/* Tablets - 768px to 1023px */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .bcm-overlay {
+    padding: 20px;
+  }
+
+  .bcm-modal {
+    padding: 24px;
+    max-width: calc(100% - 40px);
+    border-radius: 14px;
+  }
+
+  .bcm-title {
+    font-size: 20px;
+    line-height: 1.3;
+    white-space: normal;
+  }
+
+  .bcm-description {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .bcm-content {
+    margin-bottom: 32px;
+    gap: 16px;
+  }
+
+  .bcm-text-section {
+    gap: 16px;
+  }
+
+  .bcm-btn {
+    font-size: 15px;
+    height: 46px;
+    padding: 10px 16px;
+    border-radius: 8px;
+  }
+
+  .bcm-btn-glossy-top {
+    width: 220px;
+    height: 5px;
+  }
+
+  .bcm-btn-vector {
+    width: 8px;
+    height: 36px;
+  }
+
+  .bcm-close-btn {
+    width: 22px;
+    height: 22px;
+  }
+
+  .bcm-actions {
+    gap: 14px;
+  }
+}
+
+/* Small tablets/large mobile - 600px to 767px */
+@media (max-width: 767px) and (min-width: 600px) {
+  .bcm-overlay {
+    padding: 16px;
+  }
+
+  .bcm-modal {
+    padding: 20px;
+    max-width: 100%;
+    border-radius: 12px;
+  }
+
+  .bcm-title {
+    font-size: 18px;
+    line-height: 1.3;
+    white-space: normal;
+  }
+
+  .bcm-description {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .bcm-content {
+    margin-bottom: 28px;
+    gap: 12px;
+  }
+
+  .bcm-text-section {
+    gap: 14px;
+  }
+
+  .bcm-actions {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .bcm-btn {
+    font-size: 14px;
+    height: 44px;
+    padding: 10px 14px;
+    border-radius: 8px;
+  }
+
+  .bcm-btn-glossy-top {
+    width: 180px;
+    height: 5px;
+    opacity: 0.2;
+  }
+
+  .bcm-btn-vector {
+    width: 8px;
+    height: 34px;
+    opacity: 0.6;
+  }
+
+  .bcm-close-btn {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Glossy overlay adjustments */
+  .bcm-glossy-left {
+    width: 8px;
+    height: 35px;
+    opacity: 0.4;
+  }
+
+  .bcm-glossy-top {
+    width: 200px;
+    height: 5px;
+    opacity: 0.2;
+  }
+}
+
+/* Mobile - 375px to 599px */
+@media (max-width: 599px) and (min-width: 375px) {
+  .bcm-overlay {
+    padding: 12px;
+  }
+
+  .bcm-modal {
+    padding: 16px;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .bcm-title {
+    font-size: 16px;
+    line-height: 1.3;
+    white-space: normal;
+  }
+
+  .bcm-description {
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba(37, 37, 37, 0.6);
+  }
+
+  .bcm-content {
+    margin-bottom: 24px;
+    gap: 10px;
+    flex-direction: column;
+  }
+
+  .bcm-text-section {
+    gap: 12px;
+    width: 100%;
+  }
+
+  .bcm-actions {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .bcm-btn {
+    font-size: 13px;
+    height: 40px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    gap: 6px;
+  }
+
+  .bcm-btn-glossy-top {
+    width: 150px;
+    height: 4px;
+    opacity: 0.15;
+  }
+
+  .bcm-btn-vector {
+    width: 6px;
+    height: 30px;
+    opacity: 0.5;
+  }
+
+  .bcm-close-btn {
+    width: 18px;
+    height: 18px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .bcm-close-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Glossy overlay adjustments */
+  .bcm-glossy-left {
+    width: 6px;
+    height: 30px;
+    opacity: 0.3;
+  }
+
+  .bcm-glossy-top {
+    width: 160px;
+    height: 4px;
+    opacity: 0.15;
+  }
+}
+
+/* Extra small mobile - below 375px */
+@media (max-width: 374px) {
+  .bcm-overlay {
+    padding: 8px;
+  }
+
+  .bcm-modal {
+    padding: 14px;
+    max-width: 100%;
+    border-radius: 9px;
+  }
+
+  .bcm-title {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .bcm-description {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .bcm-content {
+    margin-bottom: 20px;
+    gap: 8px;
+  }
+
+  .bcm-text-section {
+    gap: 10px;
+  }
+
+  .bcm-actions {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .bcm-btn {
+    font-size: 12px;
+    height: 36px;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+
+  .bcm-btn-glossy-top {
+    width: 120px;
+    height: 3px;
+    opacity: 0.1;
+  }
+
+  .bcm-btn-vector {
+    width: 5px;
+    height: 28px;
+    opacity: 0.4;
+  }
+
+  .bcm-close-btn {
+    width: 16px;
+    height: 16px;
+  }
+
+  .bcm-close-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}

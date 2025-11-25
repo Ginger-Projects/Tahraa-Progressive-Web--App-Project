@@ -1,0 +1,165 @@
+.section-four {
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .section-four-wrapper {
+    width: 95%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+
+  /* BLOCK BASE LAYOUT */
+  .four-block {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+  }
+
+  /* Reverse layout for second column */
+  .four-block.reverse {
+    flex-direction: row-reverse;
+  }
+
+  /* IMAGES */
+  .four-img {
+    width: 330px;
+    height: auto;
+  }
+
+  /* TEXT CONTENT */
+  .four-content {
+    text-align: left;
+  }
+
+  .four-title {
+    font-family: "Poppins" !important;
+    font-size: 33px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 30px;
+    white-space: nowrap;
+  }
+
+  /* BUTTON STYLE */
+  .four-btn {
+    background: #2ac155;
+    color: #fff;
+    padding: 14px 32px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+  }
+
+  /* DIVIDER */
+  .four-divider {
+    height: 70%;
+    width: auto;
+    margin: 0 20px;
+  }
+
+  /* -------------------------- */
+  /* RESPONSIVE STYLES */
+  /* -------------------------- */
+
+  @media (max-width: 992px) {
+    .section-four-wrapper {
+      flex-direction: column;
+      gap: 80px;
+    }
+
+    .four-block,
+    .four-block.reverse {
+      width: 100%;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .four-content {
+      text-align: center;
+    }
+
+    .four-img {
+      width: 280px;
+    }
+
+    .four-divider {
+      display: none;
+    }
+
+    .four-title {
+      font-size: 32px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .four-img {
+      width: 240px;
+    }
+
+    .four-title {
+      font-size: 33px;
+    }
+
+    .four-btn {
+      padding: 12px 25px;
+      font-size: 16px;
+    }
+  }
+
+  .BTNFOUR {
+    all: unset;
+    height: 43px;
+    position: relative;
+    right: 0;
+    top: 0;
+    width: 137px;
+  }
+  .rectangle-2 {
+    background-color: #2ac155;
+    border-radius: 8.19px;
+    box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
+    height: 43px;
+    position: absolute;
+    right: 2px;
+    top: 0;
+    width: 135px;
+  }
+  .vector-2 {
+    height: 33px;
+    position: absolute;
+    right: 124px;
+    top: 3px;
+    width: 10px;
+  }
+  .line {
+    height: 4px;
+    position: absolute;
+    right: 20px;
+    top: 4px;
+    width: 121px;
+  }
+  .label {
+    color: #ffffff;
+    font-family: "Poppins", Helvetica;
+    font-size: 10.6px;
+    font-weight: 500;
+    letter-spacing: 0.29px;
+    line-height: 20px;
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    text-shadow: 0px 1.43px 0px #00000026;
+    top: 11px;
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,31 @@
+.form-selectoption {
+  border: 1px solid;
+  border-color: #1b48bb;
+  border-radius: 16px;
+  height: 60px;
+  position: relative;
+  top: 30px;
+  width: 110px;
+}
+
+.form-selectoption .ic-chevron {
+  height: 40.00%;
+  left: 55.45%;
+  position: absolute;
+  top: 30.00%;
+  width: 21.82%;
+}
+
+.form-selectoption .text-wrapper {
+  color: #1b48bb;
+  font-family: "Poppins", Helvetica;
+  font-size: 18px;
+  font-weight: 500;
+  height: 45.00%;
+  left: 24.55%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 26.67%;
+  width: 20.91%;
+}

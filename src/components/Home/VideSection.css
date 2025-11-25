@@ -1,0 +1,171 @@
+.how-section {
+ background-color: #eaecf2;
+  width: 100%;
+  padding: 2rem 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.how-wrap {
+  width: 90%;
+  margin: 0 auto;
+}
+
+/* Main heading */
+.how-title {
+  font-family: "Hahmlet", serif;
+  font-size: 40px;
+  font-weight: 600;
+  color: #252525;
+  margin-bottom: 8px;
+}
+
+/* Subheading */
+.how-subtitle {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  color: rgba(37, 37, 37, 0.6);
+  margin-bottom: 40px;
+}
+
+/* Two-column layout */
+.how-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* Each side item */
+.how-item {
+  max-width: 520px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Card wrapper */
+.how-card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* The image (your “video window” png) */
+.how-image {
+  width: 100%;
+  display: block;
+}
+.heading-text{
+    margin-top: 2rem;
+    font-weight: bold;
+}
+/* Paragraph under each card */
+.how-text {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #252525;
+  opacity: 0.9;
+  margin: 28px auto 24px;
+  max-width: 420px;
+  margin-top: 0;
+}
+
+/* Button */
+.how-btn {
+  border: none;
+  outline: none;
+  padding: 12px 36px;
+  border-radius: 999px;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  background: linear-gradient(180deg, #8a6cd4 0%, #6b4fb5 100%);
+  box-shadow: 0 6px 16px rgba(119, 93, 166, 0.5);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.how-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(119, 93, 166, 0.6);
+}
+
+.how-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(119, 93, 166, 0.5);
+}
+
+/* Responsive tweaks */
+@media (max-width: 991px) {
+  .how-title {
+    font-size: 32px;
+  }
+  .how-subtitle {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 575px) {
+  .how-section {
+    padding: 3rem 0;
+  }
+  .how-card {
+    border-radius: 18px;
+  }
+}
+
+
+
+  .BTN {
+    all: unset;
+    height: 43px;
+    position: relative;
+    right: 0;
+    top: 0;
+    width: 137px;
+  }
+  .rectangle-2 {
+    background-color: #775da6;
+    border-radius: 8.19px;
+    box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
+    height: 43px;
+    position: absolute;
+    right: 2px;
+    top: 0;
+    width: 135px;
+  }
+  .vector-2 {
+    height: 33px;
+    position: absolute;
+    right: 124px;
+    top: 3px;
+    width: 10px;
+  }
+  .line {
+    height: 4px;
+    position: absolute;
+    right: 20px;
+    top: 4px;
+    width: 121px;
+  }
+  .label {
+    color: #ffffff;
+    font-family: "Poppins", Helvetica;
+    font-size: 14.6px;
+    font-weight: 500;
+    letter-spacing: 0.29px;
+    line-height: 20px;
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    text-shadow: 0px 1.43px 0px #00000026;
+    top: 11px;
+    white-space: nowrap;
+  }

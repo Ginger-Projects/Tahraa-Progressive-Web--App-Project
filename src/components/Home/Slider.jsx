@@ -1,0 +1,88 @@
+import React from "react";
+import "./Slider.css";
+import Music from "../../assets/images/music.png";
+import Art from "../../assets/images/art.png";
+import Yoga from "../../assets/images/yoga.png";
+import Gym from "../../assets/images/gym.png";
+import Next from "../../assets/images/Next.png";
+import Prev from "../../assets/images/Prev.png";
+
+
+// Import Swiper
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+
+export const Slider = () => {
+  return (
+    <section className='category-section container-fluid text-center py-5'>
+      <div className='d-flex flex-column align-items-center justify-content-between '>
+        <div className='wrap-div'>
+          {/* Heading */}
+          <h2 className='category-title mb-3'>Time To Reimagine What You Can Do</h2>
+
+          <p className='category-subtitle mb-5'>
+            Commodo condimentum est massa in enim fermentum. Mauris turpis et pellentesque.
+          </p>
+        </div>
+
+        {/* Slider Wrapper */}
+        <div className='position-relative wrap-div'>
+          {/* Swiper Container */}
+          <Swiper
+            modules={[Navigation]}
+            navigation={{
+              nextEl: ".right-arrow",
+              prevEl: ".left-arrow",
+            }}
+            slidesPerView={4}
+            spaceBetween={40}
+            loop={true}
+            className='category-swiper'
+          >
+            <SwiperSlide>
+              <div className='category-item'>
+                <img className='category-img' src={Music} alt='Music' />
+                <p className='category-label mt-3'>Music</p>
+              </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div className='category-item'>
+                <img className='category-img' src={Art} alt='Art' />
+                <p className='category-label mt-3'>Art</p>
+              </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div className='category-item'>
+                <img className='category-img' src={Gym} alt='Gym' />
+                <p className='category-label mt-3'>Gym</p>
+              </div>
+            </SwiperSlide>
+
+            <SwiperSlide>
+              <div className='category-item'>
+                <img className='category-img' src={Yoga} alt='Yoga' />
+                <p className='category-label mt-3'>Yoga</p>
+              </div>
+            </SwiperSlide>
+
+                        <SwiperSlide>
+              <div className='category-item'>
+                <img className='category-img' src={Music} alt='Music' />
+                <p className='category-label mt-3'>Music</p>
+              </div>
+            </SwiperSlide>
+
+          </Swiper>
+
+          {/* Navigation Arrows — YOUR original styles */}
+          <button className='arrow-btn right-arrow'><img src={Next} alt="" /></button>
+          <button className='arrow-btn left-arrow'><img src={Prev} alt="" /></button>
+        </div>
+      </div>
+    </section>
+  );
+};

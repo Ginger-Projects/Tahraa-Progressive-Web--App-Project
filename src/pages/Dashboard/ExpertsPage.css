@@ -1,0 +1,59 @@
+.experts-page {
+  min-height: 100vh;
+  background: #f3f4fb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Poppins",
+    "Inter", sans-serif;
+}
+
+/* responsive tweaks */
+@media (max-width: 1200px) {
+  .exp-cards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .exp-header,
+  .exp-banner,
+  .exp-listing-section,
+  .exp-faq-section,
+  .exp-footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .exp-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .exp-faq-section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .exp-header {
+    flex-direction: column;
+    height: auto;
+    gap: 12px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .exp-banner {
+    padding: 32px 18px;
+  }
+
+  .exp-search-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .exp-cards-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .exp-faq-section {
+    padding-top: 40px;
+    padding-bottom: 48px;
+  }
+}

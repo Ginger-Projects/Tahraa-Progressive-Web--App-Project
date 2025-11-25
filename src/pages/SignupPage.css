@@ -1,0 +1,620 @@
+/* ---- Base page ---- */
+
+:root {
+  --tahraa-bg-left: #f4f0ff;
+  --tahraa-bg-right: #f0e7ff;
+  --tahraa-primary: #6e40ff;
+  --tahraa-primary-dark: #5b32d5;
+  --tahraa-accent: #21c177;
+  --tahraa-card-bg: #ffffff;
+  --tahraa-text-main: #252525;
+  --tahraa-text-soft: #77798b;
+  --tahraa-border: #e1e1ef;
+  --tahraa-input-bg: #ffffff;
+  --tahraa-radius-lg: 18px;
+  --tahraa-radius-md: 10px;
+  --tahraa-radius-sm: 8px;
+  --tahraa-shadow-soft: 0 18px 40px rgba(34, 26, 95, 0.15);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Poppins", "Inter", sans-serif;
+}
+
+/* outer background */
+
+.tahraa-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0px 80px;
+
+  background-image: url("../assets/images/bg.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* main wrapper */
+
+.tahraa-wrapper {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  height: fit-content;
+}
+
+/* LEFT PANEL */
+
+.tahraa-left-panel {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  padding: 5rem 1rem;
+}
+
+.tahraa-logo {
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 0.03em;
+  color: #5b34ff;
+  margin-bottom: 28px;
+}
+
+.tahraa-title {
+  font-size: 40px;
+  line-height: 1.25;
+  margin: 0 0 12px;
+  color: var(--tahraa-text-main);
+  font-family: "Hahmlet";
+  font-weight: bold;
+}
+
+.tahraa-subtitle {
+  margin: 0 0 28px;
+  font-size: 20px;
+  line-height: 1.6;
+  color: rgba(37, 37, 37, 50%);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Form */
+
+.tahraa-form {
+  width: 100%;
+}
+
+.tahraa-field {
+  margin-bottom: 18px;
+}
+
+.tahraa-label {
+  display: block;
+  font-size: 17px;
+  font-weight: 500;
+  color: #252525;
+  margin-bottom: 6px;
+}
+
+.tahraa-input {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  background: var(--tahraa-input-bg);
+  border-radius: 9px;
+  border: 1px solid var(--tahraa-border);
+  box-shadow: 0 10px 24px rgba(76, 64, 168, 0.06);
+  height: 48px;
+  padding-left: 1rem;
+}
+
+.tahraa-input-inner {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: #282a3d;
+}
+
+.tahraa-input-inner::placeholder {
+  color: #878787;
+  font-size: 16px;
+}
+
+/* inner controls */
+
+.tahraa-input--with-icon {
+  display: flex;
+  align-items: center;
+  padding-right: 42px;
+}
+
+.tahraa-input--with-icon .tahraa-input-inner {
+  padding: 0;
+}
+
+.tahraa-input-icon {
+  position: absolute;
+  right: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* fake icons for look */
+
+.calendar-icon,
+.chevron-icon,
+.eye-icon {
+  display: inline-block;
+}
+
+.calendar-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid #c4c3de;
+  position: relative;
+}
+
+.calendar-icon::before,
+.calendar-icon::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 60%;
+  background: #c4c3de;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.calendar-icon::before {
+  top: 4px;
+}
+
+.calendar-icon::after {
+  top: 8px;
+}
+
+.chevron-icon {
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid #b2b3c7;
+  border-bottom: 2px solid #b2b3c7;
+  transform: rotate(-45deg) translateY(-1px);
+}
+
+.eye-icon {
+  width: 18px;
+  height: 10px;
+  border-radius: 999px;
+  border: 2px solid #c3c4db;
+  position: relative;
+}
+
+.eye-icon::before {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #c3c4db;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* row for DOB + Gender */
+
+.tahraa-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* select */
+
+.tahraa-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Password strength */
+
+.tahraa-password-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 11px;
+}
+
+.tahraa-password-message {
+  color: #63c58f;
+}
+
+.tahraa-password-label {
+  font-weight: 600;
+  color: #8d8fa3;
+}
+
+.tahraa-password-bar {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: #e3e4f0;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.tahraa-password-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: inherit;
+  transition: width 0.25s ease-out, background-color 0.25s ease-out;
+}
+
+/* Buttons */
+
+.tahraa-btn {
+  width: 100%;
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 24px rgba(67, 36, 160, 0.25);
+}
+
+.tahraa-btn-primary {
+  background: linear-gradient(135deg, #7c4dff, #5e33de);
+  color: #ffffff;
+}
+
+.tahraa-btn-primary:hover {
+  background: linear-gradient(135deg, #6f42f5, #5328ce);
+}
+
+.tahraa-btn-google {
+  background: #1fb64c;
+  color: #ffffff;
+  box-shadow: 0 12px 22px rgba(29, 180, 88, 0.35);
+  gap: 8px;
+}
+
+.google-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  color: #1fb64c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Login + terms */
+
+.tahraa-login-hint {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #5a5b70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tahraa-login-hint button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font-size: inherit;
+  font-weight: 600;
+  color: #4749e5;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tahraa-terms {
+  margin-top: 18px;
+  font-size: 11px;
+  color: #9a9bb3;
+  max-width: 360px;
+}
+
+.tahraa-terms a {
+  color: #5e4beb;
+  text-decoration: underline;
+}
+/* Stagger second column vertically */
+.tahraa-cards-track > .tahraa-card:nth-child(odd) {
+  transform: translateY(-100px);
+}
+
+/* RIGHT PANEL */
+
+.tahraa-right-panel {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 100%;
+  height: 140vh;
+}
+
+.tahraa-cards-scroller {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  padding-right: 4px;
+}
+
+/* vertical marquee */
+
+.tahraa-cards-track {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* TWO COLUMN GRID */
+  gap: 22px 32px;
+  animation: tahraaScrollUp 32s linear infinite;
+}
+
+@keyframes tahraaScrollUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+/* mentor card */
+
+.tahraa-card {
+  background: var(--tahraa-card-bg);
+  border-radius: var(--tahraa-radius-lg);
+  box-shadow: var(--tahraa-shadow-soft);
+  overflow: hidden;
+  padding: 10px 10px 14px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* image */
+
+.tahraa-card-image-wrapper {
+  border-radius: 18px;
+  overflow: hidden;
+  height: auto;
+}
+
+.tahraa-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* text area */
+
+.tahraa-card-body {
+  padding: 10px 6px 0;
+  margin: 0.5rem 0;
+}
+
+.tahraa-card-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.tahraa-card-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #202133;
+}
+
+.verified-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #21c177;
+  position: relative;
+}
+
+.verified-dot::before {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 10px;
+  transform: translate(-50%, -54%);
+  color: #ffffff;
+}
+
+.tahraa-card-meta {
+  margin: 0;
+  font-size: 12px;
+  color: #9293a7;
+}
+
+.dot-separator {
+  margin: 0 4px;
+}
+
+.tahraa-card-years {
+  color: #7654ff;
+  font-weight: 500;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1023px) {
+  .tahraa-wrapper {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 700px;
+    padding: 32px 24px 36px;
+  }
+
+  .tahraa-left-panel {
+    max-width: 100%;
+  }
+
+  .tahraa-right-panel {
+    margin-top: 20px;
+    justify-content: flex-start;
+  }
+
+  .tahraa-cards-scroller {
+    max-width: none;
+    max-height: 400px;
+  }
+
+  .tahraa-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .tahraa-page {
+    padding: 18px;
+  }
+
+  .tahraa-wrapper {
+    padding: 24px 18px 26px;
+    border-radius: 24px;
+  }
+
+  .tahraa-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.BTN {
+  all: unset;
+  height: 43px;
+  position: relative;
+  right: 0;
+  top: 0;
+  width: 100%;
+  .rectangle-2 {
+    background-color: #2ac155;
+    border-radius: 8.19px;
+    box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
+    height: 43px;
+    position: absolute;
+    right: 2px;
+    top: 0;
+    width: 100%;
+    padding: 1rem 0;
+  }
+  .vector-2 {
+    height: 33px;
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: auto;
+  }
+  .line {
+    height: 4px;
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 100%;
+  }
+  .label {
+    color: #ffffff;
+    font-family: "Poppins", Helvetica;
+    font-size: 14.6px;
+    font-weight: 500;
+    letter-spacing: 0.29px;
+    line-height: 20px;
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    text-shadow: 0px 1.43px 0px #00000026;
+    top: 11px;
+    white-space: nowrap;
+  }
+}
+.BTN-2 {
+  all: unset;
+  height: 43px;
+  position: relative;
+  right: 0;
+  top: 0;
+  width: 100%;
+  display: block;
+  margin-bottom: 1rem;
+  .rectangle-2 {
+    background-color: #775da6;
+    border-radius: 8.19px;
+    box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
+    height: 43px;
+    position: absolute;
+    right: 2px;
+    top: 0;
+    width: 100%;
+    padding: 1rem 0;
+  }
+  .vector-2 {
+    height: 33px;
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 10px;
+  }
+  .line {
+    height: 4px;
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 100%;
+  }
+  .label {
+    color: #ffffff;
+    font-family: "Poppins", Helvetica;
+    font-size: 14.6px;
+    font-weight: 500;
+    letter-spacing: 0.29px;
+    line-height: 20px;
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    text-shadow: 0px 1.43px 0px #00000026;
+    top: 11px;
+    white-space: nowrap;
+  }
+}

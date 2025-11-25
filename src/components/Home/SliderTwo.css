@@ -1,0 +1,183 @@
+.experts-section {
+  background-color: #eaecf2;
+  width: 100%;
+  padding: 2rem 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .experts-title {
+    font-family: "Hahmlet";
+    font-size: 40px;
+    font-weight: 600;
+    color: #252525;
+  }
+
+  .experts-subtitle {
+    font-family: "Poppins";
+    font-size: 18px;
+    color: rgba(37, 37, 37, 0.5);
+  }
+
+  .experts-slider-container {
+    margin-top: 40px;
+    overflow: visible;
+  }
+.swiper-slide{
+  display: flex;
+  justify-content: center;
+}
+  /* Card */
+  .expert-card {
+    background: #ffffff;
+    border: 2px solid #7e60b8;
+    border-right: 8px solid #7e60b8;
+    border-bottom: 8px solid #7e60b8; /* Slightly lighter purple + thinner */
+    border-radius: 22px; /* More curved corners */
+
+    /* Subtle soft outer shadow instead of bottom-heavy */
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
+  }
+
+  .expert-name {
+    font-size: 12.77px;
+    font-family: "Hahmlet";
+    font-weight: bold;
+  }
+  .expert-role {
+    font-size: 11.26px;
+    color: #775da6;
+    font-family: "Poppins";
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    span {
+      font-weight: lighter;
+    }
+  }
+  .speak {
+    font-size: 10px;
+    color: #252525;
+    margin-bottom: 0.5rem;
+    span {
+      color: #888888;
+    }
+  }
+  .expert-price{
+    p{
+        font-size: 11px;
+        font-weight: bold;
+        color: #252525;
+        margin-bottom: 0;
+        span{
+            font-size: 10px;
+            color: #888888;
+        }
+    }
+    span{
+        font-size: 8px;
+        color: #775DA6;
+    }
+  }
+  .expert-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+
+  .expert-content {
+    padding: 15px;
+  }
+
+  .btn-box button {
+    width: 140px;
+  }
+
+  .BTNslider2 {
+    all: unset;
+    height: 43px;
+    position: relative;
+    right: 0;
+    top: 0;
+    width: 137px;
+  }
+  .rectangle-2 {
+    background-color: #775da6;
+    border-radius: 8.19px;
+    box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
+    height: 43px;
+    position: absolute;
+    right: 2px;
+    top: 0;
+    width: 135px;
+  }
+  .vector-2 {
+    height: 33px;
+    position: absolute;
+    right: 124px;
+    top: 3px;
+    width: 10px;
+  }
+  .line {
+    height: 4px;
+    position: absolute;
+    right: 20px;
+    top: 4px;
+    width: 121px;
+  }
+  .label {
+    color: #ffffff;
+    font-family: "Poppins", Helvetica;
+    font-size: 14.6px;
+    font-weight: 500;
+    letter-spacing: 0.29px;
+    line-height: 20px;
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    text-shadow: 0px 1.43px 0px #00000026;
+    top: 11px;
+    white-space: nowrap;
+  }
+
+  .right-arrow {
+    right: -2%;
+  }
+  .left-arrow {
+    left: -2%;
+  }
+
+  .BTN-2slider {
+    all: unset;
+    height: 43px;
+    top: 0;
+    width: 137px;
+    position: relative;
+  }
+  .rectangle-4 {
+    height: 43px;
+    position: absolute;
+    right: 2px;
+    top: 0;
+    width: 135px;
+  }
+  .vector-2 {
+    height: 33px;
+    position: absolute;
+    right: 124px;
+    top: 3px;
+    width: 10px;
+  }
+  .label-3 {
+    color: #ffffff;
+    font-family: "Poppins", Helvetica;
+    font-size: 14.6px;
+    font-weight: 500;
+    letter-spacing: 0.29px;
+    line-height: 20px;
+    position: absolute;
+    right: 44px;
+    text-shadow: 0px 1.43px 0px #00000026;
+    top: 11px;
+    white-space: nowrap;
+  }
+}

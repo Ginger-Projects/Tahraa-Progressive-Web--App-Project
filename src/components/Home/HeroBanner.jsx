@@ -1,0 +1,114 @@
+import "./HeroBanner.css";
+import Logo from "../../assets/images/logo.png";
+import { FormSelectoption } from "../../components/FormSelectoption";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+const HeroBanner = () => {
+
+  const [scrolled, setScrolled] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+
+  return (
+    <div className='box' data-model-id='3116:1408-frame'>
+      <div className='group'>
+        <img className='rectangle' alt='Rectangle' src='https://c.animaapp.com/RRnEyncc/img/rectangle-11910.svg' />
+
+        <img className='vector' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector.svg' />
+
+        <img className='img' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1.svg' />
+
+        <nav className={`navbar ${scrolled ? "nav-white" : ""} ${isNavOpen ? "nav-open" : ""}`}>
+          <img src={Logo} className='div' alt='Logo' />
+
+          <button
+            type="button"
+            className="nav-toggle"
+            onClick={() => setIsNavOpen((prev) => !prev)}
+          >
+            <span className="nav-toggle-line" />
+            <span className="nav-toggle-line" />
+            <span className="nav-toggle-line" />
+          </button>
+
+          <div className='nav-content'>
+            <div className='frame'>
+              <Link to="/our-experts" className='text-wrapper-2 text-decoration-none'>Our Experts and Packages</Link>
+
+              <div className='text-wrapper-2'>How It Works</div>
+
+              <div className='text-wrapper-2'>Reach Us</div>
+            </div>
+            <div className='d-flex gap-5'>
+              <button className='BTN-2s'>
+                <img className='rectangle-4' alt='Rectangle' src='https://c.animaapp.com/RRnEyncc/img/rectangle-1.png' />
+
+                <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-3.svg' />
+
+                <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-2.svg' />
+
+                <Link to='/signin'><div className='label-3' >Sign In</div></Link>
+              </button>
+              <button className='BTNns'>
+                <div className='rectangle-2' />
+
+                <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
+
+                <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
+
+                <div className='label'>Join for Free</div>
+              </button>
+              <FormSelectoption
+                className='form-selectoption-instance'
+                divClassName='design-component-instance-node'
+                icChevron='https://c.animaapp.com/RRnEyncc/img/ic-chevron-1.svg'
+              />
+            </div>
+          </div>
+        </nav>
+        <div>
+          <h2 className='heading'>
+            <span className='span'>This Is Where You Pick Up </span>
+
+            <span className='text-wrapper-3'>A Hobby Or Change Your Lifestyle</span>
+          </h2>
+
+          <p className='text'>
+            Discover new passions and build a richer life. Get personalized guidance from experts in hobbies and specialized
+            skills.
+          </p>
+
+          <button className='button'>
+            <div className='rectangle-3' />
+
+            <img className='vector-3' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-2.svg' />
+
+            <img className='line-2' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-1.svg' />
+
+            <div className='label-2'>Start Your Discovery</div>
+          </button>
+        </div>
+
+        <img className='women-KB-copy' alt='Women KB copy' src='https://c.animaapp.com/RRnEyncc/img/women-kb-copy-1.png' />
+
+        <img
+          className='basket-ball-man-copy'
+          alt='Basket ball man copy'
+          src='https://c.animaapp.com/RRnEyncc/img/basket-ball-man-copy-1.png'
+        />
+      </div>
+    </div>
+  );
+};
+
+export default HeroBanner;

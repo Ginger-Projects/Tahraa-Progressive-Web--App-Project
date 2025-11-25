@@ -1,0 +1,80 @@
+.category-section {
+  background-color: #eaecf2;
+  width: 100%;
+  padding: 7rem 0 !important;
+}
+
+/* Title */
+.category-title {
+  font-family: "Hahmlet", serif;
+  font-size: 40px;
+  font-weight: 600;
+  color: #252525;
+  text-align: start;
+}
+
+/* Subtitle */
+.category-subtitle {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  color: rgba(37, 37, 37, 50%);
+  max-width: 100%;
+  margin: auto;
+  text-align: start;
+}
+
+/* Circular icons */
+.category-img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain; /* Keeps your PNG transparency intact */
+  background: transparent;
+}
+
+/* Labels */
+.category-label {
+  font-family: "Hahmlet", serif;
+  font-size: 23px;
+  font-weight: 600;
+  color: #252525;
+}
+
+/* Arrows */
+.arrow-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #6e5fb0;
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.left-arrow {
+  position: absolute;
+  left: 1%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.right-arrow {
+  position: absolute;
+  right: 1%;
+  top: 48%;
+  transform: translateY(-50%);
+}
+.wrap-div {
+  width: 90%;
+}
+.arrow-btn {
+  z-index: 999 !important;
+  position: absolute;
+}
+.swiper-button-lock {
+  display: block !important;
+}
