@@ -13,7 +13,7 @@ const ForgotPassword = () => {
         {/* LEFT SECTION */}
         <div className='fp-left'>
           <div className='fp-logo'>
-            <img src={Logo} alt='' />
+            <Link to='/'><img src={Logo} alt='' /></Link>
           </div>
 
           <div className='fp-emoji mt-5'>

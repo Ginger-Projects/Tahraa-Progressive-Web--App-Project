@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ExpertsBanner.css";
 import Button from "../../components/Button";
 
@@ -8,6 +9,7 @@ const ExpertsBanner = ({ activeTab, setActiveTab }) => {
   const [selectedExperience, setSelectedExperience] = useState("All");
   const [selectedTrainee, setSelectedTrainee] = useState("All");
   const [selectedSort, setSelectedSort] = useState("Also speaks");
+  const navigate = useNavigate();
 
   return (
     <section className='exp-banner'>
@@ -16,10 +18,22 @@ const ExpertsBanner = ({ activeTab, setActiveTab }) => {
         <p className='exp-banner-subtitle'>Your search ends here. Pick an expert of your choice.</p>
 
         <div className='exp-banner-toggle'>
-          <button className={`toggle-btn ${activeTab === "experts" ? "active" : ""}`} onClick={() => setActiveTab("experts")}>
+          <button
+            className={`toggle-btn ${activeTab === "experts" ? "active" : ""}`}
+            onClick={() => {
+              setActiveTab("experts");
+              navigate("/our-experts");
+            }}
+          >
             Expert
           </button>
-          <button className={`toggle-btn ${activeTab === "packages" ? "active" : ""}`} onClick={() => setActiveTab("packages")}>
+          <button
+            className={`toggle-btn ${activeTab === "packages" ? "active" : ""}`}
+            onClick={() => {
+              setActiveTab("packages");
+              navigate("/our-packages");
+            }}
+          >
             Packages
           </button>
         </div>

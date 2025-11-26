@@ -42,7 +42,7 @@ const LoginPage = () => {
         {/* LEFT – FORM */}
         <div className='lp-left'>
           <div className='lp-logo'>
-            <img src={Logo} alt='' />
+            <Link to='/'><img src={Logo} alt='' /></Link>
           </div>
 
           <h1 className='lp-title'>Yay, you&apos;re back!</h1>

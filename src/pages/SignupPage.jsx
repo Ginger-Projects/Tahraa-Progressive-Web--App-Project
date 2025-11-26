@@ -101,7 +101,7 @@ const TahraaSignup = () => {
       <div className="tahraa-wrapper">
         {/* LEFT – FORM */}
         <div className="tahraa-left-panel">
-          <div className="tahraa-logo"><img src={Logo} alt="" /></div>
+          <div className="tahraa-logo"><Link to='/'><img src={Logo} alt='' /></Link></div>
 
           <h1 className="tahraa-title">Discover Yourself</h1>
           <p className="tahraa-subtitle">
@@ -210,7 +210,7 @@ const TahraaSignup = () => {
             <div className='label'>Sign Up</div>
           </button>
 
-            <button className='BTN'>
+            <button className='BTNaa'>
             <div className='rectangle-2' />
 
             <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />

@@ -18,6 +18,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { Link } from "react-router-dom";
 
 export const SliderThree = () => {
   return (
@@ -36,7 +37,7 @@ export const SliderThree = () => {
 
             <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-            <div className='label'>View All</div>
+           <Link to="/our-packages" className='label text-decoration-none'>View All</Link>
           </button>
         </div>
 

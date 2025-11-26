@@ -12,9 +12,9 @@ const Header = () => {
         <Link to='/' className="exp-logo"><img src={Logo} alt="" /></Link>
 
         <nav className={`exp-nav ${mobileMenuOpen ? 'active' : ''}`}>
-          <a href="#" className="active">Our Experts and Packages</a>
-          <a href="#">How It Works</a>
-          <a href="#">Reach Us</a>
+          <Link to="/our-experts" className="active text-decoration-none">Our Experts and Packages</Link>
+          <Link to="/how-it-works-dashboard" className="text-decoration-none">How It Works</Link>
+          <Link to="/reach-us" className="text-decoration-none">Reach Us</Link>
         </nav>
       </div>
 

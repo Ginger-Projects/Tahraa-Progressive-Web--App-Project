@@ -42,6 +42,11 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+
+  @media(max-width : 991px){
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 /* main wrapper */
@@ -82,6 +87,13 @@ body {
   color: var(--tahraa-text-main);
   font-family: "Hahmlet";
   font-weight: bold;
+
+  @media(max-width : 768px){
+    font-size: 30px;
+  }
+  @media(max-width : 500px){
+    font-size: 20px;
+  }
 }
 
 .tahraa-subtitle {
@@ -91,6 +103,13 @@ body {
   color: rgba(37, 37, 37, 50%);
   width: 100%;
   max-width: 100%;
+
+  @media(max-width : 768px){
+    font-size: 15px;
+  }
+   @media(max-width : 500px){
+    font-size: 12px;
+  }
 }
 
 /* Form */
@@ -350,6 +369,11 @@ body {
   font-size: 11px;
   color: #9a9bb3;
   max-width: 360px;
+
+  @media(max-width : 991px){
+    max-width: 100%;
+    text-align: center;
+  }
 }
 
 .tahraa-terms a {
@@ -387,7 +411,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr; /* TWO COLUMN GRID */
   gap: 22px 32px;
-  animation: tahraaScrollUp 32s linear infinite;
+  animation: tahraaScrollUp 20s linear infinite;
 }
 
 @keyframes tahraaScrollUp {
@@ -482,7 +506,7 @@ body {
 
 /* RESPONSIVE */
 
-@media (max-width: 1023px) {
+@media (max-width: 991px) {
   .tahraa-wrapper {
     grid-template-columns: minmax(0, 1fr);
     max-width: 700px;
@@ -496,6 +520,7 @@ body {
   .tahraa-right-panel {
     margin-top: 20px;
     justify-content: flex-start;
+    display: none;
   }
 
   .tahraa-cards-scroller {
@@ -522,7 +547,7 @@ body {
     grid-template-columns: minmax(0, 1fr);
   }
 }
-.BTN {
+.BTNaa {
   all: unset;
   height: 43px;
   position: relative;

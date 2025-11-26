@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../Button";
 import Veryfied from "../../assets/images/verified.png";
+import { Link } from "react-router-dom";
 
 const ExpertCard = ({ data, view }) => {
   return (
@@ -33,8 +34,8 @@ const ExpertCard = ({ data, view }) => {
       </div>
 
       <div className="exp-card-footer">
-        <Button label="Book Session" bg="#775DA6" />
-        <Button label="Enquire" bg="#02B346" />
+        <Link to="/expert-booking" className="w-100"><Button label="Book Session" bg="#775DA6" /></Link>
+        <Link to="/expert-profile" className="w-100"><Button label="Enquire" bg="#02B346" /></Link>
       </div>
     </article>
   );
