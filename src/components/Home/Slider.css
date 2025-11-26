@@ -24,11 +24,20 @@
 }
 
 /* Circular icons */
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .category-img {
   width: 250px;
   height: 250px;
   object-fit: contain; /* Keeps your PNG transparency intact */
   background: transparent;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Labels */
@@ -77,4 +86,81 @@
 }
 .swiper-button-lock {
   display: block !important;
+}
+
+/* ---------------------- */
+/* RESPONSIVE STYLES      */
+/* ---------------------- */
+
+@media (max-width: 992px) {
+  .category-title {
+    font-size: 32px;
+    text-align: center;
+  }
+
+  .category-subtitle {
+    font-size: 16px;
+    text-align: center;
+    max-width: 80%;
+  }
+
+  .wrap-div {
+    width: 100%;
+  }
+
+  .category-img {
+    width: 200px;
+    height: 200px;
+  }
+
+  .left-arrow {
+    left: 4%;
+  }
+
+  .right-arrow {
+    right: 4%;
+  }
+}
+
+@media (max-width: 768px) {
+  .category-section {
+    padding: 4rem 0 !important;
+  }
+
+  .category-title {
+    font-size: 28px;
+  }
+
+  .category-subtitle {
+    font-size: 15px;
+    max-width: 90%;
+  }
+
+  .category-img {
+    width: auto;
+    height: auto;
+  }
+
+  .arrow-btn {
+   width: 44px;
+        height: 44px;
+        top: 41%;
+        transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 576px) {
+  .category-title {
+    font-size: 24px;
+  }
+
+  .category-subtitle {
+    font-size: 14px;
+    max-width: 95%;
+  }
+
+  .category-img {
+    width: auto;
+    height: auto;
+  }
 }

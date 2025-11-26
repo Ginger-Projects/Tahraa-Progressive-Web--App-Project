@@ -1,7 +1,7 @@
 import React from "react";
 import "./SectionFour.css";
 
-import BgImage from "../../assets/images/cta-bg.png"; 
+import BgImage from "../../assets/images/home-bg.png";
 import LeftImg from "../../assets/images/cta-left.png";
 import RightImg from "../../assets/images/cta-right.png";
 import Divider from "../../assets/images/cta-divider.png";
@@ -10,56 +10,67 @@ export const SectionFour = () => {
   return (
     <section
       className="section-four"
-      style={{ backgroundImage: `url(${BgImage})` }}
+      style={{ backgroundImage: `url(${BgImage})`, backgroundSize : 'cover' , backgroundPosition : 'center' }}
     >
       <div className="section-four-wrapper">
-
-        {/* LEFT SIDE (Image Left / Text Right) */}
+        {/* LEFT SIDE (image left, text right) */}
         <div className="four-block">
-          <img src={LeftImg} alt="" className="four-img" />
+          <img src={LeftImg} alt="Discover yourself" className="four-img" />
 
           <div className="four-content">
             <h2 className="four-title">
-              Your simple start <br /> to mastery
+              Your simple start
+              <br />
+              to mastery
             </h2>
 
-           <button className='BTNFOUR'>
-            <div className='rectangle-2' />
-
-            <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-            <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-            <div className='label'>Find Yourself Here</div>
-          </button>
+            <button className="BTNFOUR">
+              <div className="rectangle-2" />
+              <img
+                className="vector-2"
+                alt="Vector"
+                src="https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg"
+              />
+              <img
+                className="line"
+                alt="Line"
+                src="https://c.animaapp.com/RRnEyncc/img/line-1.svg"
+              />
+              <div className="label">Find Yourself Here</div>
+            </button>
           </div>
         </div>
 
-        {/* DIVIDER */}
-        <img src={Divider} alt="" className="four-divider" />
+        {/* DIVIDER BETWEEN CTAS */}
+        <img src={Divider} alt="Divider" className="four-divider" />
 
-        {/* RIGHT SIDE (Image Right / Text Left) */}
+        {/* RIGHT SIDE (image right, text left) */}
         <div className="four-block reverse">
-          <img src={RightImg} alt="" className="four-img" />
+          <img src={RightImg} alt="Grow your business" className="four-img" />
+
           <div className="four-content">
             <h2 className="four-title">
-              Unlock your assistant <br /> to grow your business
+              Unlock your assistant
+              <br />
+              to grow your business
             </h2>
 
-            <button className='BTNFOUR'>
-            <div className='rectangle-2' />
-
-            <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-            <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-            <div className='label'>Register as an Expert</div>
-          </button>
+            <button className="BTNFOUR BTNFOUR-secondary">
+              <div className="rectangle-2" />
+              <img
+                className="vector-2"
+                alt="Vector"
+                src="https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg"
+              />
+              <img
+                className="line"
+                alt="Line"
+                src="https://c.animaapp.com/RRnEyncc/img/line-1.svg"
+              />
+              <div className="label">Register as an Expert</div>
+            </button>
           </div>
-
-          
         </div>
-
       </div>
     </section>
   );

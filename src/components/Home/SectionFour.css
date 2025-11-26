@@ -4,162 +4,190 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  padding: 80px 0;
+  overflow-x: hidden;
+}
 
-  .section-four-wrapper {
-    width: 95%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
+.section-four-wrapper {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+/* BLOCK BASE LAYOUT */
+.four-block {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0;
+  justify-content: flex-start;
+}
+
+/* Reverse layout for second column */
+.four-block.reverse {
+  flex-direction: row-reverse;
+}
+
+/* IMAGES */
+.four-img {
+  width: 100%;
+  max-width: 330px;
+  height: auto;
+}
+
+/* TEXT CONTENT */
+.four-content {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.four-block.reverse .four-content {
+  text-align: right;
+  align-items: flex-end;
+
+  @media(max-width : 1200px){
     align-items: center;
-    position: relative;
   }
+}
 
-  /* BLOCK BASE LAYOUT */
-  .four-block {
-    display: flex;
-    align-items: center;
-    gap: 40px;
+.four-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.3;
+  margin-bottom: 32px;
+  max-width: 360px;
+  white-space: nowrap;
+}
+
+/* DIVIDER */
+.four-divider {
+  height: 70%;
+  width: auto;
+  margin: 0 20px;
+}
+
+/* CTA BUTTONS */
+.BTNFOUR {
+  all: unset;
+  height: 43px;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  width: 200px;
+}
+
+.BTNFOUR .rectangle-2 {
+  background-color: #2ac155;
+  border-radius: 8.19px;
+  box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
+  height: 43px;
+  position: absolute;
+  right: 2px;
+  top: 0;
+  width: 198px;
+}
+
+
+
+.BTNFOUR .vector-2 {
+  height: 33px;
+  position: absolute;
+  left: 4px;
+  top: 3px;
+  width: 10px;
+}
+
+.BTNFOUR .line {
+      height: 4px;
+    position: absolute;
+    left: -40px;
+    top: 4px;
     width: 100%;
+}
+
+.BTNFOUR .label {
+  color: #ffffff;
+  font-family: "Poppins", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.29px;
+  line-height: 20px;
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
+  text-shadow: 0px 1.43px 0px #00000026;
+  top: 11px;
+  white-space: nowrap;
+}
+
+/* -------------------------- */
+/* RESPONSIVE STYLES          */
+/* -------------------------- */
+
+/* Let titles wrap a bit earlier so content doesn't push images out on medium screens */
+@media (max-width: 1200px) {
+  .four-title {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 1200px) {
+  .section-four-wrapper {
+    flex-direction: column;
   }
 
-  /* Reverse layout for second column */
+  .four-block,
   .four-block.reverse {
-    flex-direction: row-reverse;
+    width: 100%;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
   }
 
-  /* IMAGES */
-  .four-img {
-    width: 330px;
-    height: auto;
-  }
-
-  /* TEXT CONTENT */
   .four-content {
-    text-align: left;
+    text-align: center;
+    align-items: center;
+  }
+
+  .four-img {
+    max-width: 280px;
+  }
+
+  .four-divider {
+    display: none;
   }
 
   .four-title {
-    font-family: "Poppins" !important;
-    font-size: 33px;
-    font-weight: 600;
-    color: #ffffff;
-    line-height: 1.3;
-    margin-bottom: 30px;
-    white-space: nowrap;
+    font-size: 30px;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 600px) {
+  .section-four {
+    padding: 60px 0;
   }
 
-  /* BUTTON STYLE */
-  .four-btn {
-    background: #2ac155;
-    color: #fff;
-    padding: 14px 32px;
-    font-size: 18px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    font-family: "Poppins", sans-serif;
+  .four-img {
+    max-width: 240px;
   }
 
-  /* DIVIDER */
-  .four-divider {
-    height: 70%;
-    width: auto;
-    margin: 0 20px;
-  }
-
-  /* -------------------------- */
-  /* RESPONSIVE STYLES */
-  /* -------------------------- */
-
-  @media (max-width: 992px) {
-    .section-four-wrapper {
-      flex-direction: column;
-      gap: 80px;
-    }
-
-    .four-block,
-    .four-block.reverse {
-      width: 100%;
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .four-content {
-      text-align: center;
-    }
-
-    .four-img {
-      width: 280px;
-    }
-
-    .four-divider {
-      display: none;
-    }
-
-    .four-title {
-      font-size: 32px;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .four-img {
-      width: 240px;
-    }
-
-    .four-title {
-      font-size: 33px;
-    }
-
-    .four-btn {
-      padding: 12px 25px;
-      font-size: 16px;
-    }
+  .four-title {
+    font-size: 26px;
   }
 
   .BTNFOUR {
-    all: unset;
-    height: 43px;
-    position: relative;
-    right: 0;
-    top: 0;
-    width: 137px;
+    width: 190px;
   }
-  .rectangle-2 {
-    background-color: #2ac155;
-    border-radius: 8.19px;
-    box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
-    height: 43px;
-    position: absolute;
-    right: 2px;
-    top: 0;
-    width: 135px;
-  }
-  .vector-2 {
-    height: 33px;
-    position: absolute;
-    right: 124px;
-    top: 3px;
-    width: 10px;
-  }
-  .line {
-    height: 4px;
-    position: absolute;
-    right: 20px;
-    top: 4px;
-    width: 121px;
-  }
-  .label {
-    color: #ffffff;
-    font-family: "Poppins", Helvetica;
-    font-size: 10.6px;
-    font-weight: 500;
-    letter-spacing: 0.29px;
-    line-height: 20px;
-    position: absolute;
-    right: 50%;
-    transform: translateX(50%);
-    text-shadow: 0px 1.43px 0px #00000026;
-    top: 11px;
-    white-space: nowrap;
+
+  .BTNFOUR .rectangle-2 {
+    width: 188px;
   }
 }

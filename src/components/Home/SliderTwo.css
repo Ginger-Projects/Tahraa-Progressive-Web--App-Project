@@ -1,22 +1,40 @@
 .experts-section {
   background-color: #eaecf2;
   width: 100%;
-  padding: 2rem 0 !important;
+  padding: 2rem 3rem !important;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media(max-width : 768px){
+    padding: 2rem 1rem !important;
+  }
 
   .experts-title {
     font-family: "Hahmlet";
     font-size: 40px;
     font-weight: 600;
     color: #252525;
+
+    @media(max-width : 768px){
+      font-size: 30px;
+    }
+     @media(max-width : 500px){
+      font-size: 20px;
+    }
   }
 
   .experts-subtitle {
     font-family: "Poppins";
     font-size: 18px;
     color: rgba(37, 37, 37, 0.5);
+
+     @media(max-width : 768px){
+      font-size: 16px;
+    }
+     @media(max-width : 500px){
+      font-size: 14px;
+    }
   }
 
   .experts-slider-container {
@@ -37,6 +55,7 @@
 
     /* Subtle soft outer shadow instead of bottom-heavy */
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
+    margin: 0 6px; /* small horizontal gap between cards */
   }
 
   .expert-name {
@@ -99,8 +118,7 @@
     right: 0;
     top: 0;
     width: 137px;
-  }
-  .rectangle-2 {
+      .rectangle-2 {
     background-color: #775da6;
     border-radius: 8.19px;
     box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
@@ -109,6 +127,10 @@
     right: 2px;
     top: 0;
     width: 135px;
+
+    @media(max-width : 768px){
+      width: 100%;
+    }
   }
   .vector-2 {
     height: 33px;
@@ -138,27 +160,43 @@
     top: 11px;
     white-space: nowrap;
   }
+  }
+
 
   .right-arrow {
-    right: -2%;
+    right: -25px;
+
+    @media(max-width : 768px){
+      right: 3%;
+    }
   }
   .left-arrow {
-    left: -2%;
+    left: -25px;
+     @media(max-width : 768px){
+      left: 3%;
+    }
   }
 
   .BTN-2slider {
     all: unset;
     height: 43px;
+    position: relative;
+    right: 0;
     top: 0;
     width: 137px;
-    position: relative;
-  }
-  .rectangle-4 {
+      .rectangle-2 {
+    background-color: #02B346;
+    border-radius: 8.19px;
+    box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
     height: 43px;
     position: absolute;
     right: 2px;
     top: 0;
     width: 135px;
+
+    @media(max-width : 768px){
+      width: 100%;
+    }
   }
   .vector-2 {
     height: 33px;
@@ -167,7 +205,14 @@
     top: 3px;
     width: 10px;
   }
-  .label-3 {
+  .line {
+    height: 4px;
+    position: absolute;
+    right: 20px;
+    top: 4px;
+    width: 121px;
+  }
+  .label {
     color: #ffffff;
     font-family: "Poppins", Helvetica;
     font-size: 14.6px;
@@ -175,9 +220,118 @@
     letter-spacing: 0.29px;
     line-height: 20px;
     position: absolute;
-    right: 44px;
+    right: 50%;
+    transform: translateX(50%);
     text-shadow: 0px 1.43px 0px #00000026;
     top: 11px;
     white-space: nowrap;
   }
+  }
+
+
+/* ---------------------- */
+/* RESPONSIVE STYLES      */
+/* ---------------------- */
+
+@media (max-width: 992px) {
+  .experts-section .wrap-div {
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .experts-section .header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .experts-section .experts-title {
+    font-size: 32px;
+  }
+
+  .experts-section .experts-subtitle {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .experts-section {
+    padding: 3rem 0 !important;
+  }
+
+  .experts-section .header-row {
+    align-items: center;
+    text-align: center;
+  }
+
+  .experts-section .experts-title {
+    font-size: 26px;
+  }
+
+  .experts-section .experts-subtitle {
+    font-size: 14px;
+  }
+
+  .experts-section .BTNslider2 {
+    margin-top: 0.5rem;
+    width: 100% !important;
+  }
+
+  .experts-section .expert-card {
+    max-width: 320px;
+    width: 100%;
+  }
+
+  .experts-section .expert-img {
+    height: 200px;
+  }
+
+  .experts-section .arrow-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .experts-section .btn-box {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .experts-section .btn-box button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .experts-section .experts-title {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  .experts-section .experts-subtitle {
+    font-size: 13px;
+  }
+
+  .experts-section .expert-card {
+    max-width: 280px;
+  }
+
+  .experts-section .expert-img {
+    height: 180px;
+  }
+
+  /* bring arrows closer on very small screens so they don't cut cards */
+  .experts-section .right-arrow {
+    right: 2%;
+  }
+
+  .experts-section .left-arrow {
+    left: 2%;
+  }
+
+  /* Ensure buttons stay inside card on small screens */
+
+
+  .experts-section .btn-box button {
+    width: 100%;
+  }
+}
 }

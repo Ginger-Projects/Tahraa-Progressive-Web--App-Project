@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const HeroBanner = () => {
 
   const [scrolled, setScrolled] = useState(false);
-  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,20 +28,20 @@ const HeroBanner = () => {
 
         <img className='img' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1.svg' />
 
-        <nav className={`navbar ${scrolled ? "nav-white" : ""} ${isNavOpen ? "nav-open" : ""}`}>
+        <nav className={`navbar ${scrolled || navOpen ? "nav-white" : ""}`}>
           <img src={Logo} className='div' alt='Logo' />
 
           <button
-            type="button"
-            className="nav-toggle"
-            onClick={() => setIsNavOpen((prev) => !prev)}
+            className='nav-toggle'
+            type='button'
+            onClick={() => setNavOpen((prev) => !prev)}
           >
-            <span className="nav-toggle-line" />
-            <span className="nav-toggle-line" />
-            <span className="nav-toggle-line" />
+            <span className='nav-toggle-bar' />
+            <span className='nav-toggle-bar' />
+            <span className='nav-toggle-bar' />
           </button>
 
-          <div className='nav-content'>
+          <div className={`nav-menu ${navOpen ? "open" : ""}`}>
             <div className='frame'>
               <Link to="/our-experts" className='text-wrapper-2 text-decoration-none'>Our Experts and Packages</Link>
 
@@ -49,34 +49,35 @@ const HeroBanner = () => {
 
               <div className='text-wrapper-2'>Reach Us</div>
             </div>
-            <div className='d-flex gap-5'>
-              <button className='BTN-2s'>
-                <img className='rectangle-4' alt='Rectangle' src='https://c.animaapp.com/RRnEyncc/img/rectangle-1.png' />
+            <div className='d-flex gap-5 nav-actions'>
+            
+            <button className='BTN-2s'>
+              <img className='rectangle-4' alt='Rectangle' src='https://c.animaapp.com/RRnEyncc/img/rectangle-1.png' />
 
-                <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-3.svg' />
+              <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-3.svg' />
 
-                <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-2.svg' />
+              <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-2.svg' />
 
-                <Link to='/signin'><div className='label-3' >Sign In</div></Link>
-              </button>
-              <button className='BTNns'>
-                <div className='rectangle-2' />
+              <Link to='/signin'><div className='label-3' >Sign In</div></Link>
+            </button>
+            <button className='BTNns'>
+              <div className='rectangle-2' />
 
-                <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
+              <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
-                <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
+              <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-                <div className='label'>Join for Free</div>
-              </button>
-              <FormSelectoption
-                className='form-selectoption-instance'
-                divClassName='design-component-instance-node'
-                icChevron='https://c.animaapp.com/RRnEyncc/img/ic-chevron-1.svg'
-              />
-            </div>
+              <div className='label'>Join for Free</div>
+            </button>
+            <FormSelectoption
+              className='form-selectoption-instance'
+              divClassName='design-component-instance-node'
+              icChevron='https://c.animaapp.com/RRnEyncc/img/ic-chevron-1.svg'
+            />
+          </div>
           </div>
         </nav>
-        <div>
+        <div className='hero-content'>
           <h2 className='heading'>
             <span className='span'>This Is Where You Pick Up </span>
 

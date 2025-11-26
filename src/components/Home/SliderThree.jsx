@@ -23,13 +23,13 @@ export const SliderThree = () => {
   return (
     <section className='sliderthree-section container-fluid py-5'>
       <div className='wrap-div'>
-        <div className='header-row  d-flex justify-content-between align-items-start '>
+        <div className='header-row  d-flex justify-content-between align-items-center flex-md-row flex-column'>
           <div>
             <h2 className='experts-title'>Tailored packages for hobbies <br /> and lifestyle changes</h2>
             <p className='experts-subtitle'>Pick a package. Choose your session schedule. Make it your experience.</p>
           </div>
 
-          <button className='BTN'>
+          <button className='BTN3'>
             <div className='rectangle-2' />
 
             <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />

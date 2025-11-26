@@ -17,7 +17,7 @@ import "swiper/css/navigation";
 export const Slider = () => {
   return (
     <section className='category-section container-fluid text-center py-5'>
-      <div className='d-flex flex-column align-items-center justify-content-between '>
+      <div className='d-flex flex-column align-items-center justify-content-between pt-5 pt-lg-0 pt-md-0'>
         <div className='wrap-div'>
           {/* Heading */}
           <h2 className='category-title mb-3'>Time To Reimagine What You Can Do</h2>
@@ -38,6 +38,24 @@ export const Slider = () => {
             }}
             slidesPerView={4}
             spaceBetween={40}
+            breakpoints={{
+              0: {
+                slidesPerView: 1,
+                spaceBetween: 16,
+              },
+              576: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 24,
+              },
+              1200: {
+                slidesPerView: 4,
+                spaceBetween: 40,
+              },
+            }}
             loop={true}
             className='category-swiper'
           >

@@ -4,15 +4,25 @@
   border-radius: 16px;
   height: 60px;
   position: relative;
-  top: 30px;
+  top: 0;
   width: 110px;
+}
+
+.form-selectoption-trigger {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  width: 100%;
+  height: 100%;
 }
 
 .form-selectoption .ic-chevron {
   height: 40.00%;
-  left: 55.45%;
-  position: absolute;
-  top: 30.00%;
   width: 21.82%;
 }
 
@@ -21,11 +31,35 @@
   font-family: "Poppins", Helvetica;
   font-size: 18px;
   font-weight: 500;
-  height: 45.00%;
-  left: 24.55%;
   letter-spacing: 0;
   line-height: normal;
+}
+
+.form-selectoption-menu {
   position: absolute;
-  top: 26.67%;
-  width: 20.91%;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  background-color: #ffffff;
+  border: 1px solid #1b48bb;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.form-selectoption-option {
+  all: unset;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  font-family: "Poppins", Helvetica;
+  font-size: 16px;
+  color: #1b48bb;
+}
+
+.form-selectoption-option:hover {
+  background-color: #f3f5ff;
 }

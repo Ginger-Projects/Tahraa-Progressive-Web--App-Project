@@ -20,8 +20,8 @@ import "swiper/css/navigation";
 export const SliderTwo = () => {
   return (
     <section className='experts-section container-fluid py-5'>
-      <div className='wrap-div'>
-        <div className='header-row  d-flex justify-content-between align-items-center '>
+      <div className='wrap-div w-100'>
+        <div className='header-row  d-flex justify-content-between align-items-center flex-md-row flex-column'>
           <div>
             <h2 className='experts-title'>Find Reliable And Experienced Experts</h2>
             <p className='experts-subtitle'>Your search ends here. Pick an expert of your choice.</p>
@@ -60,12 +60,14 @@ export const SliderTwo = () => {
               });
             }}
             slidesPerView={4}
-            spaceBetween={30}
+            spaceBetween={24}
             loop={true}
             breakpoints={{
-              0: { slidesPerView: 1 },
-              768: { slidesPerView: 2 },
-              1200: { slidesPerView: 4 },
+              0: { slidesPerView: 1, spaceBetween: 12 },
+              768: { slidesPerView: 2, spaceBetween: 18 },
+               768: { slidesPerView: 2, spaceBetween: 18 },
+              1130: { slidesPerView: 3, spaceBetween: 24 },
+              1400: { slidesPerView: 4, spaceBetween: 24 },
             }}
             className='experts-swiper'
           >
@@ -105,13 +107,13 @@ export const SliderTwo = () => {
 
                     {/* Green Button */}
                     <button className='BTN-2slider'>
-                      <img className='rectangle-4' alt='Rectangle' src='https://c.animaapp.com/RRnEyncc/img/rectangle-1.png' />
+                      <div className='rectangle-2' />
 
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-3.svg' />
+                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-2.svg' />
+                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-                      <div className='label-3'>Enquire</div>
+                      <div className='label'>Enquire</div>
                     </button>
                   </div>
                 </div>
@@ -151,14 +153,14 @@ export const SliderTwo = () => {
                       <div className='label'>Book Session</div>
                     </button>
 
-                    <button className='BTN-2slider'>
-                      <img className='rectangle-4' alt='Rectangle' src='https://c.animaapp.com/RRnEyncc/img/rectangle-1.png' />
+                     <button className='BTN-2slider'>
+                      <div className='rectangle-2' />
 
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-3.svg' />
+                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-2.svg' />
+                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-                      <div className='label-3'>Enquire</div>
+                      <div className='label'>Enquire</div>
                     </button>
                   </div>
                 </div>
@@ -198,14 +200,14 @@ export const SliderTwo = () => {
                       <div className='label'>Book Session</div>
                     </button>
 
-                    <button className='BTN-2slider'>
-                      <img className='rectangle-4' alt='Rectangle' src='https://c.animaapp.com/RRnEyncc/img/rectangle-1.png' />
+                     <button className='BTN-2slider'>
+                      <div className='rectangle-2' />
 
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-3.svg' />
+                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-2.svg' />
+                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-                      <div className='label-3'>Enquire</div>
+                      <div className='label'>Enquire</div>
                     </button>
                   </div>
                 </div>
@@ -246,14 +248,14 @@ export const SliderTwo = () => {
                       <div className='label'>Book Session</div>
                     </button>
 
-                    <button className='BTN-2slider'>
-                      <img className='rectangle-4' alt='Rectangle' src='https://c.animaapp.com/RRnEyncc/img/rectangle-1.png' />
+                     <button className='BTN-2slider'>
+                      <div className='rectangle-2' />
 
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-3.svg' />
+                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-2.svg' />
+                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-                      <div className='label-3'>Enquire</div>
+                      <div className='label'>Enquire</div>
                     </button>
                   </div>
                 </div>
@@ -293,14 +295,14 @@ export const SliderTwo = () => {
                     </button>
 
                     {/* Green Button */}
-                    <button className='BTN-2slider'>
-                      <img className='rectangle-4' alt='Rectangle' src='https://c.animaapp.com/RRnEyncc/img/rectangle-1.png' />
+                     <button className='BTN-2slider'>
+                      <div className='rectangle-2' />
 
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-3.svg' />
+                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-2.svg' />
+                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-                      <div className='label-3'>Enquire</div>
+                      <div className='label'>Enquire</div>
                     </button>
                   </div>
                 </div>
