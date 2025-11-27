@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Reachus.css";
 import Logo from "../../assets/images/logo.png";
 import kate from "../../assets/images/kate.png";
+import Phone from "../../assets/images/phone.png";
+import Mail from "../../assets/images/mail.png";
+import BtnLeftGlow from "../../assets/images/btn-left-glow.svg";
+import BtnTopLine from "../../assets/images/btn-top-line.svg";
+import Fb from "../../assets/images/fb-reach.png";
+import Insta from "../../assets/images/insta-reach.png";
+import Maill from "../../assets/images/mail-reach.png";
+
 
 const Reachus = () => {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
   return (
     <section className="main-reach">
         <div className="reachus-page">
@@ -15,7 +25,7 @@ const Reachus = () => {
             <img src={Logo} alt="Tahraa" />
           </Link>
 
-          <nav className="reachus-nav">
+          <nav className={`reachus-nav ${isNavOpen ? "reachus-nav-open" : ""}`}>
             <Link to="/our-experts" className="reachus-nav-link">
               Our Experts and Packages
             </Link>
@@ -26,8 +36,17 @@ const Reachus = () => {
           </nav>
         </div>
 
-        <div className="reachus-header-avatar" >
-            <img src={kate} alt="" />
+        <div className="reachus-header-right">
+          <div className="reachus-header-avatar" >
+              <img src={kate} alt="" />
+          </div>
+          <button
+            type="button"
+            className="reachus-nav-toggle"
+            onClick={() => setIsNavOpen((prev) => !prev)}
+          >
+           <i class="fa fa-bars" aria-hidden="true"></i>
+          </button>
         </div>
       </header>
 
@@ -42,7 +61,7 @@ const Reachus = () => {
 
             <div className="reachus-contact-block">
               <div className="reachus-contact-item">
-                <div className="reachus-social-circle">☎</div>
+                <div className="reachus-social-circle"><img src={Phone} alt="" /></div>
                 <div className="reachus-contact-text">
                   <div>+974 1234 5678</div>
                   <div>+974 8765 4321</div>
@@ -50,7 +69,7 @@ const Reachus = () => {
               </div>
 
               <div className="reachus-contact-item">
-                <div className="reachus-social-circle">✉</div>
+                <div className="reachus-social-circle"><img src={Mail} alt="" /></div>
                 <div className="reachus-contact-text">
                   <div>support@yourbrand.com</div>
                   <div>info@yourbrand.com</div>
@@ -111,7 +130,9 @@ const Reachus = () => {
 
               <div className="reachus-submit-wrap">
                 <button type="button" className="reachus-submit-btn">
-                  Submit
+                  <img src={BtnLeftGlow} alt="" className="reachus-btn-left-glow" />
+                  <img src={BtnTopLine} alt="" className="reachus-btn-top-line" />
+                  <span className="reachus-submit-text">Submit</span>
                 </button>
                 <p className="reachus-note">We&apos;ll get back to you in 1-2 business days.</p>
               </div>
@@ -125,9 +146,9 @@ const Reachus = () => {
       </div>
         <div className="reachus-footer-strip">
           <div className="reachus-socials">
-            <div className="reachus-social-circle">f</div>
-            <div className="reachus-social-circle">in</div>
-            <div className="reachus-social-circle">✉</div>
+            <div className="reachus-social-circle"><img src={Fb} alt="" /></div>
+            <div className="reachus-social-circle"><img src={Insta} alt="" /></div>
+            <div className="reachus-social-circle"><img src={Maill} alt="" /></div>
           </div>
 
           <p className="reachus-footer-text">

@@ -11,6 +11,10 @@ import ExpertsBookingMain from './pages/Dashboard/ExpertBookingMain'
 import BookingConfirmMain from './pages/Dashboard/BookingConfirmMain'
 import HowItWorksMain from './pages/Dashboard/HowItWorksMain'
 import ReachusMain from './pages/Dashboard/ReachusMain'
+import RegistrationBasicsMain from './pages/Dashboard/RegistrationBasicsMain'
+import RegistrationEducationMain from './pages/Dashboard/RegistrationEducationMain'
+import RegistrationWorkMain from './pages/Dashboard/RegistrationWorkMain'
+import WelcomeMain from './pages/Dashboard/WelcomeMain'
 
 function App() {
 
@@ -28,6 +32,10 @@ function App() {
       <Route path="/confirm-booking" element={<BookingConfirmMain />} />
       <Route path="/how-it-works-dashboard" element={<HowItWorksMain />} />
       <Route path="/reach-us" element={<ReachusMain />} />
+      <Route path="/registration" element={<RegistrationBasicsMain />} />
+      <Route path="/regitraion-education" element={<RegistrationEducationMain />} />
+      <Route path="/registration-work" element={<RegistrationWorkMain />} />
+      <Route path="/welcome" element={<WelcomeMain />} />
     </Routes>
     </>
   )
