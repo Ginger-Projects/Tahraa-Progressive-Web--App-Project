@@ -10,13 +10,17 @@
   background-repeat: no-repeat;
   padding: 30px 72px 80px;
   background-position-x: 50px;
-  height: auto;
+  padding-bottom: 0;
+
+  @media(max-width : 1200px){
+  padding: 30px 32px 80px;
+  }
 }
 
 /* PAGE HEADER (specific to Reach Us design) */
  .reachus-header {
   max-width: 100%;
-  margin: 0 auto 40px;
+  margin: 0 auto 4px; /* slightly less space below navbar */
   padding: 0 12px;
   display: flex;
   align-items: center;
@@ -38,6 +42,15 @@
   gap: 32px;
   font-family: "Poppins", sans-serif;
   font-size: 14px;
+}
+
+.reachus-nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #252525;
 }
 
 .reachus-nav-link {
@@ -68,13 +81,14 @@ text-decoration: none;
 
 .reachus-banner {
   background: rgba(255, 255, 255, 0.0);
-  padding: 40px 0 32px;
+  padding: 24px 0 32px; /* further reduce top padding to pull content up */
   display: flex;
   flex-direction: row;
   gap: 4rem; /* slightly tighter middle space */
+  padding-top: 0;
 }
 .reachChild{
-  margin-top: 7rem;
+  margin-top: 1.3rem; /* bring content slightly closer to nav */
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -98,6 +112,14 @@ font-style: normal;
 font-weight: 600;
 line-height: 48px; /* 120% */
 letter-spacing: 1.425px;
+
+@media(max-width : 1200px){
+  font-size: 35px;
+}
+@media(max-width : 600px){
+  font-size: 20px;
+  line-height: normal;
+}
 }
 
 .reachus-left-text {
@@ -107,6 +129,10 @@ font-size: 20px;
 font-style: normal;
 font-weight: 400;
 line-height: normal;
+
+@media(max-width : 600px){
+  font-size: 13px;
+}
 }
 
 .reachus-contact-block {
@@ -132,18 +158,26 @@ letter-spacing: 0.494px;
 }
 /* RIGHT FORM CARD */
 .reachus-form-card {
-  background: #ffffff;
-  border-radius: 24px;
-  box-shadow: 0 22px 50px rgba(37, 37, 37, 0.12);
-  padding: 3rem 5rem;
-  max-width: 60%; /* form dominates right side but keeps margins */
-  /* small offset so card peeks but does not dominate */
-  transform: translateX(10px);
-  border-radius: 30px;
-border: 1.067px solid #775DA6;
-background: #FFF;
-border-right: 10px solid #775DA6;
-border-bottom: 10px solid #775DA6;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 22px 50px rgba(37, 37, 37, 0.12);
+    padding: 3rem 5rem;
+    max-width: 60%;
+    transform: translateY(131px);
+    border-radius: 30px;
+    border: 1.067px solid #775DA6;
+    background: #FFF;
+    border-right: 10px solid #775DA6;
+    border-bottom: 10px solid #775DA6;
+    position: relative;
+    z-index: 2;
+
+    @media(max-width : 768px){
+      padding: 3rem 3rem;
+    }
+    @media(max-width : 500px){
+      padding: 3rem 1rem;
+    }
 }
 
 .reachus-form-grid {
@@ -202,31 +236,58 @@ margin-top: 1rem;
   font-size: 16px;
   font-weight: 500;
   border-radius: 10.57px;
-background: #775DA6;
-box-shadow: -3.964px -3.964px 6.606px 0 rgba(0, 0, 0, 0.30) inset;
-}
-
-.reachus-note {
-  margin-top: 10px;
-  text-align: center;
-  font-family: "Poppins", sans-serif;
-  font-size: 13px;
-  color: #77838f;
-}
-
-/* FOOTER AREA INSIDE PAGE */
-.reachus-footer-strip {
-  margin-top: 40px;
+  background: #775DA6;
+  box-shadow: -3.964px -3.964px 6.606px 0 rgba(0, 0, 0, 0.30) inset;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+}
+
+.reachus-submit-text {
+  position: relative;
+  z-index: 2; /* keep text above highlights */
+  color: #ffffff;
+}
+
+.reachus-btn-left-glow {
+  position: absolute;
+  left: 4px; /* slightly inset from left corner */
+  top: 6px;   /* vertically centered in button */
+  height: 43px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.reachus-btn-top-line {
+  position: absolute;
+  top: 5px; /* clearly inside button, not touching top edge */
+  left: 4px;  /* leave margin from rounded corners */
+  right: 40px;
+  height: 6px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* FOOTER AREA (separate section) */
+.reachus-footer-strip {
+  margin-top: -24px; /* pull footer upward so card base sits slightly inside */
+  padding-top: 48px; /* keep space above footer content */
+  display: flex;
+  flex-direction: column; /* stack icons and text on the left */
+  align-items: flex-start;
   gap: 16px;
+  padding-left: 72px; /* align footer content with main page padding */
+  position: relative;
+  z-index: 1; /* sit visually under the form card */
+  padding-bottom: 2rem;
 }
 
 .reachus-footer-text {
   font-family: "Poppins", sans-serif;
   font-size: 14px;
   color: #252525;
+  max-width: 360px; /* match approximate width of Figma footer copy block */
+  line-height: 1.6;
 }
 
 .reachus-socials {
@@ -235,25 +296,79 @@ box-shadow: -3.964px -3.964px 6.606px 0 rgba(0, 0, 0, 0.30) inset;
 }
 
 .reachus-social-circle {
-  width: 40px;
-  height: 40px;
   border-radius: 50%;
   border: 1px solid rgba(119, 93, 166, 0.13);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
+  img{
+    width: auto;
+    height: auto;
+  }
 }
 
 /* RESPONSIVE */
 @media (max-width: 992px) {
+  .reachus-header {
+    padding: 0;
+    position: relative; /* anchor mobile nav dropdown */
+  }
+.reachus-header-right{
+  display: flex;
+  gap: 1rem;
+}
+  .reachus-header-left {
+    gap: 16px;
+  }
+
+  .reachus-nav-toggle {
+    display: block;
+  }
+
+  .reachus-nav {
+    display: none;
+    position: absolute;
+    top: 66px; /* drop just below header / toggle */
+    right: 8px; /* align under toggle/avatar on right */
+    left: auto;
+    width: 240px; /* compact panel instead of full width */
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 12px;
+    gap: 12px;
+    flex-direction: column;
+    z-index: 10;
+  }
+
+  .reachus-nav.reachus-nav-open {
+    display: flex;
+  }
+
   .reachus-page {
     padding: 40px 32px 60px;
   }
 
   .reachus-banner {
-    grid-template-columns: minmax(0, 1fr);
-    padding: 40px 32px 48px;
+    flex-direction: column;
+    padding: 24px 0 32px;
+    gap: 2rem;
+  }
+
+  .reachus-form-card {
+    max-width: 100%;
+    transform: none; /* remove horizontal offset on smaller screens */
+  }
+
+  .reachus-footer-strip {
+    margin-top: 24px; /* no overlap on smaller screens */
+    padding-top: 24px;
+    padding-left: 32px;
+    align-items: center;
+    p{
+      max-width: 100%;
+      text-align: center;
+    }
   }
 }
 
@@ -263,10 +378,14 @@ box-shadow: -3.964px -3.964px 6.606px 0 rgba(0, 0, 0, 0.30) inset;
   }
 
   .reachus-banner {
-    padding: 32px 18px 42px;
+    padding: 20px 0 32px;
   }
 
   .reachus-left-title {
     font-size: 26px;
+  }
+
+  .reachus-footer-strip {
+    padding-left: 18px;
   }
 }
