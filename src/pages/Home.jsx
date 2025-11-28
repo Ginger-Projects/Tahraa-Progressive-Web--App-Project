@@ -6,6 +6,7 @@ import { SliderThree } from "../components/Home/SliderThree";
 import { VideSection } from "../components/Home/VideSection";
 import { SectionFour } from "../components/Home/SectionFour";
 import { Footer } from "../components/Home/Footer";
+import "./Home.css";
 
 
 export const Home = () => {
@@ -16,8 +17,10 @@ export const Home = () => {
     <SliderTwo />
     <SliderThree />
     <VideSection />
-    <SectionFour />
-    <Footer />
+    <div className="home-bottom-wrapper">
+      <SectionFour />
+      <Footer />
+    </div>
     <div className="whatsapp-float">
       <a
         href="https://wa.me/1234567890"

@@ -10,7 +10,6 @@ export const SectionFour = () => {
   return (
     <section
       className="section-four"
-      style={{ backgroundImage: `url(${BgImage})`, backgroundSize : 'cover' , backgroundPosition : 'center' }}
     >
       <div className="section-four-wrapper">
         {/* LEFT SIDE (image left, text right) */}
