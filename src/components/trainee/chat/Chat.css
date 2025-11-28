@@ -267,7 +267,7 @@
 .chat-bubble-row {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 14px;
 }
 
 .chat-bubble-row-left {
@@ -286,7 +286,9 @@
 }
 
 .chat-bubble-block {
-  max-width: 70%;
+  display: inline-block;
+  width: auto;
+  max-width: 50%;
 }
 
 .chat-msg-meta {
@@ -311,21 +313,65 @@
   max-width: 100%;
   padding: 10px 14px;
   border-radius: 8px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .chat-bubble-expert {
-  background: #fdb73e80;
+  position: relative;
+  background: rgba(253, 183, 62, 50%);
   color: #252525;
+  border-radius: 0 8px 8px 8px; /* no radius on top-left corner */
+}
+
+/* Small tail on top-left, like the Figma design */
+.chat-bubble-expert::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -7px; /* project slightly outside the corner */
+  width: 8px;
+  height: 10px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='10' viewBox='0 0 8 10' fill='none'><path d='M7.17578 0H2.00421C0.222399 0 -0.669938 2.15428 0.589991 3.41421L7.17578 10V0Z' fill='%23FDB73E' fill-opacity='0.5'/></svg>");
 }
 
 .chat-bubble-trainee {
   background: #775da6;
   color: #ffffff;
+  position: relative;
+  border-radius: 8px 0 8px 8px; /* no radius on top-right corner */
+}
+
+/* Tail for sent (trainee) message on top-right */
+.chat-bubble-trainee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -7px; /* mirror of expert tail offset */
+  width: 8px;
+  height: 10px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='10' viewBox='0 0 8 10' fill='none'><path d='M0 0H5.17157C6.95338 0 7.84572 2.15428 6.58579 3.41421L0 10V0Z' fill='%23775DA6'/></svg>");
 }
 
 .chat-bubble-text {
   margin: 0;
   font-size: 12px;
+  color: black;
+}
+
+/* Override text color per bubble type */
+.chat-bubble-expert .chat-bubble-text {
+  color: #252525;
+}
+
+.chat-bubble-trainee .chat-bubble-text {
+  color: #ffffff;
+  
 }
 
 .chat-input {
@@ -342,7 +388,7 @@
   border: none;
   resize: none;
   outline: none;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .chat-input-send {
@@ -351,4 +397,56 @@
   padding: 8px 16px;
   cursor: pointer;
   font-size: 13px;
+}
+
+/* Mobile responsive behavior */
+@media (max-width: 768px) {
+  .chat-shell {
+    max-width: 100%;
+    margin: 0;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .chat-sidebar {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .chat-main {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 16px;
+    flex: 1; /* stretch so input stays at bottom */
+  }
+
+  .chat-main-back {
+    border: none;
+    background: transparent;
+    color: #775da6;
+    font-size: 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+
+  /* In mobile messages, only show time, hide avatar and name */
+  .chat-msg-avatar {
+    display: none;
+  }
+
+  .chat-msg-name {
+    display: none;
+  }
+
+  .chat-msg-meta {
+    margin-bottom: 2px;
+  }
+
+  .chat-bubble-block {
+    display: block;
+    max-width: 100%; /* never exceed chat column on mobile */
+  }
 }

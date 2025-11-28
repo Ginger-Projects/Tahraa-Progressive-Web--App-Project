@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChatSidebar, { getChatById } from "./ChatSidebar";
 import ChatConversation from "./ChatConversation";
 import ChatInput from "./ChatInput";
@@ -43,6 +43,26 @@ export default function ChatLayout() {
   const [messagesByChat, setMessagesByChat] = useState(initialMessagesByChat);
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedChatId, setSelectedChatId] = useState(3); // default Bruce Banner
+  const [isMobile, setIsMobile] = useState(false);
+  const [showListOnMobile, setShowListOnMobile] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (!mobile) {
+        // On desktop always show both
+        setShowListOnMobile(false);
+      } else {
+        // On mobile default to list view
+        setShowListOnMobile(true);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleSend = (text) => {
     if (!text.trim()) return;
@@ -66,20 +86,40 @@ export default function ChatLayout() {
   const selectedChat = getChatById(selectedChatId);
   const activeMessages = messagesByChat[selectedChatId] || [];
 
+  const handleSelectChat = (id) => {
+    setSelectedChatId(id);
+    if (isMobile) {
+      setShowListOnMobile(false);
+    }
+  };
+
   return (
     <div className="chat-page">
       <div className="chat-shell">
-        <ChatSidebar
-          activeFilter={activeFilter}
-          onChangeFilter={setActiveFilter}
-          selectedChatId={selectedChatId}
-          onSelectChat={setSelectedChatId}
-        />
-        <div className="chat-main">
-          <ChatHeader activeChat={selectedChat} />
-          <ChatConversation messages={activeMessages} />
-          <ChatInput onSend={handleSend} />
-        </div>
+        {(!isMobile || showListOnMobile) && (
+          <ChatSidebar
+            activeFilter={activeFilter}
+            onChangeFilter={setActiveFilter}
+            selectedChatId={selectedChatId}
+            onSelectChat={handleSelectChat}
+          />
+        )}
+        {(!isMobile || !showListOnMobile) && (
+          <div className="chat-main">
+            {isMobile && (
+              <button
+                type="button"
+                className="chat-main-back"
+                onClick={() => setShowListOnMobile(true)}
+              >
+                {"< Back"}
+              </button>
+            )}
+            <ChatHeader activeChat={selectedChat} />
+            <ChatConversation messages={activeMessages} />
+            <ChatInput onSend={handleSend} />
+          </div>
+        )}
       </div>
     </div>
   );
