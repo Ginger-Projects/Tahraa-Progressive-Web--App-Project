@@ -5,9 +5,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
-.how-wrap {
+  .how-wrap {
   width: 90%;
   margin: 0 auto;
 }
@@ -129,10 +128,10 @@
     position: relative;
     right: 0;
     top: 0;
-    width: 137px;
+    width: 189px;
   }
   .rectangle-2 {
-    background-color: #775da6;
+    background-color: #775da6 !important;
     border-radius: 8.19px;
     box-shadow: inset -3.07px -3.07px 5.12px #0000004c;
     height: 43px;
@@ -169,3 +168,5 @@
     top: 11px;
     white-space: nowrap;
   }
+}
+

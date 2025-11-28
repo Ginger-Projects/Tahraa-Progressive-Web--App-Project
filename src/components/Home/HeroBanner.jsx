@@ -1,5 +1,5 @@
 import "./HeroBanner.css";
-import Logo from "../../assets/images/logo.png";
+import Logo from "../../assets/images/logo-white.png";
 import { FormSelectoption } from "../../components/FormSelectoption";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -67,11 +67,11 @@ const HeroBanner = () => {
 
               <div className='label'>Join for Free</div>
             </button>
-            <FormSelectoption
+            {/* <FormSelectoption
               className='form-selectoption-instance'
               divClassName='design-component-instance-node'
               icChevron='https://c.animaapp.com/RRnEyncc/img/ic-chevron-1.svg'
-            />
+            /> */}
           </div>
           </div>
         </nav>
@@ -83,8 +83,7 @@ const HeroBanner = () => {
           </h2>
 
           <p className='text'>
-            Discover new passions and build a richer life. Get personalized guidance from experts in hobbies and specialized
-            skills.
+            Get personalized coaching from experts in activities that activities you've always wanted to master.
           </p>
 
           <button className='button'>

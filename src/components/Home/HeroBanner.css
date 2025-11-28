@@ -258,6 +258,9 @@
   text-align: center;
   max-width: 700px;
   margin: 0 auto 20px;
+  color: #54376D !important;
+
+
 
   @media (max-width: 1024px) {
     font-size: 40px;
@@ -279,11 +282,11 @@
 }
 
 .box .span {
-  color: #252525;
+  /* color: #252525; */
 }
 
 .box .text-wrapper-3 {
-  color: #775da6;
+  /* color: #775da6; */
 }
 
 .box .text {

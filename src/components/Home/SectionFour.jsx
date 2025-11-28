@@ -1,7 +1,7 @@
 import React from "react";
 import "./SectionFour.css";
 
-import BgImage from "../../assets/images/home-bg.png";
+import BgImage from "../../assets/images/footer-bg.png";
 import LeftImg from "../../assets/images/cta-left.png";
 import RightImg from "../../assets/images/cta-right.png";
 import Divider from "../../assets/images/cta-divider.png";

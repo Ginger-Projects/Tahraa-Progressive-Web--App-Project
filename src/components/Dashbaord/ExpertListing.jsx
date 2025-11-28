@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./ExpertsListing.css";
 import ExpertCard from "./ExpertCard";
 import PackageCard from "./PackageCard";
+import gridIcon from "../../assets/images/grid.svg";
+import listIcon from "../../assets/images/list.svg";
 
 const ExpertsListing = ({ activeTab, experts, packages }) => {
   const [viewType, setViewType] = useState("grid"); // "grid" | "list"
@@ -27,14 +29,18 @@ const ExpertsListing = ({ activeTab, experts, packages }) => {
             className={`view-btn ${viewType === "grid" ? "active" : ""}`}
             onClick={() => setViewType("grid")}
           >
-            <span className="view-icon grid" />
+            <span className="view-icon grid">
+              <img src={gridIcon} alt="Grid view" />
+            </span>
           </button>
 
           <button
             className={`view-btn ${viewType === "list" ? "active" : ""}`}
             onClick={() => setViewType("list")}
           >
-            <span className="view-icon list" />
+            <span className="view-icon list">
+              <img src={listIcon} alt="List view" />
+            </span>
           </button>
         </div>
       </div>

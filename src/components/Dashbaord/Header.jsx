@@ -2,9 +2,17 @@ import React, { useState } from "react";
 import "./Header.css";
 import kate from '../../assets/images/kate.png'
 import Logo from '../../assets/images/logo.png'
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 const Header = () => {
+  const location = useLocation();
+  const { pathname } = location;
+
+  const navLinkClass = (path) =>
+    `${pathname === path ? "active" : ""} text-decoration-none`.trim();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [language, setLanguage] = useState("EN");
+  const [langOpen, setLangOpen] = useState(false);
 
   return (
     <header className="exp-header">
@@ -12,9 +20,9 @@ const Header = () => {
         <Link to='/' className="exp-logo"><img src={Logo} alt="" /></Link>
 
         <nav className={`exp-nav ${mobileMenuOpen ? 'active' : ''}`}>
-          <Link to="/our-experts" className="active text-decoration-none">Our Experts and Packages</Link>
-          <Link to="/how-it-works-dashboard" className="text-decoration-none">How It Works</Link>
-          <Link to="/reach-us" className="text-decoration-none">Reach Us</Link>
+          <Link to="/our-experts" className={navLinkClass("/our-experts")}>Our Experts and Packages</Link>
+          <Link to="/how-it-works-dashboard" className={navLinkClass("/how-it-works-dashboard")}>How It Works</Link>
+          <Link to="/reach-us" className={navLinkClass("/reach-us")}>Reach Us</Link>
         </nav>
       </div>
 
@@ -41,9 +49,40 @@ const Header = () => {
           </div>
         </div>
 
-        <button className="exp-lang-btn">
-          EN <span className="exp-lang-chevron">▾</span>
-        </button>
+        <div className="exp-lang-wrapper">
+          <button
+            className="exp-lang-btn"
+            type="button"
+            onClick={() => setLangOpen((open) => !open)}
+          >
+            {language} <span className="exp-lang-chevron">▾</span>
+          </button>
+
+          {langOpen && (
+            <div className="exp-lang-menu">
+              <button
+                type="button"
+                className={`exp-lang-option ${language === "EN" ? "active" : ""}`}
+                onClick={() => {
+                  setLanguage("EN");
+                  setLangOpen(false);
+                }}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                className={`exp-lang-option ${language === "AR" ? "active" : ""}`}
+                onClick={() => {
+                  setLanguage("AR");
+                  setLangOpen(false);
+                }}
+              >
+                AR
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

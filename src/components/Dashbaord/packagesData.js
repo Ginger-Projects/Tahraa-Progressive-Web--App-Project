@@ -8,7 +8,9 @@ export const packagesData = [
     by: "By Tony Stark",
     fee: "QAR 2,500",
     image:Image,
-    category : "Vocal Training"
+    duration : 50,
+    category : "Vocal Training",
+    sessions : 12
   },
   {
     id: 102,
@@ -17,7 +19,9 @@ export const packagesData = [
     by: "By Steve Rogers",
     fee: "QAR 3,500",
     image:Image,
-    category : "Vocal Training"
+     duration : 50,
+    category : "Vocal Training",
+    sessions : 12
   },
   {
     id: 103,
@@ -26,7 +30,9 @@ export const packagesData = [
     by: "By Natasha Romanoff",
     fee: "QAR 4,900",
     image:Image,
-    category : "Vocal Training"
+     duration : 50,
+    category : "Vocal Training",
+    sessions : 12
   },
   {
     id: 104,
@@ -35,6 +41,8 @@ export const packagesData = [
     by: "By Peggy Carter",
     fee: "QAR 1,600",
     image:Image,
-    category : "Vocal Training"
+     duration : 50,
+    category : "Vocal Training",
+    sessions : 12
   },
 ];

@@ -97,6 +97,10 @@
   object-fit: cover;
 }
 
+.exp-lang-wrapper {
+  position: relative;
+}
+
 .exp-lang-btn {
   border-radius: 16px;
   border: 1px solid #775DA6;
@@ -111,7 +115,39 @@
   height: 60px;
   flex-shrink: 0;
   justify-content: center;
-  align-items: center;
+}
+
+.exp-lang-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 4px;
+  background: #ffffff;
+  border: 1px solid #775DA6;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  z-index: 1002;
+}
+
+.exp-lang-option {
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.exp-lang-option:hover {
+  background: #f4f5fb;
+}
+
+.exp-lang-option.active {
+  background: #775DA6;
+  color: #ffffff;
 }
 
 .exp-lang-chevron {

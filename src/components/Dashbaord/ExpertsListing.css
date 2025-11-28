@@ -23,20 +23,24 @@
   }
 
   .exp-view-toggle {
-    display: flex;
-    gap: 10px;
+    display: inline-flex;
+    background: #eaecf7;
+    padding: 2px;
+    border-radius: 10px;
+    overflow: hidden;
   }
 
   .view-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 12px;
-    border: 1px solid #d4d5e9;
+    width: 40px;
+    height: 32px;
+    border-radius: 0; /* buttons themselves are square; container handles rounding */
+    border: none;
     background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    padding: 0;
   }
 
   .view-btn.active {
@@ -47,45 +51,21 @@
   .view-icon.list {
     width: 16px;
     height: 16px;
-    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .view-icon.grid::before,
-  .view-icon.grid::after,
-  .view-icon.list::before,
-  .view-icon.list::after {
-    content: "";
-    position: absolute;
-    background: #7a7cb0;
-    border-radius: 2px;
+  .view-icon.grid img,
+  .view-icon.list img {
+    width: 16px;
+    height: 16px;
+    display: block;
   }
 
-  .view-icon.grid::before {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 6px;
-  }
-
-  .view-icon.grid::after {
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 6px;
-  }
-
-  .view-icon.list::before {
-    top: 2px;
-    left: 0;
-    right: 0;
-    height: 3px;
-  }
-
-  .view-icon.list::after {
-    bottom: 2px;
-    left: 0;
-    right: 0;
-    height: 3px;
+  .view-btn.active .view-icon.grid img,
+  .view-btn.active .view-icon.list img {
+    filter: brightness(0) invert(1);
   }
 
   /* Cards grid */
@@ -202,6 +182,9 @@
     padding: 10px 16px 14px;
     display: flex;
     gap: 10px;
+    @media(max-width : 500px){
+    flex-direction: column;
+  }
   }
 
   .exp-btn-outline,
@@ -375,6 +358,7 @@
       object-fit: cover;
     }
 
+    /* Default (grid) – content overlays image */
     .expert-content {
       padding: 15px;
       position: absolute;
@@ -386,6 +370,78 @@
       z-index: 10;
       border-radius: 18px;
       border: 1px solid #775da6;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* List view: content should NOT be absolutely positioned */
+    
+
+    .expert-cardss.list-view .expert-img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 18px;
+    }
+
+    .expert-cardss.list-view .package-btn-bar {
+      margin-top: 10px;
+    }
+
+    .package-btn-bar {
+      margin-top: 6px;
+    }
+
+    .package-btn {
+      width: 100%;
+      padding: 8px 0;
+      border-radius: 12px;
+      border: none;
+      background-color: #02b346;
+      color: #ffffff;
+      font-family: Poppins;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset -4.65px -4.65px 7.75px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* List view: make package button behave like expert buttons (not full-width bar) */
+    .expert-cardss.list-view .package-btn {
+      width: 210px;
+      align-self: flex-start;
+    }
+
+    .package-btn-vector-left,
+    .package-btn-vector-top {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .package-btn-vector-left {
+      left: 10px;
+      top: 4px;
+      height: calc(100% - 8px);
+      display: flex;
+      align-items: center;
+    }
+
+    .package-btn-vector-top {
+      left: 26px; /* start a bit right of the left glow */
+      top: 6px;
+      display: flex;
+      justify-content: flex-start; /* align line toward the left side */
+    }
+
+    .package-btn-label {
+      position: relative;
+      z-index: 1;
     }
   }
 }
@@ -394,27 +450,173 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
+
+  @media(max-width : 900px){
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 /* Expert list */
 .exp-card.list-view {
   display: flex;
+  flex-direction: row;
+  align-items: center; /* center content vertically against tall image */
   gap: 20px;
-  /* align-items: center; */
+  padding: 16px 24px;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media(max-width : 900px){
+    flex-direction: column;
+  }
+}
+
+.exp-card.list-view .exp-card-img-wrap {
+  flex: 0 0 auto;
+}
+
+.exp-card.list-view .exp-card-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center; /* vertically center text + buttons within card height */
+
+  @media(max-width : 900px){
+    align-items: center;
+  }
+}
+
+/* List view content typography overrides to match Figma */
+.exp-card.list-view .exp-card-body {
+  padding-top: 4px;
+@media(max-width : 900px){
+  display: flex;
+  flex-direction: column;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+}
+
+.exp-card.list-view .exp-card-name {
+  color: #252525;
+font-family: Poppins;
+font-size: 25.865px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+}
+
+.exp-card.list-view .exp-card-role {
+  color: #775DA6;
+font-family: Poppins;
+font-size: 22.817px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+}
+
+.exp-card.list-view .exp-card-speaks,
+.exp-card.list-view .exp-card-fee {
+  color: #888; /* base text colour for both lines */
+  font-family: Poppins;
+  font-size: 19.837px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+}
+.exp-card.list-view .exp-card-speaks span{
+  font-family: Poppins;
+font-size: 19.837px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+.exp-card.list-view .exp-card-fee span{
+  font-family: Poppins;
+  font-size: 19.837px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+}
+
+/* Fee line colours ONLY (keep your font sizes/weights) */
+.exp-card.list-view .exp-card-fee > span:first-child {
+  color: #b3b3b3; /* 'Fee range:' label */
+}
+
+.exp-card.list-view .exp-card-fee > span:first-child span {
+  color: #000000;    /* QAR 250/hr */
+  font-weight: 700;  /* bold amount */
+}
+
+.exp-card.list-view .exp-card-fee > span:last-child {
+  color: #775da6;    /* 140 Active Student */
+}
+
+.exp-card.list-view .exp-card-footer {
+  margin-top: 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+
+  @media(max-width: 500px){flex-direction: column;}
+}
+
+/* prevent list-view buttons from stretching full width */
+.exp-card.list-view .exp-card-footer .w-100 {
+  width: 210px !important; /* close to Figma button width */
 }
 
 /* Package list */
 .expert-cardss.list-view {
   display: flex;
-  gap: 20px;
+  flex-direction: row;
   align-items: center;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 25.248px;
+border: 1.622px solid #775DA6;
+
+@media(max-width : 900px){
+  flex-direction: column;
+  height: fit-content;
+  width: fit-content;
+}
+
 }
 
 .list-view .exp-card-img-wrap img,
 .list-view .expert-img {
-  width: 180px;
-  height: 140px;
+  width: 351px;
+  height: 351px;
+  border-radius: 16px;
   object-fit: cover;
+
+  @media(max-width : 500px){
+    width: auto;
+    height: auto;
+  }
+}
+
+/* Package LIST view: override generic list image size so it matches expert list card layout */
+.exp-cards-grid.list .expert-cardss.list-view .expert-img {
+  width: auto;
+  height: 100%;
+  border-radius: 18px;
+  object-fit: cover;
+
+  @media(max-width : 900px){
+    width: 100%;
+  }
 }
 /* 🔥 Responsive Grid Layout */
 .exp-cards-grid {
@@ -445,5 +647,113 @@
 
   .exp-listing-section {
     padding: 20px;
+  }
+
+  /* Mobile: reduce list-view typography so it fits better on small screens */
+  .exp-card.list-view .exp-card-name {
+    font-size: 18px;
+  }
+
+  .exp-card.list-view .exp-card-role {
+    font-size: 14px;
+  }
+
+  .exp-card.list-view .exp-card-speaks,
+  .exp-card.list-view .exp-card-fee,
+  .exp-card.list-view .exp-card-speaks span,
+  .exp-card.list-view .exp-card-fee span {
+    font-size: 12px;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 400px) {
+  .exp-card.list-view .exp-card-name {
+    font-size: 16px;
+  }
+
+  .exp-card.list-view .exp-card-role {
+    font-size: 12px;
+  }
+
+  .exp-card.list-view .exp-card-speaks,
+  .exp-card.list-view .exp-card-fee,
+  .exp-card.list-view .exp-card-speaks span,
+  .exp-card.list-view .exp-card-fee span {
+    font-size: 10px;
+  }
+}
+.list-view .expert-content {
+      position: static !important;
+      bottom: auto;
+      left: auto;
+      transform: none !important;
+      width: fit-content !important;
+      background-color: transparent !important;
+      border-radius: 18px;
+      border: none !important; 
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+
+      .expert-name{
+        max-width: 100% !important;
+        color: #252525;
+font-family: Poppins;
+font-size: 25.865px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+      }
+      .expert-role span,.expert-role{
+        color: #775DA6;
+font-family: Poppins;
+font-size: 22.817px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+      }
+              .expert-price p{
+               color: #888;
+font-family: Poppins;
+font-size: 19.841px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+              }
+              .expert-price span{
+                color: #775DA6;
+font-family: Poppins;
+font-size: 15.489px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+              }
+    }
+
+@media (max-width: 600px) {
+  .list-view .expert-content {
+    padding: 10px 12px;
+  }
+
+  .list-view .expert-content .expert-name {
+    font-size: 18px;
+  }
+
+  .list-view .expert-content .expert-role span,
+  .list-view .expert-content .expert-role {
+    font-size: 14px;
+  }
+
+  .list-view .expert-content .expert-price p {
+    font-size: 12px;
+  }
+
+  .list-view .expert-content .expert-price span {
+    font-size: 11px;
   }
 }

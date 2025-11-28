@@ -57,7 +57,7 @@ const ExpertsBanner = ({ activeTab, setActiveTab }) => {
             </span>
             <input type='text' placeholder='Search name or keyword' />
           </div>
-          <Button label='Search' bg='#775DA6' />
+          <Button label='Search' bg='#02B346' />
         </div>
 
         {/* Filter Row */}
