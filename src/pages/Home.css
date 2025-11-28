@@ -5,16 +5,14 @@
   background-position: center;
   background-repeat: no-repeat;
 
-  /* Vertical spacing similar to Figma bottom section */
-  padding-top: 60px;
-  padding-bottom: 60px;
 }
 
 /* On the Home page, make the inner SectionFour and Footer transparent
    so only the parent container background is visible */
 .home-bottom-wrapper .section-four {
   background: none;
-  padding-bottom: 0;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
 }
 
 .home-bottom-wrapper .footer-section {
