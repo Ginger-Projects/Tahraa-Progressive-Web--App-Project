@@ -1,0 +1,73 @@
+.my-experts-card {
+  background: #ffffff;
+  border: 0.5px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.my-experts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.my-experts-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.more-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.more-btn:hover {
+  background: #f3f4f6;
+}
+
+.my-experts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.expert-item {
+  text-align: center;
+}
+
+.expert-avatar {
+  width: 44px;
+  height: 44px;
+  background: #4f46e5; /* primary */
+  border-radius: 50%;
+  margin: 0 auto 8px auto;
+}
+
+.expert-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.expert-role {
+  font-size: 10px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .my-experts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

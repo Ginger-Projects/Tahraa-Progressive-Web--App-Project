@@ -1,0 +1,53 @@
+.trainer-container{
+    background-color: #EAECF2;
+}
+
+.trainer-page {
+  padding: 0px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: sans-serif;
+  min-height: 100vh; /* full page height */
+}
+
+/* Main grid: 2 columns on desktop */
+.trainer-grid {
+  display: grid;
+  grid-template-columns: 30% 70%; /* 30%-70% split */
+  gap: 20px;
+  align-items: stretch; /* stretch columns to same height */
+}
+
+/* Left column: Welcome + Course */
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Right column: Schedule + Experts row */
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Experts side by side */
+.experts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* MyExperts + SavedExperts */
+  gap: 20px;
+}
+
+/* ---------------------------------- */
+/* Responsive: Mobile */
+@media (max-width: 1024px) {
+  .trainer-grid {
+    grid-template-columns: 1fr; /* Single column */
+  }
+
+  .experts-row {
+    grid-template-columns: 1fr; /* Stack MyExperts and SavedExperts vertically */
+  }
+}

@@ -11,6 +11,8 @@ import ExpertsBookingMain from './pages/Dashboard/ExpertBookingMain'
 import BookingConfirmMain from './pages/Dashboard/BookingConfirmMain'
 import HowItWorksMain from './pages/Dashboard/HowItWorksMain'
 import ReachusMain from './pages/Dashboard/ReachusMain'
+import Trainer from './pages/Trainer/Trainer'
+import TrainerCalendar from './pages/Trainer/TrainerCalendar'
 
 function App() {
 
@@ -28,7 +30,9 @@ function App() {
       <Route path="/confirm-booking" element={<BookingConfirmMain />} />
       <Route path="/how-it-works-dashboard" element={<HowItWorksMain />} />
       <Route path="/reach-us" element={<ReachusMain />} />
-    </Routes>
+      <Route path='/trainee' element={<Trainer/>} />
+      <Route path='/traineeCalendar' element= {<TrainerCalendar/>}/>
+     </Routes>
     </>
   )
 }

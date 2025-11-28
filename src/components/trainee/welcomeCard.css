@@ -1,0 +1,51 @@
+.welcome-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.welcome-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Constrain the image */
+.welcome-image img {
+  width: 96px;        /* fixed width */
+  height: 96px;       /* fixed height */
+  border-radius: 12px;
+  object-fit: cover;  /* scales image correctly */
+  display: block;
+}
+
+/* Text section */
+.welcome-text {
+  flex: 1;
+}
+
+.welcome-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.badge-icon {
+  width: 16px;
+  height: 16px;
+  color: #10b981;
+}
+
+.welcome-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}

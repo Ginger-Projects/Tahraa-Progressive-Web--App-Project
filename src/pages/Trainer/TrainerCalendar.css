@@ -1,0 +1,9 @@
+.trainee-calendar{
+    background-color: #EAECF2;
+    padding: 40px;
+}
+.calendar-block {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px; /* optional: rounded corners look nicer */
+  background-color: white; /* needed to see shadow clearly */
+}

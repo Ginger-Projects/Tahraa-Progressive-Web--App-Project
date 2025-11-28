@@ -1,0 +1,78 @@
+/* Header background + border */
+.header {
+  background: var(--background, #EAECF2);
+}
+
+/* Main container */
+.header-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary, #775DA6);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+/* Circle buttons */
+.circle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #775DA6;
+  border: none;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-size: 16px;
+  transition: background 0.2s ease;
+}
+
+.circle-btn:hover {
+  background: #f1f1f1;
+}
+
+/* small gap between chat and bell */
+.bell-btn {
+  margin-left: 8px;
+}
+
+/* separator line */
+.separator {
+  width: 1px;             /* thin vertical line */
+  height: 24px;           /* line height */
+  background-color: #D2D2D2; /* gray line */
+  margin: 0 16px;         /* spacing around the line */
+}
+
+/* profile button */
+.profile-btn {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 10%;
+  margin-left: 0; /* spacing handled by separator */
+}
+
+/* icon sizes */
+.icon {
+  width: 22px;
+  height: 22px;
+}
+
+
+
