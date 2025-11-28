@@ -19,6 +19,7 @@ import RegistrationBasicsMain from './pages/Dashboard/RegistrationBasicsMain'
 import RegistrationEducationMain from './pages/Dashboard/RegistrationEducationMain'
 import RegistrationWorkMain from './pages/Dashboard/RegistrationWorkMain'
 import WelcomeMain from './pages/Dashboard/WelcomeMain'
+import Chat from './pages/Chat/Chat'
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
         {/* Trainer */}
         <Route path="/trainee" element={<Trainer />} />
         <Route path="/traineeCalendar" element={<TrainerCalendar />} />
+
+        {/* Chat */}
+        <Route path="/chat" element={<Chat />} />
 
         {/* Registration */}
         <Route path="/registration" element={<RegistrationBasicsMain />} />

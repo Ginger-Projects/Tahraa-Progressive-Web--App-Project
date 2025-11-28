@@ -13,11 +13,35 @@
   justify-content: space-between;
 }
 
-/* Logo */
-.logo {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--primary, #775DA6);
+/* Logo group (logo image + "Chats" text) */
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logo-image {
+  height: 20px;
+  width: 100%;
+  display: block;
+}
+
+.logo-divider {
+  width: 1px;
+  height: 20px;
+  background-color: #d2d2d2;
+}
+
+.logo-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #252525;
 }
 
 .actions {
@@ -37,7 +61,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 0;
+  padding: 25px;
   font-size: 16px;
   transition: background 0.2s ease;
 }
@@ -63,7 +87,7 @@
 .profile-btn {
   width: 60px;
   height: 60px;
-  background: white;
+  /* background: white; */
   border-radius: 10%;
   margin-left: 0; /* spacing handled by separator */
 }
@@ -72,6 +96,31 @@
 .icon {
   width: 22px;
   height: 22px;
+}
+
+.icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Small red notification bubble on top-right of icons */
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background-color: #b60123;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 
