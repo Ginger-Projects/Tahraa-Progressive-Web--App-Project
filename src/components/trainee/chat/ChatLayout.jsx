@@ -3,6 +3,7 @@ import ChatSidebar, { getChatById } from "./ChatSidebar";
 import ChatConversation from "./ChatConversation";
 import ChatInput from "./ChatInput";
 import ChatHeader from "./ChatHeader";
+import ReportIssueModal from "./ReportIssueModal";
 import "./Chat.css";
 
 // Seed messages per chat so each person has their own conversation
@@ -45,6 +46,7 @@ export default function ChatLayout() {
   const [selectedChatId, setSelectedChatId] = useState(3); // default Bruce Banner
   const [isMobile, setIsMobile] = useState(false);
   const [showListOnMobile, setShowListOnMobile] = useState(true);
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -115,9 +117,16 @@ export default function ChatLayout() {
                 {"< Back"}
               </button>
             )}
-            <ChatHeader activeChat={selectedChat} />
+            <ChatHeader
+              activeChat={selectedChat}
+              onOpenReport={() => setIsReportOpen(true)}
+            />
             <ChatConversation messages={activeMessages} />
             <ChatInput onSend={handleSend} />
+            <ReportIssueModal
+              open={isReportOpen}
+              onClose={() => setIsReportOpen(false)}
+            />
           </div>
         )}
       </div>

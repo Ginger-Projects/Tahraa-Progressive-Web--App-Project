@@ -1,6 +1,6 @@
 .chat-page {
   background: #eaecf2;
-  height: calc(100vh - 80px); /* fixed height below header */
+  height: 100vh; /* fixed height below header */
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -39,6 +39,8 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  border-bottom: 1px solid #EAE9FE;
+  padding-bottom: 1rem;
 }
 
 .chat-header-left {
@@ -399,8 +401,157 @@
   font-size: 13px;
 }
 
+/* Report issue modal */
+.chat-report-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(37, 37, 37, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.chat-report-modal {
+  position: relative;
+  background: #ffffff;
+  border-radius: 30px;
+  border: 1px solid #775da6;
+  padding: 40px 56px 32px;
+  width: 720px;
+  max-width: 90%;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+}
+
+/* Hide modal scrollbar but keep scroll behavior */
+.chat-report-modal {
+  scrollbar-width: none; /* Firefox */
+}
+
+.chat-report-modal::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
+}
+
+.chat-report-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.chat-report-modal-title {
+  margin: 0 0 32px;
+  font-family: "Poppins", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.chat-report-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chat-report-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-report-label {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #252525;
+}
+
+.chat-report-input,
+.chat-report-textarea {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #eae9fe;
+  padding: 12px 18px;
+  outline: none;
+}
+
+.chat-report-input::placeholder,
+.chat-report-textarea::placeholder {
+  color: #878787;
+}
+
+.chat-report-textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.chat-report-submit {
+  margin-top: 12px;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 14px 20px;
+  background: linear-gradient(180deg, #8b6ed0 0%, #775da6 100%);
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset -4px -4px 7px rgba(0, 0, 0, 0.3);
+}
+
+.chat-report-submit-label {
+  position: relative;
+  z-index: 1;
+}
+
+.chat-report-submit-highlight-left {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  z-index: 0;
+}
+
+.chat-report-submit-highlight-top {
+  position: absolute;
+    left: 3px;
+    right: 10px;
+    top: -9px;
+    display: block;
+    z-index: 0;
+
+}
+
+.chat-report-footer-text {
+  margin-top: 12px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+  color: #77838f;
+}
+
 /* Mobile responsive behavior */
 @media (max-width: 768px) {
+  .chat-report-modal {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 16px;
+    padding: 24px 20px 20px;
+    border-radius: 20px;
+    max-height: calc(100vh - 40px);
+  }
+
   .chat-shell {
     max-width: 100%;
     margin: 0;
