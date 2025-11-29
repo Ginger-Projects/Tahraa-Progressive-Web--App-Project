@@ -4,7 +4,7 @@ import EditProfileForm from "../../components/trainee/Edit-Profile";
 
 export default function EditProfile() {
   return (
-   <div>
+   <>
     <div className="edit-profile">
 
       {/* Full width header */}
@@ -17,6 +17,6 @@ export default function EditProfile() {
           Copyright © 2025 Tahma. All rights reserved. Developed by Ginger Technologies.
         </p>
       </div>
-    </div>
+    </>
   );
 }

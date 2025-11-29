@@ -6,12 +6,16 @@ import { FiUpload, FiX } from 'react-icons/fi';
 
 import ProfileKeta from "../../assets/images/ProfileKeta.jpg"
 import avatar1 from "../../assets/images/avatar1.png"
+import avatar2 from "../../assets/images/avatar2.png"
+import avatar3 from "../../assets/images/avatar3.png"
+import avatar4 from "../../assets/images/avatar4.png"
+import avatar5 from "../../assets/images/avatar5.png"
 const avatarOptions = [
   { id: 1, src: avatar1, alt: 'Avatar 1' },
-  { id: 2, src: avatar1, alt: 'Avatar 2' },
-  { id: 3, src: avatar1, alt: 'Avatar 3' },
-  { id: 4, src: avatar1, alt: 'Avatar 4' },
-  { id: 5, src: avatar1, alt: 'Avatar 5' },
+  { id: 2, src: avatar2, alt: 'Avatar 2' },
+  { id: 3, src: avatar3, alt: 'Avatar 3' },
+  { id: 4, src: avatar4, alt: 'Avatar 4' },
+  { id: 5, src: avatar5, alt: 'Avatar 5' },
 ];
 
 export default function EditTraineeProfilePicture() {
@@ -62,7 +66,7 @@ export default function EditTraineeProfilePicture() {
   };
 
   return (
-    <div className="edit-profile-container">
+    <div className="edit-profile-container flex-column">
       <TraineeHeader title={headerTitle} />
       <div className="violet-container">
         <div className="profile-image-container">

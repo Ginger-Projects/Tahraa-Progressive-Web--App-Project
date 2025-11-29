@@ -167,7 +167,7 @@ export default function EditProfileForm() {
     />
 
     <Calendar
-      className="calendar-icon"
+      className="calendar-icon" 
       size={20}
       onClick={() => document.getElementById("dob-input").showPicker()}
     />
