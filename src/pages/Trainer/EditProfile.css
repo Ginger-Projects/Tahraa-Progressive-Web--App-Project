@@ -1,0 +1,64 @@
+
+.edit-profile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #EAECF2;
+
+  /* Big container under header */
+.edit-box {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  /* Optional: box styling */
+  background: white;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+/* Basic form styling (optional) */
+.edit-form .form-group {
+  margin-bottom: 20px;
+}
+
+.edit-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.edit-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+
+
+
+}
+.edit-profile-footer {
+  margin: 0;               /* remove default margin around the footer */
+  padding: 15px 20px;      /* adjust padding */
+  background-color: #EAECF2;  /* same as page background if needed */
+  border: none;            /* remove any border */
+  box-shadow: none;        /* remove shadow if any */
+  text-align: center;
+}
+
+.edit-profile-footer p {
+  margin: 0;               /* remove paragraph margin */
+  padding: 0;
+  line-height: 1.5;
+  color: #333;
+}
+
+
+
+

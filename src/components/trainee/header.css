@@ -1,8 +1,8 @@
 /* Header background + border */
 .header {
-  background: var(--background, #EAECF2);
-}
-
+  background: #f8f9fa;
+  width: 100%;
+  
 /* Main container */
 .header-container {
   max-width: 1280px;
@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: #f8f9fa;
 }
 
 /* Logo group (logo image + "Chats" text) */
@@ -37,11 +38,12 @@
   background-color: #d2d2d2;
 }
 
+/* Title text */
 .logo-title {
   font-family: "Poppins", sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  color: #252525;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
 }
 
 .actions {
@@ -125,3 +127,5 @@
 
 
 
+
+}

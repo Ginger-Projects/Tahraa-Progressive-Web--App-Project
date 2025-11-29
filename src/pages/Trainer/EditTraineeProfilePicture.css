@@ -1,0 +1,467 @@
+/* Main Container */
+.edit-profile-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.violet-container {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(102, 54, 191, 0.75) 0%,
+      rgba(65, 53, 86, 0.75) 100%
+    ),
+    url('../../assets/images/gradient.png');
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  height: 119px;
+  width: 90%;
+  margin: 0 5%;
+  position: relative;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding-bottom: 60px;
+}
+
+
+.profile-image-container {
+  position: absolute;
+  bottom: calc(-60%);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.profile-image-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+ .white-container {
+  background: #FFFFFF;
+  width: 90%;
+  margin: 0 5%;
+  position: relative;
+  z-index: 1;
+  padding: 80px 0 40px;
+  border-radius: 0 0 20px 20px;
+  margin-top: -20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Header - full width */
+.trainee-header {
+  width: 100%;
+  margin: 0;
+  padding: 15px 0;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 100;
+}
+
+/* Content area with 90% width */
+.edit-profile-content {
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+/* Profile Card - layout wrapper only, card visuals handled by white-container */
+.profile-card {
+  padding: 40px;
+  margin: 0 auto;
+  text-align: center;
+  max-width: 100%;
+}
+
+.profile-title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+
+.profile-image-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;   /* optional rounded corners */
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.default-avatar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: block;
+ 
+}
+.default-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+.avatar-initials {
+  color: #FFFFFF;
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Upload Section */
+.upload-section {
+  margin: 10px 0;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* center the block, we'll shift it with transform */
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;   /* text + button as a group */
+  gap: 24px;                 /* space between them */
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  transform: translateX(-20px); /* small left shift so button is nearer image */
+}
+
+.upload-text {
+  color: #252525;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.upload-button {
+  display: inline-flex;          /* horizontal layout */
+  align-items: center;           /* vertically center content */
+  gap: 8px;                      /* spacing between SVG and text */
+  background: #02B346;
+  color: #fff;
+  padding: 10px 28px;
+  border-radius: 8.52px;
+  border: none;
+  box-shadow: -3.195px -3.195px 5.325px 0 rgba(0, 0, 0, 0.30) inset;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;            /* allow absolutely positioned strip inside */
+}
+.upload-top-glow {
+  position: absolute;
+  top: 2px;
+  left: calc(50% + 2px);
+  transform: translateX(-50%);
+  width: calc(100% - 4px);
+  opacity: 0.5;   /* reduce glow intensity */
+  pointer-events: none;
+  z-index: 1;
+}
+
+
+
+.upload-strip {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 35px;
+  pointer-events: none;          /* strip is decorative only */
+}
+
+
+
+.upload-button:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+
+
+.upload-icon {
+  font-size: 16px;
+}
+
+
+/* Left highlight strip to mimic SVG effect */
+.file-input {
+  display: none;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 30px 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: #E0E0E0;
+}
+
+.divider-text {
+  padding: 0 15px;
+  color: #252525;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+/* Avatar Section */
+.avatar-section {
+  margin: 30px 0;
+}
+
+.section-title {
+  color: #252525;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.avatar-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.avatar-option {
+  width: 100px;       /* Increase width */
+  height: 100px;      /* Increase height */
+  border-radius: 12px; /* Square with rounded corners */
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.avatar-option:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-option.selected {
+  border-color: #FDB73E;
+  box-shadow: 0 0 0 3px rgba(253, 183, 62, 0.3);
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+justify-content: center;
+  margin-top: 48px; 
+  flex-wrap: wrap;
+
+}
+
+/* Base Button Style */
+.cancel-button,
+.save-button {
+  position: relative;
+  width: 148px;
+  height: 51.269px;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 9.766px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: visible;
+}
+
+/* CANCEL Button */
+.cancel-button {
+  background: #FDB73E;
+  color: #FFFFFF;
+  box-shadow: -3.662px -3.662px 6.103px rgba(0, 0, 0, 0.30) inset;
+}
+
+.cancel-button:hover {
+  background: #f0ae3c;
+  transform: translateY(-1px);
+  box-shadow: -3.662px -3.662px 6.103px 0 rgba(0, 0, 0, 0.30) inset, 
+              0 6px 20px rgba(253, 183, 62, 0.4);
+
+}
+
+/* SAVE Button */
+.save-button {
+  background: #775DA6;
+  color: #FFFFFF;
+  box-shadow: -3.662px -3.662px 6.103px rgba(0, 0, 0, 0.30) inset;
+  
+}
+
+.save-button:hover {
+  background: #6a4fa0;
+  transform: translateY(-1px);
+  box-shadow: -3.662px -3.662px 6.103px 0 rgba(0, 0, 0, 0.30) inset,
+              0 6px 20px rgba(16, 185, 129, 0.4);
+
+}
+
+/* ----------------------------- */
+/*          GLOW SYSTEM          */
+/* ----------------------------- */
+
+/* TOP glow strip */
+.button-left-glow {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.75;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.button-top-glow {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  opacity: 0.75;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.button-left-glow svg,
+.button-top-glow svg {
+  display: block;
+}
+
+.button-icon {
+  font-size: 18px;
+  background: #5D4A82;
+  transform: translateY(-2px);
+}
+
+/* Shared footer used on profile edit screens */
+.edit-trainee-profile-footer {
+  width: 100%;
+  color: #25252580;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 15.552px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 23.328px;
+  margin-top: 30px; /* optional */
+}
+
+.edit-trainee-profile-footer p {
+  color: #25252550;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-card {
+    padding: 30px 20px;
+  }
+  
+  .profile-image-container {
+    width: 180px;
+    height: 180px;
+      bottom: -90px;
+
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cancel-btn,
+  .save-btn {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  /* On mobile, stack upload text and button vertically */
+  .upload-content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transform: none; /* no horizontal shift on mobile */
+  }
+
+  /* On mobile, show avatars as 3 per row, with 2 centered on second row */
+  .avatar-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 16px;
+    row-gap: 16px;
+    padding: 0 10px;
+  }
+
+  .avatar-option {
+    flex: 0 0 calc(33.33% - 16px);
+    max-width: 100px;
+  }
+}

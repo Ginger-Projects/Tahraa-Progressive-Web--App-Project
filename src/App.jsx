@@ -20,6 +20,8 @@ import RegistrationEducationMain from './pages/Dashboard/RegistrationEducationMa
 import RegistrationWorkMain from './pages/Dashboard/RegistrationWorkMain'
 import WelcomeMain from './pages/Dashboard/WelcomeMain'
 import Chat from './pages/Chat/Chat'
+import EditProfile from './pages/Trainer/EditProfile'
+import EditTraineeProfilePicture from './pages/Trainer/EditTraineeProfilePicture'
 
 function App() {
   return (
@@ -40,10 +42,11 @@ function App() {
         {/* Trainer */}
         <Route path="/trainee" element={<Trainer />} />
         <Route path="/traineeCalendar" element={<TrainerCalendar />} />
+        <Route path='/edit-traineeProfile' element={<EditProfile/>} />
+         <Route path='/edit-traineeProfilePicture' element={<EditTraineeProfilePicture />} />
 
         {/* Chat */}
         <Route path="/chat" element={<Chat />} />
-
         {/* Registration */}
         <Route path="/registration" element={<RegistrationBasicsMain />} />
         <Route path="/regitraion-education" element={<RegistrationEducationMain />} />
