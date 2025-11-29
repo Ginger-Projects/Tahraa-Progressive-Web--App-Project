@@ -1,6 +1,6 @@
 /* Header background + border */
 .header {
-  background: #f8f9fa;
+  background: #EAECF2;
   width: 100%;
   
 /* Main container */
@@ -11,7 +11,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #f8f9fa;
 }
 
 /* Logo group (logo image + "Chats" text) */
