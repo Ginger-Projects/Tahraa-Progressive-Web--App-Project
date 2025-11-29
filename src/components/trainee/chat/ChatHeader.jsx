@@ -2,7 +2,7 @@ import React from "react";
 import "./Chat.css";
 import KateAvatar from "../../../assets/images/kate.png";
 
-export default function ChatHeader({ activeChat }) {
+export default function ChatHeader({ activeChat, onOpenReport }) {
   const name = activeChat?.name || "Bruce Banner";
 
   return (
@@ -13,7 +13,11 @@ export default function ChatHeader({ activeChat }) {
           <div className="chat-header-name">{name}</div>
         </div>
       </div>
-      <button className="chat-header-report" type="button">
+      <button
+        className="chat-header-report"
+        type="button"
+        onClick={onOpenReport}
+      >
         <span>Report an issue</span>
         <span className="chat-header-report-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
