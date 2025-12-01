@@ -2,9 +2,11 @@
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 8px;
+  padding: 5px; /* add uniform padding so image has left gap */
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  width: 100%;
+
+  width: 100%;  /* fill left container, which is 530px wide in layout */
+  height: 142px;  /* let card height be driven by content, not fixed */
   box-sizing: border-box;
 }
 
@@ -12,12 +14,22 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  height: 100%; /* fill full 142px card height inside the 5px padding */
+}
+
+/* Image wrapper should follow card height and center the image */
+.welcome-image {
+  display: flex;
+  align-items: center;   /* vertically center the 96x96 image */
+  justify-content: center;
+  width: 135px;
+  height: 134px;         /* fixed container size as requested */
 }
 
 /* Constrain the image */
 .welcome-image img {
-  width: 96px;        /* fixed width */
-  height: 96px;       /* fixed height */
+  width: 100%;        /* fill container width */
+  height: 100% !important;       /* fill container height */
   border-radius: 12px;
   object-fit: cover;  /* scales image correctly */
   display: block;
@@ -28,13 +40,27 @@
   flex: 1;
 }
 
+.welcome-hey {
+  margin: 0 0 4px 0;
+  color: rgba(37, 37, 37, 0.80);
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%; /* 18px */
+}
+
 .welcome-badge {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 8px;
-  font-size: 14px;
-  color: #6b7280;
+  color: #252525;
+  font-family: Poppins, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%; /* 27px */
 }
 
 .badge-icon {
@@ -44,8 +70,11 @@
 }
 
 .welcome-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: #111827;
+  color: #775DA6;
+  font-family: Poppins, sans-serif;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
   margin: 0;
 }

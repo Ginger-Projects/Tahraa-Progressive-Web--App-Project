@@ -3,13 +3,19 @@ import Calendar from "../../components/trainee/Calendar";
 import './TrainerCalendar.css'
 
 export default function TrainerCalendar(){
-    return(
+    return (
         <div className="trainee-calendar">
-            <TraineeHeader />
+            <TraineeHeader title="My Calendar" />
+
             <div className="calendar-block">
-             <Calendar/>
+                <Calendar />
             </div>
-            
+
+            <footer className="calendar-footer">
+                <p>
+                    Copyright 2025 Tahra. All rights reserved. Developed by Ginger Technologies.
+                </p>
+            </footer>
         </div>
-    )
+    );
 }

@@ -1,9 +1,28 @@
-.trainee-calendar{
-    background-color: #EAECF2;
-    padding: 40px;
+.trainee-calendar {
+  min-height: 100vh;
+  background-color: #EAECF2;
+  padding-bottom: 16px;   /* less bottom padding so footer sits closer */
 }
+
+/* Center the calendar card like in Figma */
 .calendar-block {
+  margin: 0 5%;              /* 5% side margins as before */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px; /* optional: rounded corners look nicer */
-  background-color: white; /* needed to see shadow clearly */
+  border-radius: 8px;        /* rounded corners */
+  background-color: white;   /* white card */
+}
+
+.calendar-footer {
+  width: 100%;
+  margin-top: 20px;       /* similar gap to space above calendar card */
+  text-align: center;
+  font-family: Poppins;
+font-size: 15.552px;
+font-style: normal;
+font-weight: 400;
+  color: rgba(37, 37, 37, 0.5);
+}
+
+.calendar-footer p {
+  color: rgba(37, 37, 37, 0.5);
 }

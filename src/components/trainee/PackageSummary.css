@@ -14,14 +14,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 32px 24px 18px 24px; /* no bottom padding so table starts immediately below */
+  border-bottom: none;       /* remove separator line between header and table */
 }
 
 .package-summary-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #111827; /* text-card-foreground */
+  color: #202020;
+font-family: Poppins;
+font-size: 21px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
 }
 
 .package-summary-controls {
@@ -36,16 +40,16 @@
   gap: 4px;
   padding: 8px 12px;
   border-radius: 8px;
-  border: none;
-  background: #f3f4f6; /* hover:bg-muted */
+  border: 1px solid #EAE9FE;
+  background: #ffffff; /* light pill background */
   cursor: pointer;
   transition: background 0.2s;
-  font-size: 14px;
-  color: #6b7280;
+  font-size: 12px;
+  color: #202020;
 }
 
 .package-summary-button:hover {
-  background: #e5e7eb;
+  background: #f3f4ff; /* subtle hover tint */
 }
 
 .package-summary-icon-btn {
@@ -53,18 +57,21 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background: #f3f4f6;
+  background: transparent; /* no background behind three-dot SVG */
   transition: background 0.2s;
 }
 
 .package-summary-icon-btn:hover {
-  background: #e5e7eb;
+  background: transparent; /* keep transparent on hover as well */
 }
 
 /* Table container */
 .package-summary-table-container {
   overflow-x: auto;
   width: 100%;
+  padding: 0 24px 16px 24px; /* horizontal gap + bottom padding */
+  margin-top: 8px;           /* small vertical gap between header and table */
+  box-sizing: border-box;
 }
 
 /* Table */
@@ -89,6 +96,15 @@
   font-weight: 600;
 }
 
+/* Round header row corners */
+.package-summary-table thead th:first-child {
+  border-top-left-radius: 4px;
+}
+
+.package-summary-table thead th:last-child {
+  border-top-right-radius: 4px;
+}
+
 .package-summary-table tbody tr:hover {
   background: rgba(243, 244, 246, 0.5); /* hover:bg-muted/50 */
   transition: background 0.2s;
@@ -98,27 +114,55 @@
   margin: 0;
 }
 
-.package-summary-table .text-muted {
+/* First line (e.g., session.name) in each cell */
+.package-summary-table td p:first-child {
+  color: var(--Black, #242E2C);
+  font-family: Poppins, sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%; /* 15.6px */
+}
+
+.package-summary-table .text-muted {
+  color: var(--Gray-30, #6B7271);
+  font-family: Poppins, sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 124%; /* 13.64px */
+}
+
+/* Fees column (4th column) text */
+.package-summary-table td:nth-child(4) {
+  color: var(--Black, #242E2C);
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%; /* 15.6px */
 }
 
 /* Status pill */
 .status-pill {
   padding: 4px 10px;
-  border-radius: 9999px; /* rounded-full */
+  border-radius: 4px; /* base radius, can be overridden per status */
   font-size: 12px;
   font-weight: 600;
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 83px;
+  height: 26px; /* fixed size so Completed and Ongoing match */
 }
 
 .status-completed {
-  background-color: #10b981;  /* bg-accent */
+  background-color: #02B346;  /* completed: green from Figma */
   color: #ffffff;              /* text-accent-foreground */
 }
 
 .status-ongoing {
-  background-color: #f59e0b;  /* amber-500 */
+  background-color: #FDB73E;  /* amber-500 */
   color: #ffffff;
 }
 

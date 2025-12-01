@@ -12,8 +12,10 @@ export default function WelcomeCard() {
         </div>
 
         <div className="welcome-text">
+          <p className="welcome-hey">Hey 👋</p>
+
           <div className="welcome-badge">
-            <CheckCircle className="badge-icon" />
+            
             <span>Welcome back!</span>
           </div>
 

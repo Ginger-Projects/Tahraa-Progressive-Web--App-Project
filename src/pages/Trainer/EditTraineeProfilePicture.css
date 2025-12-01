@@ -418,7 +418,12 @@ justify-content: center;
 }
 
 .edit-trainee-profile-footer p {
-  color: #25252550;
+  color: rgba(37, 37, 37, 0.50);
+font-family: Poppins;
+font-size: 15.552px;
+font-style: normal;
+font-weight: 400;
+line-height: 23.328px; /* 150% */
 }
 
 /* Responsive Design */

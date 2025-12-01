@@ -11,8 +11,8 @@
 /* Container */
 .calendar-container{
   background: var(--card);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 18px;
+  padding: 32px 0 40px;           /* remove side padding so grid can touch edges */
   box-shadow: 0 2px 6px var(--shadow);
   color: var(--text);
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -25,33 +25,41 @@
   align-items:center;
   gap:12px;
   margin-bottom:16px;
+  padding: 0 32px;          /* inset month label + Today/Weekly/Monthly */
 }
 
-.calendar-header-left{
-  display:flex;
-  align-items:center;
-  gap:12px;
+.calendar-header-left {
+  display: flex;
+  align-items: center;      /* vertically center */
+  justify-content: center;  /* center the whole group */
+  gap: 12px;                /* space between arrow – month – arrow */
 }
 
-.nav-btn{
+.nav-btn {
   background: transparent;
   border: none;
-  padding:8px;
-  border-radius:8px;
-  cursor:pointer;
+  padding: 0;
+  display: flex;            /* keeps SVG centered */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
-.nav-btn:hover{ background: var(--muted); }
 
-.calendar-month{
-  font-weight:600;
-  font-size:18px;
-  min-width:170px;
+.calendar-month {
+  color: #252525;
+
+font-family: Poppins;
+font-size: 21.397px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;          /* fixes vertical offset */
 }
+
 
 /* Container allows horizontal scroll on small screens */
 .view-mode-container {
   overflow-x: auto;
-  padding: 4px 0;
+  padding: 8px 0;         /* vertical breathing room around pill */
 }
 
 /* Flex layout for buttons */
@@ -129,14 +137,21 @@
 }
 
 .weekday {
-  font-size: 0.8rem;
-  color: #555;
+  color: rgba(37, 37, 37, 0.50);
+font-family: Poppins;
+font-size: 14.06px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
 }
 
 .day {
-  font-size: 1rem;
-  font-weight: bold;
-  margin-top: 2px;
+  color: #252525;
+font-family: Poppins;
+font-size: 21.413px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;  /* slight space from left inside button */
 }
 
 
@@ -220,7 +235,8 @@
 .month-view {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;              /* slightly larger gap between labels and grid */
+  padding: 8px 0 0;       /* no horizontal padding so grid starts at left edge */
 }
 
 .month-weekdays {
@@ -237,9 +253,10 @@
 
 .month-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 days a week */
-  border-top: 1px solid #EAE9FE ;      /* top border for first row */
-  border-left: 0.5px solid #EAE9FE ;     /* left border for grid */
+  grid-template-columns: repeat(7, 1fr); /* 7 equal columns that fill container */
+  width: 100%;
+  border-top: 1px solid #EAE9FE;      /* top border for first row */
+  border-left: 0.5px solid #EAE9FE;   /* left border for grid */
 }
 
 .has-event {
@@ -250,16 +267,31 @@
 .has-event .month-date {
   font-weight: bold;
 }
+.month-date{
+  color: #252525;
+
+font-family: Poppins;
+font-size: 28.958px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+
+  /* small offset from top-left inside month cell */
+  padding-top: 4px;
+  padding-left: 6px;
+}
 
 
 .month-cell {
   border-right: 0.5px solid #EAE9FE;       /* right border */
   border-bottom: 1px solid #EAE9FE;        /* bottom border */
-  min-height: 60px;
+  height: 149.619px;                       /* fixed row height from Figma */
   padding: 4px;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;                  /* avoid overflow */
 }
+
 .month-cell.empty {
   background-color: #f9f9f9;
 }
@@ -272,7 +304,32 @@
 /* responsive */
 @media (max-width: 720px){
   .date-btn{ min-width:120px; }
-  .calendar-container{ padding:12px; }
+  .calendar-container{ padding:12px 0 24px; }
   .calendar-month{ min-width:120px; font-size:16px; }
+
+  /* Monthly view on mobile: horizontal scroll, weekdays aligned with dates */
+  .month-view {
+    padding: 8px 0 0;
+    overflow-x: auto;              /* scroll whole month horizontally */
+  }
+
+  /* Weekday header: fixed-width columns so they match date columns */
+  .month-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 120px);  /* 7 columns, each 120px */
+    width: auto;                               /* total width from columns */
+  }
+
+  .month-weekday {
+    padding: 2px 0;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* Month grid: same column widths as weekday header so everything lines up */
+  .month-grid {
+    grid-template-columns: repeat(7, 120px);
+    width: auto;
+  }
 }
 

@@ -102,15 +102,31 @@ export default function Calendar() {
   const monthYear = currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   /* ---------- Date arrays ---------- */
-  const getDatesForDayRange = (range = 14) => {
-    const dates = [];
-    const startDate = new Date(currentDate);
-    startDate.setDate(currentDate.getDate() - Math.floor(range / 2));
+  // Daily strip: show only dates from the current month, centered on currentDate.
+  // Example: if current day is 14, show 7–21. Near month edges, clamp to [1, lastDay].
+  const getDatesForDayRangeInMonth = (range = 15) => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const lastDay = daysInMonth(year, month);
 
-    for (let i = 0; i < range; i++) {
-      const d = new Date(startDate);
-      d.setDate(startDate.getDate() + i);
-      dates.push(d);
+    const half = Math.floor(range / 2);
+    let start = currentDate.getDate() - half;
+    let end = currentDate.getDate() + half;
+
+    // Clamp to month
+    if (start < 1) {
+      end += 1 - start; // shift window forward
+      start = 1;
+    }
+    if (end > lastDay) {
+      start -= end - lastDay; // shift window back
+      end = lastDay;
+      if (start < 1) start = 1;
+    }
+
+    const dates = [];
+    for (let day = start; day <= end; day++) {
+      dates.push(new Date(year, month, day));
     }
     return dates;
   };
@@ -137,7 +153,7 @@ export default function Calendar() {
   };
 
   const dates = viewMode === "daily"
-    ? getDatesForDayRange(18)
+    ? getDatesForDayRangeInMonth(15)
     : viewMode === "weekly"
       ? getDatesForWeek_MonToFri_InsideMonth()
       : getDatesForMonth();
@@ -168,21 +184,37 @@ export default function Calendar() {
       {/* Header */}
       <div className="calendar-header">
         <div className="calendar-header-left">
-          <button className="nav-btn" onClick={goToPrevMonth}><ChevronLeft size={20} /></button>
+          <button className="nav-btn" onClick={goToPrevMonth}><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+  <path d="M14.2638 3.5661L7.13159 10.6983L14.2638 17.8305" fill="#775DA6"/>
+</svg></button>
           <h2 className="calendar-month">{monthYear}</h2>
-          <button className="nav-btn" onClick={goToNextMonth}><ChevronRight size={20} /></button>
+          <button className="nav-btn" onClick={goToNextMonth}><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+  <path d="M7.13281 3.5661L14.265 10.6983L7.13281 17.8305" fill="#775DA6"/>
+</svg></button>
         </div>
         <div className="view-mode-container">
           <div className="view-mode">
-            {["daily", "weekly", "monthly"].map((m) => (
-              <button
-                key={m}
-                className={`view-btn ${viewMode === m ? "active" : ""}`}
-                onClick={() => setViewMode(m)}
-              >
-                {m}
-              </button>
-            ))}
+            {["daily", "weekly", "monthly"].map((m) => {
+              const label =
+                m === "daily"
+                  ? "Today"
+                  : m.charAt(0).toUpperCase() + m.slice(1);
+              return (
+                <button
+                  key={m}
+                  className={`view-btn ${viewMode === m ? "active" : ""}`}
+                  onClick={() => {
+                    if (m === "daily") {
+                      // Reset to real today when switching to Today view
+                      setCurrentDate(new Date());
+                    }
+                    setViewMode(m);
+                  }}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
         </div>
 

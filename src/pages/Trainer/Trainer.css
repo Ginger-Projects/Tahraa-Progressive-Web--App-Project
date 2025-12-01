@@ -1,28 +1,31 @@
 .trainer-container{
-    background-color: #EAECF2;
+	background-color: #EAECF2; /* light grey page background similar to Figma */
+	min-height: 100vh;
 }
 
 .trainer-page {
-  padding: 0px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  font-family: sans-serif;
-  min-height: 100vh; /* full page height */
+	/* center main content like the Figma canvas */
+
+	margin: 0 5%;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	font-family: sans-serif;
 }
 
 /* Main grid: 2 columns on desktop */
 .trainer-grid {
-  display: grid;
-  grid-template-columns: 30% 70%; /* 30%-70% split */
-  gap: 20px;
-  align-items: stretch; /* stretch columns to same height */
+	display: grid;
+	grid-template-columns: 38% 60%; /* slightly wider schedule column, close to Figma */
+	gap: 24px;
+	align-items: stretch; /* stretch columns to same height */
 }
 
 /* Left column: Welcome + Course */
 .left-column {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
   gap: 20px;
 }
 
