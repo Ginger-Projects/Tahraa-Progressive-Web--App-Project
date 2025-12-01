@@ -8,6 +8,7 @@
   width: 100%;  /* fill left container, which is 530px wide in layout */
   height: 142px;  /* let card height be driven by content, not fixed */
   box-sizing: border-box;
+  position: relative; /* allow absolutely positioned hamburger */
 }
 
 .welcome-content {
@@ -77,4 +78,28 @@
   font-weight: 600;
   line-height: normal;
   margin: 0;
+}
+
+/* Hamburger icon at top-right of the welcome card */
+.welcome-hamburger {
+  position: absolute;
+  top: 24px;
+  right: 0px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.welcome-hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: #252525;
 }

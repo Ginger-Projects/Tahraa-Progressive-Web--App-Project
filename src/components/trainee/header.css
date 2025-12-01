@@ -7,11 +7,49 @@
 .header-container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 20px;
+  padding:  40px 60px 40px 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
+@media (max-width: 600px) {
+  .header-container {
+    padding: 40px 40px 40px 40px;
+  }
+}
+
+.logout-glow-left {
+  display: flex;
+  align-items: center;
+}
+
+.logout-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-glow-top {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  right: 4px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.logout-glow-left {
+  position: absolute;
+  top: 4px;
+  left: 2px;          /* start at the left edge of the button */
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+
 
 /* Logo group (logo image + "Chats" text) */
 .logo-group {
@@ -23,6 +61,13 @@
   @media(max-width : 600px){
     gap: 4px;
   }
+}
+
+/* Left chat button: move icon toward left edge of circle */
+.chat-btn {
+  justify-content: flex-start;
+  padding-left: 8px;   /* move icon closer to left edge */
+  padding-right: 18px; /* balance total padding */
 }
 
 .logo-link {
@@ -143,7 +188,335 @@
   justify-content: center;
 }
 
+/* Profile popup overlay */
+.profile-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
 
+/* Profile popup card */
+.profile-popup-card {
+  background: #FFF;
+  border-radius: 16px;
+  border: 1px solid #EAE9FE;
+  width: 244px;
+  height: 391px;
+  padding: 24px 20px;
+  box-shadow: none;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+  position: fixed;
+  top: 120px; /* slightly moved upward */
+  right: 60px; /* align with profile button area */
+  transform: none;
+  z-index: 1001;
+}
 
+/* Notification popup card: larger dialog */
+.notification-popup-card {
+  background: #EAECF2;
+  border-radius: 26.41px;
+  width: 534px;
+  height: auto;
+  padding: 24px 20px; /* 20px left/right so inner width = 494px, matching notification box */
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+  position: fixed;
+  top: 120px; /* same vertical position as profile popup */
+  right: 60px; /* aligned under the bell/profile area */
+  transform: none;
+  z-index: 1001;
+}
+
+/* Notification list container inside the notification popup */
+.notification-list {
+  margin-top: 0;
+  height: auto;
+  max-height: 338.053px; /* within container, becomes scrollable when content is taller */
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* visual gap only between date groups */
+  overflow-y: auto; /* scroll vertically inside the container */
+  overflow-x: hidden; /* prevent horizontal scroll */
+}
+
+/* Hide scrollbar but keep scrolling */
+.notification-list {
+  scrollbar-width: none; /* Firefox */
+}
+
+.notification-list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.notification-date-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Gap between notification boxes inside the same date group */
+.notification-date-group .notification-item + .notification-item {
+  margin-top: 8px;
+}
+
+.notification-date-label {
+  color: rgba(37, 37, 37, 0.50);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 12px; /* increased gap below Today/Yesterday labels */
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  height: 76px; /* equal row height for each notification */
+  border-radius: 10px;
+  padding: 0 16px;
+  width: 494px;
+  margin: 0 auto; /* center inside 534px modal */
+  background: #FFFFFF;
+}
+
+.notification-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 4px;
+  background: #F6F0FF; /* light placeholder background */
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center SVG inside the box */
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 12px;
+  margin-right: 12px;
+  flex: 1;
+}
+
+.notification-title {
+  color: #252525;
+
+font-family: Poppins;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* show ... when too long */
+}
+
+.notification-subtext {
+  font-size: 14px;
+  color: rgba(37, 37, 37, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* show ... when too long */
+}
+
+.notification-delete-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.notification-text {
+  font-size: 13px;
+  color: #252525;
+}
+
+.profile-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  color: #777;
+}
+
+/* Responsive adjustments for popups on small screens */
+@media (max-width: 600px) {
+  .profile-popup-card,
+  .notification-popup-card {
+    width: calc(100% - 32px); /* 16px margin on left and right */
+    left: 16px;
+    right: 16px; /* override desktop right */
+    top: 80px;   /* a bit below header */
+    max-height: calc(100vh - 120px);
+    overflow-y: auto; /* scroll inside card if content is tall */
+  }
+
+  .notification-list {
+    max-height: none; /* let card manage the max-height on mobile */
+  }
+}
+
+.profile-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.profile-popup-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-popup-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centers name + email relative to avatar height */
+}
+
+.profile-popup-text h3 {
+color: var(--Primary-Text, #303134);
+font-family: Poppins;
+font-size: 12.214px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+width: 74px;
+height: 9.601px;
+}
+
+.profile-popup-text p {
+  color: rgba(37, 37, 37, 0.50);
+font-family: Poppins;
+font-size: 9.5px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+width: 114px;
+height: 7.468px;
+}
+
+.profile-popup-body {
+  border-top: 1px solid #f0f0f5;
+  border-bottom: 1px solid #f0f0f5;
+  padding: 12px 0;
+  margin-bottom: 14px;
+}
+
+.profile-popup-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #444;
+  padding: 4px 0;
+}
+
+.profile-popup-row .label {
+  color: #888;
+}
+
+.profile-popup-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profile-popup-view-btn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #bfa0f5, #775da6);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.profile-popup-view-btn:hover {
+  opacity: 0.95;
+}
+
+.profile-popup-actions {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--Spacing-2-rem, 8px);
+}
+
+/* Extra spacing around the separator line between Change Password and My Calendar */
+.profile-popup-actions > svg {
+  margin: 6px 0; /* increase if you want even more gap */
+}
+
+.profile-action-item {
+  display: flex;
+  width: 228px;
+  padding: var(--Spacing-2-rem, 8px);
+  align-items: center;
+  gap: 10px;
+  border: none;
+  background: #FFF;
+  color: #252525;
+
+font-family: Poppins;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: var(--Spacing-5-rem, 20px);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.profile-action-icon {
+  width: 24px;                /* common icon column width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-action-item:hover {
+  border-radius: 12px;
+border: 0.5px solid #EAE9FE;
+
+background: #F8F8F8;
+}
+
+.profile-logout-btn {
+  margin-top: var(--Spacing-2-rem, 8px);
+  display: flex;
+  position: relative;
+  width: 206px;
+  height: 44.729px;
+  gap: 8px;
+  padding: var(--Spacing-2-rem, 8px);
+  align-items: center;      /* vertically center icon + text */
+  justify-content: center;  /* center icon + text horizontally */
+  border-radius: 8.52px;
+background: #FDB73E;
+box-shadow: -3.195px -3.195px 5.325px 0 rgba(0, 0, 0, 0.30) inset;
+  border: none;
+  font-weight: 600;
+  color: #C13232;
+  cursor: pointer;
+  color: var(--white, #FFF);
+text-shadow: 0 1.485px 0 rgba(0, 0, 0, 0.15);
+font-family: Poppins;
+font-size: 15.136px;
+font-style: normal;
+font-weight: 500;
+line-height: 20.794px; /* 137.382% */
+letter-spacing: 0.303px;
+}
 
 }

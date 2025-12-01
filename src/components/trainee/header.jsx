@@ -1,12 +1,18 @@
 import "./Header.css";
+import { useState } from "react";
 import { HiOutlineChat, HiOutlineBell } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import Profile from "../../assets/images/kate.png";
+import ProfilePopup from "./ProfilePopup";
+import NotificationPopup from "./NotificationPopup";
 
 
 
 export default function TraineeHeader({ title = "Dashboard" }) {
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const navigate = useNavigate()
   return (
     <header className="header">
       <div className="header-container">
@@ -19,7 +25,7 @@ export default function TraineeHeader({ title = "Dashboard" }) {
         </div>
 
       <div className="actions">
-  <button className="circle-btn">
+  <button onClick={()=>navigate('/chat')} className="circle-btn chat-btn">
     <span className="icon-wrapper">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
   <g clip-path="url(#clip0_205_1645)">
@@ -68,7 +74,10 @@ export default function TraineeHeader({ title = "Dashboard" }) {
     </span>
   </button>
 
-  <button className="circle-btn bell-btn">
+  <button
+    className="circle-btn bell-btn"
+    onClick={() => setIsNotificationOpen(true)}
+  >
     <span className="icon-wrapper">
     <svg xmlns="http://www.w3.org/2000/svg" width="19" height="22" viewBox="0 0 19 22" fill="none">
   <path d="M9.33083 3.86918C10.4164 3.86918 11.2964 3.00303 11.2964 1.93459C11.2964 0.866145 10.4164 0 9.33083 0C8.24526 0 7.36523 0.866145 7.36523 1.93459C7.36523 3.00303 8.24526 3.86918 9.33083 3.86918Z" fill="url(#paint0_linear_205_1618)"/>
@@ -176,7 +185,11 @@ export default function TraineeHeader({ title = "Dashboard" }) {
 
   <div className="separator"></div>
 
-  <button className="circle-btn profile-btn" style={{background : 'none'}}>
+  <button
+    className="circle-btn profile-btn"
+    style={{ background: "none" }}
+    onClick={() => setIsProfileOpen(true)}
+  >
     <img
       src={Profile}
       alt="Profile"
@@ -184,6 +197,12 @@ export default function TraineeHeader({ title = "Dashboard" }) {
     />
   </button>
 </div>
+
+<ProfilePopup open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+<NotificationPopup
+  open={isNotificationOpen}
+  onClose={() => setIsNotificationOpen(false)}
+/>
 
 
       </div>
