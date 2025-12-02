@@ -5,7 +5,7 @@ import Art from "../../assets/images/art.png";
 import Yoga from "../../assets/images/yoga.png";
 import Gym from "../../assets/images/gym.png";
 import Next from "../../assets/images/next.png";
-import Prev from "../../assets/images/Prev.png";
+import Prev from "../../assets/images/prev.png";
 
 
 // Import Swiper
