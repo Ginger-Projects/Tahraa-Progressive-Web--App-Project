@@ -12,7 +12,9 @@ const ExpertBooking = () => {
   const [currentMonthDate, setCurrentMonthDate] = useState(new Date(2025, 10, 1)); // November 2025
   const [selectedDate, setSelectedDate] = useState(new Date(2025, 10, 6)); // 6 November 2025
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  // Calendar header should start from Sunday
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const getCalendarMatrix = (baseDate) => {
     const year = baseDate.getFullYear();
@@ -20,8 +22,8 @@ const ExpertBooking = () => {
     const firstOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // JS: 0 = Sun ... 6 = Sat -> convert to Mon=0 ... Sun=6
-    const startIndex = (firstOfMonth.getDay() + 6) % 7;
+    // JS getDay(): 0 = Sun ... 6 = Sat, and we also display Sunday as the first column
+    const startIndex = firstOfMonth.getDay();
 
     const weeks = [];
     let currentDayNumber = 1 - startIndex;
@@ -54,11 +56,12 @@ const ExpertBooking = () => {
     return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
   };
 
-  const isWeekend = (dateObj) => {
+  // Special highlight days in the design: Friday and Saturday
+  const isSpecialDay = (dateObj) => {
     if (!dateObj) return false;
     const day = dateObj.getDay();
-    // 0 = Sun, 6 = Sat
-    return day === 0 || day === 6;
+    // 5 = Fri, 6 = Sat
+    return day === 5 || day === 6;
   };
 
   const handlePrevMonth = () => {
@@ -407,6 +410,46 @@ const ExpertBooking = () => {
               </h2>
               <p className='eb-expert-role'>Certified Vocal Instructor</p>
               <p className='eb-expert-exp'>10 Years experience</p>
+              <button
+                className='eb-card-enquire-btn'
+                type='button'
+                onClick={() => setIsBookingModalOpen(true)}
+              >
+                <span className='eb-card-btn-left'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
+                    <g filter="url(#filter0_f_178_1398)">
+                      <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3"/>
+                      <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)"/>
+                    </g>
+                    <defs>
+                      <filter id="filter0_f_178_1398" x="-0.00147986" y="1.54972e-05" width="17.0186" height="36.4596" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398"/>
+                      </filter>
+                      <linearGradient id="paint0_linear_178_1398" x1="2.24219" y1="3.09462" x2="4.64423" y2="7.48478" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="white"/>
+                        <stop offset="1" stopColor="white" stopOpacity="0"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </span>
+                <span className='eb-card-btn-top'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="266" height="5" viewBox="0 0 266 5" fill="none">
+                    <g filter="url(#filter0_f_178_1399)">
+                      <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round"/>
+                    </g>
+                    <defs>
+                      <filter id="filter0_f_178_1399" x="-0.00147986" y="1.54972e-05" width="265.636" height="4.76779" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399"/>
+                      </filter>
+                    </defs>
+                  </svg>
+                </span>
+                <span className='eb-card-btn-label'>Enquire</span>
+              </button>
             </div>
 
             {/* Calendar */}
@@ -445,71 +488,114 @@ const ExpertBooking = () => {
                 </div>
 
                 <div className='eb-calendar-days-header'>
-                  {daysOfWeek.map((day, idx) => (
-                    <div key={idx} className='eb-day-name'>
-                      {day}
-                    </div>
-                  ))}
+                  {daysOfWeek.map((day, idx) => {
+                    const isSpecialHeaderDay = idx === 5 || idx === 6; // Fri, Sat
+                    return (
+                      <div
+                        key={idx}
+                        className={
+                          isSpecialHeaderDay ? "eb-day-name eb-day-name-special" : "eb-day-name"
+                        }
+                      >
+                        {day}
+                      </div>
+                    );
+                  })}
                 </div>
 
                 <div className='eb-calendar-grid'>
                   {calendarDays.map((week, weekIdx) => (
                     <div key={weekIdx} className='eb-calendar-week'>
-                      {week.map((dayObj, dayIdx) => {
-                        // For Saturday/Sunday, render a combined weekend pill row
-                        if (dayIdx === 5) {
-                          const sat = week[5];
-                          const sun = week[6];
-                          return (
-                            <div key='weekend' className='eb-weekend-box'>
-                              <button
-                                className={`eb-calendar-day eb-weekend-day-left ${!sat ? "empty" : ""} ${
-                                  isSameDay(sat, selectedDate) ? "selected" : ""
-                                } ${isWeekend(sat) ? "highlighted" : ""}`}
-                                onClick={() => sat && setSelectedDate(sat)}
-                                disabled={!sat}
-                              >
-                                {sat ? sat.getDate() : ""}
-                              </button>
-                              <button
-                                className={`eb-calendar-day eb-weekend-day-right ${!sun ? "empty" : ""} ${
-                                  isSameDay(sun, selectedDate) ? "selected" : ""
-                                } ${isWeekend(sun) ? "highlighted" : ""}`}
-                                onClick={() => sun && setSelectedDate(sun)}
-                                disabled={!sun}
-                              >
-                                {sun ? sun.getDate() : ""}
-                              </button>
-                            </div>
-                          );
-                        }
-
-                        // Skip Sunday here; it's rendered together with Saturday
-                        if (dayIdx === 6) {
-                          return null;
-                        }
-
-                        return (
-                          <button
-                            key={dayIdx}
-                            className={`eb-calendar-day ${!dayObj ? "empty" : ""} ${
-                              isSameDay(dayObj, selectedDate) ? "selected" : ""
-                            } ${isWeekend(dayObj) ? "highlighted" : ""}`}
-                            onClick={() => dayObj && setSelectedDate(dayObj)}
-                            disabled={!dayObj}
-                          >
-                            {dayObj ? dayObj.getDate() : ""}
-                          </button>
-                        );
-                      })}
+                      {week.map((dayObj, dayIdx) => (
+                        <button
+                          key={dayIdx}
+                          className={`eb-calendar-day ${!dayObj ? "empty" : ""} ${
+                            isSameDay(dayObj, selectedDate) ? "selected" : ""
+                          } ${isSpecialDay(dayObj) ? "highlighted" : ""}`}
+                          onClick={() => dayObj && setSelectedDate(dayObj)}
+                          disabled={!dayObj}
+                        >
+                          {dayObj ? dayObj.getDate() : ""}
+                        </button>
+                      ))}
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className='eb-action-buttons'>
-                <button className='eb-btn eb-btn-primary' onClick={() => setIsBookingModalOpen(true)}>Book Now</button>
-                <button className='eb-btn eb-btn-success'>Book Free Trial</button>
+                <button className='eb-btn eb-btn-primary' type='button' onClick={() => setIsBookingModalOpen(true)}>
+                  <span className='eb-card-btn-left'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
+                      <g filter="url(#filter0_f_178_1398)">
+                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3"/>
+                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)"/>
+                      </g>
+                      <defs>
+                        <filter id="filter0_f_178_1398" x="-0.00147986" y="1.54972e-05" width="17.0186" height="36.4596" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398"/>
+                        </filter>
+                        <linearGradient id="paint0_linear_178_1398" x1="2.24219" y1="3.09462" x2="4.64423" y2="7.48478" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="white"/>
+                          <stop offset="1" stopColor="white" stopOpacity="0"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span className='eb-card-btn-top'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="266" height="5" viewBox="0 0 266 5" fill="none">
+                      <g filter="url(#filter0_f_178_1399)">
+                        <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round"/>
+                      </g>
+                      <defs>
+                        <filter id="filter0_f_178_1399" x="-0.00147986" y="1.54972e-05" width="265.636" height="4.76779" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399"/>
+                        </filter>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span className='eb-card-btn-label'>Book Now</span>
+                </button>
+                <button className='eb-btn eb-btn-success' type='button'>
+                  <span className='eb-card-btn-left'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
+                      <g filter="url(#filter0_f_178_1398)">
+                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3"/>
+                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)"/>
+                      </g>
+                      <defs>
+                        <filter id="filter0_f_178_1398" x="-0.00147986" y="1.54972e-05" width="17.0186" height="36.4596" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398"/>
+                        </filter>
+                        <linearGradient id="paint0_linear_178_1398" x1="2.24219" y1="3.09462" x2="4.64423" y2="7.48478" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="white"/>
+                          <stop offset="1" stopColor="white" stopOpacity="0"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span className='eb-card-btn-top'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="266" height="5" viewBox="0 0 266 5" fill="none">
+                      <g filter="url(#filter0_f_178_1399)">
+                        <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round"/>
+                      </g>
+                      <defs>
+                        <filter id="filter0_f_178_1399" x="-0.00147986" y="1.54972e-05" width="265.636" height="4.76779" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399"/>
+                        </filter>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span className='eb-card-btn-label'>Book Free Trial</span>
+                </button>
               </div>
             </div>
 
@@ -547,7 +633,42 @@ const ExpertBooking = () => {
                 ))}
               </div>
 
-              <button className='eb-see-all-btn'>See All</button>
+              <button className='eb-see-all-btn' type='button'>
+                <span className='eb-card-btn-left'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
+                    <g filter="url(#filter0_f_178_1398)">
+                      <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3"/>
+                      <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)"/>
+                    </g>
+                    <defs>
+                      <filter id="filter0_f_178_1398" x="-0.00147986" y="1.54972e-05" width="17.0186" height="36.4596" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398"/>
+                      </filter>
+                      <linearGradient id="paint0_linear_178_1398" x1="2.24219" y1="3.09462" x2="4.64423" y2="7.48478" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="white"/>
+                        <stop offset="1" stopColor="white" stopOpacity="0"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </span>
+                <span className='eb-card-btn-top'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="266" height="5" viewBox="0 0 266 5" fill="none">
+                    <g filter="url(#filter0_f_178_1399)">
+                      <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round"/>
+                    </g>
+                    <defs>
+                      <filter id="filter0_f_178_1399" x="-0.00147986" y="1.54972e-05" width="265.636" height="4.76779" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399"/>
+                      </filter>
+                    </defs>
+                  </svg>
+                </span>
+                <span className='eb-card-btn-label'>See All</span>
+              </button>
             </div>
 
             {/* Checkout Info */}
@@ -708,17 +829,105 @@ const ExpertBooking = () => {
                         </div>
                         <div className='eb-package-meta'>
                           <span className='eb-package-modules'>
-                            <svg width='10' height='10' viewBox='0 0 10 10' fill='none'>
-                              <rect width='10' height='10' fill='currentColor' />
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              width='9'
+                              height='10'
+                              viewBox='0 0 9 10'
+                              fill='none'
+                            >
+                              <path
+                                fillRule='evenodd'
+                                clipRule='evenodd'
+                                d='M1.66853 0H5.64447C5.89206 0 6.12686 0.109975 6.28537 0.300181L8.14927 2.53686C8.27421 2.68679 8.34263 2.87578 8.34263 3.07094V7.50837C8.34263 8.42987 7.59561 9.17689 6.6741 9.17689H1.66853C0.747025 9.17689 0 8.42987 0 7.50837V1.66853C0 0.747025 0.747025 0 1.66853 0ZM7.5089 7.50839V3.33707H6.2575C5.79675 3.33707 5.42324 2.96356 5.42324 2.50281V0.834282H1.66906C1.20831 0.834282 0.834794 1.20779 0.834794 1.66855V7.50839C0.834794 7.96914 1.20831 8.34265 1.66906 8.34265H6.67463C7.13539 8.34265 7.5089 7.96914 7.5089 7.50839ZM7.03596 2.50292L6.25802 1.5694V2.50292H7.03596ZM2.50458 5.4228C2.27421 5.4228 2.08745 5.23605 2.08745 5.00567C2.08745 4.7753 2.27421 4.58854 2.50458 4.58854H5.84163C6.07201 4.58854 6.25876 4.7753 6.25876 5.00567C6.25876 5.23605 6.07201 5.4228 5.84163 5.4228H2.50458ZM2.50458 7.09127C2.27421 7.09127 2.08745 6.90451 2.08745 6.67414C2.08745 6.44376 2.27421 6.257 2.50458 6.257H5.00737C5.23775 6.257 5.4245 6.44376 5.4245 6.67414C5.4245 6.90451 5.23775 7.09127 5.00737 7.09127H2.50458ZM2.50458 3.75434C2.27421 3.75434 2.08745 3.56758 2.08745 3.33721C2.08745 3.10683 2.27421 2.92007 2.50458 2.92007H3.75598C3.98635 2.92007 4.17311 3.10683 4.17311 3.33721C4.17311 3.56758 3.98635 3.75434 3.75598 3.75434H2.50458Z'
+                                fill='#775DA6'
+                              />
                             </svg>
                             {pkg.modules}
                           </span>
                           <span className='eb-package-duration'>
-                            <svg width='10' height='10' viewBox='0 0 10 10' fill='none'>
-                              <circle cx='5' cy='5' r='4' stroke='currentColor' />
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              width='10'
+                              height='10'
+                              viewBox='0 0 10 10'
+                              fill='none'
+                            >
+                              <path
+                                d='M4.58887 0C7.12281 0.000217547 9.17675 2.05488 9.17676 4.58887C9.17655 7.12269 7.12268 9.17654 4.58887 9.17676C2.05487 9.17675 0.000206406 7.12282 0 4.58887C8.24809e-06 2.05475 2.05475 9.47444e-06 4.58887 0ZM4.58887 0.833984C2.5155 0.833994 0.834969 2.5155 0.834961 4.58887C0.835184 6.66205 2.51563 8.34276 4.58887 8.34277C6.6621 8.34277 8.34255 6.66205 8.34277 4.58887C8.34276 2.5155 6.66224 0.833991 4.58887 0.833984ZM4.58594 1.66895C4.81631 1.66895 5.00391 1.85556 5.00391 2.08594V4.38477L6.71973 5.71875C6.90156 5.86018 6.93437 6.12284 6.79297 6.30469C6.65153 6.48653 6.38888 6.51937 6.20703 6.37793L4.33008 4.91797C4.22858 4.83901 4.16906 4.71744 4.16895 4.58887V2.08594C4.16895 1.85571 4.35576 1.66918 4.58594 1.66895Z'
+                                fill='#775DA6'
+                              />
                             </svg>
                             {pkg.duration}
                           </span>
+                        </div>
+                        <div className='eb-package-cta'>
+                          <button className='eb-package-cta-btn' type='button'>
+                            <span className='eb-package-btn-left'>
+                              <svg xmlns='http://www.w3.org/2000/svg' width='5' height='17' viewBox='0 0 5 17' fill='none'>
+                                <g filter='url(#filter0_f_183_5675)'>
+                                  <path
+                                    d='M1.27382 1.79073C1.38904 0.919239 3.06869 1.00993 3.79745 1.09121C3.91567 1.10439 3.95169 1.25853 3.85682 1.33031C3.48805 1.6093 2.85986 2.15125 2.70228 2.70744C1.92865 5.43805 2.09119 10.0568 2.22462 12.2374C2.27324 13.0319 2.14426 13.8282 1.82324 14.5566L1.27382 15.8033C1.27382 15.8033 0.754401 5.71948 1.27382 1.79073Z'
+                                    fill='white'
+                                    fillOpacity='0.3'
+                                  />
+                                  <path
+                                    d='M1.27382 1.79073C1.38904 0.919239 3.06869 1.00993 3.79745 1.09121C3.91567 1.10439 3.95169 1.25853 3.85682 1.33031C3.48805 1.6093 2.85986 2.15125 2.70228 2.70744C1.92865 5.43805 2.09119 10.0568 2.22462 12.2374C2.27324 13.0319 2.14426 13.8282 1.82324 14.5566L1.27382 15.8033C1.27382 15.8033 0.754401 5.71948 1.27382 1.79073Z'
+                                    fill='url(#paint0_linear_183_5675)'
+                                  />
+                                </g>
+                                <defs>
+                                  <filter
+                                    id='filter0_f_183_5675'
+                                    x='0.00122023'
+                                    y='0'
+                                    width='4.95068'
+                                    height='16.845'
+                                    filterUnits='userSpaceOnUse'
+                                    colorInterpolationFilters='sRGB'
+                                  >
+                                    <feFlood floodOpacity='0' result='BackgroundImageFix' />
+                                    <feBlend in='SourceGraphic' in2='BackgroundImageFix' mode='normal' result='shape' />
+                                    <feGaussianBlur stdDeviation='0.520874' result='effect1_foregroundBlur_183_5675' />
+                                  </filter>
+                                  <linearGradient
+                                    id='paint0_linear_183_5675'
+                                    x1='1.04297'
+                                    y1='1.43462'
+                                    x2='2.35135'
+                                    y2='2.60229'
+                                    gradientUnits='userSpaceOnUse'
+                                  >
+                                    <stop stopColor='white' />
+                                    <stop offset='1' stopColor='white' stopOpacity='0' />
+                                  </linearGradient>
+                                </defs>
+                              </svg>
+                            </span>
+                            <span className='eb-package-btn-top'>
+                              <svg xmlns='http://www.w3.org/2000/svg' width='62' height='3' viewBox='0 0 62 3' fill='none'>
+                                <g filter='url(#filter0_f_183_5676)'>
+                                  <path d='M1.10547 1.10681H59.9166' stroke='white' strokeWidth='0.130219' strokeLinecap='round' />
+                                </g>
+                                <defs>
+                                  <filter
+                                    id='filter0_f_183_5676'
+                                    x='-0.00268602'
+                                    y='0'
+                                    width='61.0249'
+                                    height='2.21362'
+                                    filterUnits='userSpaceOnUse'
+                                    colorInterpolationFilters='sRGB'
+                                  >
+                                    <feFlood floodOpacity='0' result='BackgroundImageFix' />
+                                    <feBlend in='SourceGraphic' in2='BackgroundImageFix' mode='normal' result='shape' />
+                                    <feGaussianBlur stdDeviation='0.520874' result='effect1_foregroundBlur_183_5676' />
+                                  </filter>
+                                </defs>
+                              </svg>
+                            </span>
+                            <span className='eb-package-cta-label'>Learn More</span>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -735,11 +944,71 @@ const ExpertBooking = () => {
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
         onConfirm={() => {
-          // Handle booking confirmation
           setIsBookingModalOpen(false);
-          // Add your booking logic here
+          setIsSuccessModalOpen(true);
         }}
       />
+
+      {/* Booking Success Modal */}
+      {isSuccessModalOpen && (
+        <div className="bcm-overlay">
+          <div className="bcm-modal">
+            <button className="bcm-close-btn" onClick={() => setIsSuccessModalOpen(false)}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
+            <div className="bcm-content">
+              <div className="bcm-text-section">
+                <h2 className="bcm-title">Booking Confirmed</h2>
+                <p className="bcm-description">
+                  Thank you for booking the package. Your session schedule will be available once the expert confirms your booking.
+                </p>
+              </div>
+            </div>
+
+            <div className="bcm-actions bcm-actions-single">
+              <button
+                className="bcm-btn bcm-btn-confirm"
+                type="button"
+                onClick={() => setIsSuccessModalOpen(false)}
+              >
+                <svg className="bcm-btn-glossy-top" width="272" height="6" viewBox="0 0 272 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g filter="url(#filter0_f_151_2845)">
+                    <path d="M2.59375 2.59399H268.44" stroke="white" strokeWidth="0.305174" strokeLinecap="round"/>
+                  </g>
+                  <defs>
+                    <filter id="filter0_f_151_2845" x="1.43051e-05" y="1.43051e-05" width="271.033" height="5.18796" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_151_2845"/>
+                    </filter>
+                  </defs>
+                </svg>
+                <svg className="bcm-btn-vector" width="10" height="40" viewBox="0 0 10 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g filter="url(#filter0_f_151_2844)">
+                    <path d="M2.84839 4.20661C3.05104 2.15744 5.9989 2.36543 7.2884 2.55664C7.53645 2.59342 7.6217 2.90139 7.44446 3.07879C6.80129 3.72256 5.6506 5.02729 5.36666 6.3671C3.93727 13.1118 4.3207 24.7445 4.55795 29.5271C4.62839 30.9471 4.45094 32.3701 4.00581 33.7203L2.84839 37.2312C2.84839 37.2312 1.93268 13.4659 2.84839 4.20661Z" fill="white" fillOpacity="0.3"/>
+                    <path d="M2.84839 4.20661C3.05104 2.15744 5.9989 2.36543 7.2884 2.55664C7.53645 2.59342 7.6217 2.90139 7.44446 3.07879C6.80129 3.72256 5.6506 5.02729 5.36666 6.3671C3.93727 13.1118 4.3207 24.7445 4.55795 29.5271C4.62839 30.9471 4.45094 32.3701 4.00581 33.7203L2.84839 37.2312C2.84839 37.2312 1.93268 13.4659 2.84839 4.20661Z" fill="url(#paint0_linear_151_2844)"/>
+                  </g>
+                  <defs>
+                    <filter id="filter0_f_151_2844" x="1.43051e-05" y="1.43051e-05" width="9.98044" height="39.6726" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_151_2844"/>
+                    </filter>
+                    <linearGradient id="paint0_linear_151_2844" x1="2.44141" y1="3.36733" x2="5.30773" y2="5.2808" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="white"/>
+                      <stop offset="1" stopColor="white" stopOpacity="0"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <span>OK</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

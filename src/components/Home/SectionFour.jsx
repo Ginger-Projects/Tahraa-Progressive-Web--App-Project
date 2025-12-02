@@ -6,6 +6,8 @@ import BgImage from "../../assets/images/footer-bg.png";
 import LeftImg from "../../assets/images/cta-left.png";
 import RightImg from "../../assets/images/cta-right.png";
 import Divider from "../../assets/images/cta-divider.png";
+import BtnLeftGlow from "../../assets/images/btn-left-glow.svg";
+import BtnTopLine from "../../assets/images/btn-top-line.svg";
 
 export const SectionFour = () => {
   return (
@@ -24,20 +26,12 @@ export const SectionFour = () => {
               to mastery
             </h2>
 
-            <Link to="/how-it-works-learners" className="text-decoration-none">
+            <Link to="/signin" className="text-decoration-none">
               <button className="BTNFOUR" type="button">
                 <div className="rectangle-2" />
-                <img
-                  className="vector-2"
-                  alt="Vector"
-                  src="https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg"
-                />
-                <img
-                  className="line"
-                  alt="Line"
-                  src="https://c.animaapp.com/RRnEyncc/img/line-1.svg"
-                />
-                <div className="label">Find Yourself Here</div>
+                <img className="vector-2" alt="Glow" src={BtnLeftGlow} />
+                <img className="line" alt="Top highlight" src={BtnTopLine} />
+                <div className="label">Register as a trainee</div>
               </button>
             </Link>
           </div>
@@ -57,20 +51,12 @@ export const SectionFour = () => {
               to grow your business
             </h2>
 
-            <Link to="/how-it-works-experts" className="text-decoration-none">
+            <Link to="/registration" className="text-decoration-none">
               <button className="BTNFOUR BTNFOUR-secondary" type="button">
                 <div className="rectangle-2" />
-                <img
-                  className="vector-2"
-                  alt="Vector"
-                  src="https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg"
-                />
-                <img
-                  className="line"
-                  alt="Line"
-                  src="https://c.animaapp.com/RRnEyncc/img/line-1.svg"
-                />
-                <div className="label">Register as an Expert</div>
+                <img className="vector-2" alt="Glow" src={BtnLeftGlow} />
+                <img className="line" alt="Top highlight" src={BtnTopLine} />
+                <div className="label">Register as an expert</div>
               </button>
             </Link>
           </div>

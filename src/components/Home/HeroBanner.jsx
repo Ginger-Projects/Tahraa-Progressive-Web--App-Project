@@ -89,8 +89,7 @@ const HeroBanner = () => {
           </h2>
 
           <p className='text'>
-            Get personalized coaching from experts in activities that activities you've always wanted to master.
-          </p>
+Get personalized coaching from experts in activities that you've always wanted to master.          </p>
 
           <button className='button'>
             <div className='rectangle-3' />

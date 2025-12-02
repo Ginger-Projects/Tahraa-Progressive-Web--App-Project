@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import './App.css'
 import { Home } from './pages/Home'
@@ -33,6 +34,10 @@ import WhatsappFloat from './components/WhatsappFloat'
 function App() {
   const location = useLocation()
   const pathname = location.pathname
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
   const hideWhatsapp =
     pathname.startsWith('/trainee') ||
     pathname.startsWith('/chat') ||

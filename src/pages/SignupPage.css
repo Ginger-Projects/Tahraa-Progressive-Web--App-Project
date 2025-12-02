@@ -175,7 +175,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 /* fake icons for look */
@@ -184,6 +184,26 @@ body {
 .chevron-icon,
 .eye-icon {
   display: inline-block;
+}
+
+/* SVG-based eye icon button for password visibility */
+.eye-icon-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.eye-icon-btn svg {
+  display: block;
+}
+
+.eye-icon-btn--active svg path {
+  fill: #775da6;
 }
 
 .calendar-icon {
@@ -227,6 +247,7 @@ body {
   border-radius: 999px;
   border: 2px solid #c3c4db;
   position: relative;
+  cursor: pointer;
 }
 
 .eye-icon::before {
@@ -239,6 +260,22 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* active state when password is visible */
+.eye-icon--active {
+  border-color: #775da6;
+}
+
+/* hide default browser password reveal icon so only custom eye is visible */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-clear-button {
+  display: none;
 }
 
 /* row for DOB + Gender */

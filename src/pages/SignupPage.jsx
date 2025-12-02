@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import "./SignupPage.css";
 import Person from '../assets/images/person.png'
 import Tick from '../assets/images/verified.png'
@@ -85,6 +85,8 @@ const getPasswordStrength = (password) => {
 
 const TahraaSignup = () => {
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const dobInputRef = useRef(null);
 
   const strength = useMemo(
     () => getPasswordStrength(password),
@@ -146,12 +148,21 @@ const TahraaSignup = () => {
                 <label className="tahraa-label">Date of birth</label>
                 <div className="tahraa-input tahraa-input--with-icon">
                   <input
+                    ref={dobInputRef}
                     type="date"
                     className="tahraa-input-inner"
                     placeholder="Select your DOB*"
                   />
                   <span className="tahraa-input-icon">
-                    <span className="calendar-icon" />
+                    <span
+                      className="calendar-icon"
+                      onClick={() => {
+                        if (dobInputRef.current) {
+                          dobInputRef.current.showPicker?.();
+                          dobInputRef.current.focus();
+                        }
+                      }}
+                    />
                   </span>
                 </div>
               </div>
@@ -177,14 +188,31 @@ const TahraaSignup = () => {
               <label className="tahraa-label">Password</label>
               <div className="tahraa-input tahraa-input--with-icon">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   className="tahraa-input-inner"
                   placeholder="Enter your password*"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <span className="tahraa-input-icon">
-                  <span className="eye-icon" />
+                  <button
+                    type="button"
+                    className={`eye-icon-btn ${showPassword ? "eye-icon-btn--active" : ""}`}
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="21"
+                      height="18"
+                      viewBox="0 0 21 18"
+                      fill="none"
+                    >
+                      <path
+                        d="M10.3687 0C15.5365 0 19.836 3.7184 20.7373 8.62568C19.836 13.5329 15.5365 17.2514 10.3687 17.2514C5.20079 17.2514 0.901393 13.5329 0 8.62568C0.901393 3.7184 5.20079 0 10.3687 0ZM10.3687 15.3345C14.4281 15.3345 17.9018 12.5091 18.781 8.62568C17.9018 4.74223 14.4281 1.91682 10.3687 1.91682C6.30917 1.91682 2.83553 4.74223 1.95625 8.62568C2.83553 12.5091 6.30917 15.3345 10.3687 15.3345ZM10.3687 12.9385C7.98675 12.9385 6.05582 11.0076 6.05582 8.62568C6.05582 6.24376 7.98675 4.31284 10.3687 4.31284C12.7505 4.31284 14.6815 6.24376 14.6815 8.62568C14.6815 11.0076 12.7505 12.9385 10.3687 12.9385ZM10.3687 11.0217C11.692 11.0217 12.7647 9.94895 12.7647 8.62568C12.7647 7.3024 11.692 6.22966 10.3687 6.22966C9.04542 6.22966 7.97264 7.3024 7.97264 8.62568C7.97264 9.94895 9.04542 11.0217 10.3687 11.0217Z"
+                        fill="#898989"
+                      />
+                    </svg>
+                  </button>
                 </span>
               </div>
 

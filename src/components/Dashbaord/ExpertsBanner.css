@@ -6,9 +6,10 @@
   background-position: center;
   padding: 52px 72px 40px;
   color: #ffffff;
+}
 
-  .exp-banner-inner {
-  max-width: 90%;
+.exp-banner-inner {
+  max-width: 1236px; /* match Figma group width so 4 filters fit in one row */
   margin: 0 auto;
   text-align: center;
 }
@@ -80,9 +81,10 @@
 
 /* filters row */
 .exp-filter-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
   margin-top: 12px;
-  justify-content: space-between;
 }
 
 .exp-filter-select {
@@ -103,21 +105,23 @@
   font-style: normal;
   font-weight: 600;
   line-height: 23.361px; /* 169.231% */
+  white-space: nowrap; /* keep label text on one line */
 }
 
 .exp-filter-pill {
-  padding: 6px 14px;
+  padding: 4px 10px; /* tighter so long text like "Languages spoken" fits */
   border-radius: 999px;
   border: none;
   background: transparent;
-  font-size: 13px;
+  font-size: 12.5px;
   cursor: pointer;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between; /* push arrow to far right */
+  width: 100%;
+  white-space: nowrap; /* keep label value on one line */
   color: var(--Background-C4, rgba(27, 27, 27, 0.5));
   font-family: Poppins;
-  font-size: 13.804px;
   font-style: normal;
   font-weight: 500;
   line-height: 23.361px; /* 169.231% */
@@ -152,8 +156,6 @@
   background: rgba(119, 93, 166, 0.08);
 }
 
-}
-
 /* =========================================
    🔹 RESPONSIVE BREAKPOINTS
    ========================================= */
@@ -170,9 +172,8 @@
   }
 
   .exp-filter-row {
-    flex-wrap: wrap;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
-    justify-content: center;
   }
 }
 
@@ -206,7 +207,7 @@
   }
 
   .exp-filter-row {
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
 

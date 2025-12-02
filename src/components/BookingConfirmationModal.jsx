@@ -71,7 +71,6 @@ const BookingConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
             </svg>
             <span>Cancel</span>
           </button>
-          <Link to="/confirm-booking" className="w-100 text-decoration-none">
           <button className="bcm-btn bcm-btn-confirm w-100" onClick={onConfirm}>
             {/* Top glossy line */}
             <svg className="bcm-btn-glossy-top" width="272" height="6" viewBox="0 0 272 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -106,7 +105,6 @@ const BookingConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
             </svg>
             <span>Confirm</span>
           </button>
-          </Link>
         </div>
       </div>
     </div>

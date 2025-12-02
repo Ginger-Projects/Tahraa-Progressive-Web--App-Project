@@ -1,12 +1,14 @@
 /* Main container */
 .package-summary-card {
-  background: #ffffff;          /* bg-card */
-  border: 1px solid #e5e7eb;   /* border-border */
-  border-radius: 12px;          /* rounded-lg */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* shadow-sm */
+  background: #ffffff;
+  border: 1px solid #EAE9FE;
+  border-radius: 17.844px;
+  box-shadow: 0 3.569px 3.569px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   width: 100%;
-  margin: 0;
+  max-width: 100%;
+  height: 100vh;
+  position: relative; /* so pagination can stick to bottom */
   box-sizing: border-box;
 }
 
@@ -15,7 +17,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 32px 24px 18px 24px; /* no bottom padding so table starts immediately below */
+  padding: 24px 32px 18px 32px;
   border-bottom: none;       /* remove separator line between header and table */
 }
 
@@ -32,15 +34,43 @@ text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
 .package-summary-date-box {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 6px 12px;
+  justify-content: flex-start;
+  padding: 8px 14px;
   border-radius: 8px;
   background-color: #ffffff;
-  color: #202020;
+  border: 1px solid #EAE9FE;
+  color: #6B7271;
   font-family: Poppins, sans-serif;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   white-space: nowrap; /* keep dd-mm-yy on one line */
+  position: relative; /* so hidden date input stays inside pill */
+}
+
+.ps-date-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.ps-date-label {
+  line-height: 1;
+  margin-right: 8px;
+}
+
+.ps-date-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ps-date-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .package-summary-controls {
@@ -49,10 +79,14 @@ text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
   gap: 8px;
 }
 
+.package-summary-search-wrapper {
+  position: relative;
+}
+
 .package-summary-search {
   border: 1px solid #E5E7EB;
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 8px 30px 8px 10px;
   font-size: 12px;
   font-family: Poppins, sans-serif;
   color: #202020;
@@ -63,20 +97,58 @@ text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
   min-width: 180px;
 }
 
+.package-summary-search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
 .package-summary-download {
-  padding: 8px 16px;
+  padding: 8px 18px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  background: #775DA6;
+  background: #02B346;
   color: #ffffff;
   font-size: 12px;
   font-family: Poppins, sans-serif;
-  transition: background 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  /* match existing 3D button style: only inner inset shadow */
+  box-shadow: -3px -3px 5px 0 rgba(0, 0, 0, 0.30) inset;
 }
 
 .package-summary-download:hover {
-  background: #5f4890;
+  background: #01963a;
+  box-shadow: -3px -3px 5px 0 rgba(0, 0, 0, 0.30) inset;
+}
+
+.ps-download-left {
+  position: absolute;
+  left: 4px;
+  top: 3px;
+  pointer-events: none;
+}
+
+.ps-download-top {
+  position: absolute;
+  left: 6px;
+  right: 0;
+  top: 3px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.ps-download-label {
+  position: relative;
+  z-index: 1;
 }
 
 .package-summary-button {
@@ -114,7 +186,7 @@ text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
 .package-summary-table-container {
   overflow-x: auto;
   width: 100%;
-  padding: 0 24px 16px 24px; /* horizontal gap + bottom padding */
+  padding: 0 32px 16px 32px;
   margin-top: 8px;           /* small vertical gap between header and table */
   box-sizing: border-box;
 }
@@ -127,7 +199,7 @@ text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
 
 .package-summary-table th,
 .package-summary-table td {
-  padding: 12px 16px;
+  padding: 12px 18px;
   text-align: left;
 }
 
@@ -209,6 +281,95 @@ text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
 .status-ongoing {
   background-color: #FDB73E;  /* amber-500 */
   color: #ffffff;
+}
+
+/* Pagination controls */
+.package-summary-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+}
+
+.ps-page-indicator {
+  font-family: Poppins, sans-serif;
+  font-size: 14px;
+  color: #313131;
+}
+
+.ps-page-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 1px solid #EAE9FE;
+  background: #775DA6;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ps-page-btn:hover {
+  background: #5f4890;
+}
+
+/* Active / inactive pagination button variants */
+.ps-page-btn--active {
+  background: #775DA6;
+  border-color: #EAE9FE;
+}
+
+.ps-page-btn--inactive {
+  background: #C9BEE6;
+  border-color: rgba(234, 233, 254, 0.8);
+  cursor: default;
+  box-shadow: none;
+}
+
+.ps-page-btn--inactive .ps-page-icon svg path {
+  fill: #E0E0E0;
+}
+
+.ps-page-icon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ps-page-glow-left,
+.ps-page-glow-right {
+  position: absolute;
+  top: 3px;
+  pointer-events: none;
+}
+
+.ps-page-glow-left {
+  left: 2px;
+}
+
+.ps-page-glow-right {
+  right: 2px;
+}
+
+.ps-page-top-left,
+.ps-page-top-right {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
 }
 
 

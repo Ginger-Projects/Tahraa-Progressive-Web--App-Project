@@ -40,7 +40,7 @@ const ExpertCard = ({ data, view }) => {
         </div>
 
         <div className="exp-card-footer">
-          <Link to="/expert-booking" className="w-100"><Button label="Book Session" bg="#775DA6" /></Link>
+          <Link to="/expert-booking" className="w-100"><Button label="View Packages" bg="#775DA6" /></Link>
           <Link to="/expert-profile" className="w-100"><Button label="Enquire" bg="#02B346" /></Link>
         </div>
       </div>

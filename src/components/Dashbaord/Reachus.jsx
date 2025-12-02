@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Reachus.css";
+import "../trainee/header.css";
 import Logo from "../../assets/images/logo.png";
 import kate from "../../assets/images/kate.png";
 import Phone from "../../assets/images/phone.png";
@@ -10,10 +11,12 @@ import BtnTopLine from "../../assets/images/btn-top-line.svg";
 import Fb from "../../assets/images/fb-reach.png";
 import Insta from "../../assets/images/insta-reach.png";
 import Maill from "../../assets/images/mail-reach.png";
+import ProfilePopup from "../trainee/ProfilePopup";
 
 
 const Reachus = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   return (
     <section className="main-reach">
@@ -37,7 +40,10 @@ const Reachus = () => {
         </div>
 
         <div className="reachus-header-right">
-          <div className="reachus-header-avatar" >
+          <div
+            className="reachus-header-avatar"
+            onClick={() => setIsProfileOpen(true)}
+          >
               <img src={kate} alt="" />
           </div>
           <button
@@ -144,6 +150,8 @@ const Reachus = () => {
       
       </div>
       </div>
+        <ProfilePopup open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+
         <div className="reachus-footer-strip">
           <div className="reachus-socials">
             <div className="reachus-social-circle"><img src={Fb} alt="" /></div>

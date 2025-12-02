@@ -54,7 +54,7 @@
     overflow: hidden;
     position: relative;
     /* Subtle soft outer shadow instead of bottom-heavy */
-    height: 300px;
+    height: 350px;
     border: none !important;
     box-shadow: none !important;
     background: transparent !important;

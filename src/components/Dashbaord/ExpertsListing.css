@@ -109,24 +109,26 @@
     margin-bottom: 4px;
   }
 
+  /* GRID CARD: Expert name */
   .exp-card-name {
     color: #252525;
     font-family: Hahmlet;
-    font-size: 13px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 700;
-    line-height: normal;
+    line-height: 1.4;
     margin-bottom: 0;
   }
 
+  /* GRID CARD: Role + experience */
   .exp-card-role {
     margin: 0 0 6px;
     color: #775da6;
     font-family: Poppins;
-    font-size: 11.468px;
+    font-size: 11.5px;
     font-style: normal;
     font-weight: 700;
-    line-height: normal;
+    line-height: 1.4;
   }
 
   .exp-card-role .dot {
@@ -135,41 +137,47 @@
     font-weight: normal;
   }
 
+  /* GRID CARD: secondary text lines */
   .exp-card-speaks,
   .exp-card-fee,
   .exp-card-status {
-    color: #888;
+    color: #535353;
     font-family: Poppins;
-    font-size: 9.97px;
+    font-size: 10px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
-
-    span {
-      color: #252525;
-      font-family: Poppins;
-      font-size: 9.97px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
-    }
-  }
-  .exp-card-fee div ~ span {
-    color: #775da6;
-    font-family: Poppins;
-    font-size: 7.785px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+    line-height: 1.5;
   }
 
-  .exp-card-fee div span {
-    color: #000;
-    font-family: Poppins;
-    font-size: 10.969px;
-    font-style: normal;
+  /* GRID CARD: Speaks line - label dark, value purple */
+  .exp-card-speaks {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .exp-card-speaks span {
+    color: #775da6; /* languages */
+  }
+
+  /* GRID CARD: Fee line colours */
+  .exp-card-fee span {
+    font-size: 10px;
+  }
+
+  .exp-card-fee > span:first-child {
+    color: #b3b3b3; /* "Fee range:" label */
+  }
+
+  .exp-card-fee > span:first-child span {
+    color: #000000;   /* QAR 250/hr */
     font-weight: 700;
-    line-height: normal;
+  }
+
+  .exp-card-fee > span:last-child {
+    color: #775da6;   /* 140 Active Student */
+    font-size: 9px;
+    font-weight: 500;
   }
 
   .exp-card-status {
@@ -282,7 +290,7 @@
     overflow: hidden;
     position: relative;
     /* Subtle soft outer shadow instead of bottom-heavy */
-    height: 300px;
+    height: 371px;
 
     .expert-name {
       color: #252525;
@@ -293,6 +301,7 @@
       line-height: 26.2px; /* 155.556% */
       max-width: 203.246px;
       width: 100%;
+      text-align: left;      /* start aligned */
     }
     .expert-role {
       color: #44444f;
@@ -302,6 +311,8 @@
       font-weight: 500;
       line-height: normal;
       letter-spacing: 0.094px;
+      text-align: left;      /* align under heading */
+
       span {
         color: #535353;
         font-family: Poppins;
@@ -316,6 +327,8 @@
       font-size: 10px;
       color: #252525;
       margin-bottom: 0.5rem;
+      text-align: left;
+
       span {
         color: #888888;
       }
@@ -323,6 +336,7 @@
     .expert-price {
       p {
         color: #535353;
+
         font-family: Roboto;
         font-size: 13.1px;
         font-style: normal;
@@ -330,6 +344,7 @@
         line-height: normal;
         letter-spacing: 0.094px;
         margin-bottom: 0;
+
         span {
           color: #535353;
           font-family: Roboto;
@@ -346,7 +361,9 @@
         display: flex;
         gap: 0.5rem;
         align-items: center;
+        text-align: left;
       }
+
       img {
         width: 10px;
         height: 11px;

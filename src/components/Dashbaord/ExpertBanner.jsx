@@ -4,11 +4,10 @@ import "./ExpertsBanner.css";
 import Button from "../../components/Button";
 
 const ExpertsBanner = ({ activeTab, setActiveTab }) => {
-  const [selectedPackage, setSelectedPackage] = useState("All");
   const [selectedFee, setSelectedFee] = useState("All");
   const [selectedExperience, setSelectedExperience] = useState("All");
   const [selectedTrainee, setSelectedTrainee] = useState("All");
-  const [selectedSort, setSelectedSort] = useState("Also speaks");
+  const [selectedSort, setSelectedSort] = useState("Languages spoken");
   const navigate = useNavigate();
 
   return (
@@ -60,14 +59,8 @@ const ExpertsBanner = ({ activeTab, setActiveTab }) => {
           <Button label='Search' bg='#02B346' />
         </div>
 
-        {/* Filter Row */}
+        {/* Filter Row (4 fields, as in Figma) */}
         <div className='exp-filter-row'>
-          <FilterSelect
-            label='Packages'
-            value={selectedPackage}
-            options={["All", "Music", "Sports", "Kids"]}
-            onSelect={setSelectedPackage}
-          />
           <FilterSelect
             label='Fee Range'
             value={selectedFee}
@@ -89,7 +82,7 @@ const ExpertsBanner = ({ activeTab, setActiveTab }) => {
           <FilterSelect
             label='Sort by'
             value={selectedSort}
-            options={["Also speaks", "Price Low–High", "Most Rated"]}
+            options={["Languages spoken", "Price Low–High", "Most Rated"]}
             onSelect={setSelectedSort}
           />
         </div>

@@ -2,10 +2,11 @@
 .header {
   background: #EAECF2;
   width: 100%;
-  
+}
+
 /* Main container */
 .header-container {
-  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
   padding:  40px 60px 40px 60px;
   display: flex;
@@ -76,7 +77,7 @@
 }
 
 .logo-image {
-  height: 20px;
+  height: auto;
   width: 100%;
   display: block;
 }
@@ -426,6 +427,7 @@ line-height: normal;
   align-items: center;
   gap: 16px;
   margin-bottom: 16px;
+  cursor: pointer;
 }
 
 .profile-popup-avatar {
@@ -573,6 +575,4 @@ font-style: normal;
 font-weight: 500;
 line-height: 20.794px; /* 137.382% */
 letter-spacing: 0.303px;
-}
-
 }

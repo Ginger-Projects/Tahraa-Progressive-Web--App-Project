@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./Header.css";
+import "../trainee/header.css";
 import kate from '../../assets/images/kate.png'
 import Logo from '../../assets/images/logo.png'
 import { Link, useLocation } from "react-router-dom";
+import ProfilePopup from "../trainee/ProfilePopup";
 const Header = () => {
   const location = useLocation();
   const { pathname } = location;
@@ -19,8 +21,10 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [language, setLanguage] = useState("EN");
   const [langOpen, setLangOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   return (
+    <>
     <header className="exp-header">
       <div className="exp-header-left">
         <Link to='/' className="exp-logo"><img src={Logo} alt="" /></Link>
@@ -50,7 +54,10 @@ const Header = () => {
             <span className="exp-user-name">Kate Bishop</span>
             <span className="exp-user-email">katebishop@gmail.com</span>
           </div>
-          <div className="exp-avatar">
+          <div
+            className="exp-avatar"
+            onClick={() => setIsProfileOpen(true)}
+          >
             <img src={kate} alt="Kate Bishop" />
           </div>
         </div>
@@ -91,6 +98,9 @@ const Header = () => {
         </div>
       </div>
     </header>
+
+    <ProfilePopup open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+    </>
   );
 };
 

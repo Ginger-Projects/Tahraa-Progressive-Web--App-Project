@@ -20,12 +20,17 @@ export default function ProfilePopup({ open, onClose }) {
     navigate("/login")
   }
 
+  const handleProfileClick = () => {
+    onClose && onClose()
+    navigate("/trainee")
+  }
+
   return (
     <div className="profile-popup-overlay" onClick={handleOverlayClick}>
       <div className="profile-popup-card">
         
 
-        <div className="profile-popup-header">
+        <div className="profile-popup-header" onClick={handleProfileClick}>
           <img src={ProfileEllipse} alt="Profile" className="profile-popup-avatar" />
           <div className="profile-popup-text">
             <h3>Kate Bishop</h3>

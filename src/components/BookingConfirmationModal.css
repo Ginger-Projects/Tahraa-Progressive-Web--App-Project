@@ -124,6 +124,11 @@
   width: 100%;
 }
 
+.bcm-actions-single {
+  display: flex;
+  justify-content: center;
+}
+
 .bcm-btn {
   padding: 12px 20px;
   border: none;
