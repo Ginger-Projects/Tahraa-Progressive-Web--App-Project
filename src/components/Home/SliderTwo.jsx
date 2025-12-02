@@ -8,8 +8,8 @@ import Expert3 from "../../assets/images/expert3.png";
 import Expert4 from "../../assets/images/expert4.png";
 import Verified from "../../assets/images/verified.png";
 import Speak from "../../assets/images/speak.png";
-import Next from "../../assets/images/Next.png";
-import Prev from "../../assets/images/Prev.png";
+import Next from "../../assets/images/next.png";
+import Prev from "../../assets/images/prev.png";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";

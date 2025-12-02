@@ -8,8 +8,8 @@ import Package3 from "../../assets/images/package3.png";
 import Package4 from "../../assets/images/package4.png";
 import Verified from "../../assets/images/verified.png";
 import Speak from "../../assets/images/speak.png";
-import Next from "../../assets/images/Next.png";
-import Prev from "../../assets/images/Prev.png";
+import Next from "../../assets/images/next.png";
+import Prev from "../../assets/images/prev.png";
 import File from "../../assets/images/file.png";
 import Clock from "../../assets/images/clock.png";
 
