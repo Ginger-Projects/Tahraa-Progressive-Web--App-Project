@@ -1,8 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Footer.css";
 import Fb from "../../assets/images/fb.png"; 
 import Insta from "../../assets/images/insta.png"; 
 import Logo from "../../assets/images/footer-logo.png"; 
+import Mail from "../../assets/images/mail-white.png"; 
 
 
 export const Footer = () => {
@@ -18,14 +20,23 @@ export const Footer = () => {
         <div className="footer-socials">
           <span className="social-icon"><img src={Fb} alt="" /></span>
           <span className="social-icon"><img src={Insta} alt="" /></span>
+          <span className="social-icon"><img src={Mail} alt="" /></span>
         </div>
 
         {/* Navigation Links */}
         <ul className="footer-links">
-          <li>Reach us</li>
-          <li>Terms of Use</li>
-          <li>Privacy Policy</li>
-          <li>Code of conduct</li>
+          <li>
+            <Link to="/reach-us">Reach us</Link>
+          </li>
+          <li>
+            <Link to="/terms-of-use">Terms of Use</Link>
+          </li>
+          <li>
+            <Link to="/privacy-policy">Privacy Policy</Link>
+          </li>
+          <li>
+            <Link to="/code-of-conduct">Code of conduct</Link>
+          </li>
         </ul>
 
         {/* Bottom Copy */}

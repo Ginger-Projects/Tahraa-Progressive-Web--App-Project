@@ -50,7 +50,7 @@ const HeroBanner = () => {
           <div className={`nav-menu ${navOpen ? "open" : ""}`}>
             <div className='frame'>
               <Link to="/our-experts" className='text-wrapper-2 text-decoration-none'>Our Experts and Packages</Link>
-              <Link to="/how-it-works-dashboard" className='text-wrapper-2 text-decoration-none'>How It Works</Link>
+              <Link to="/how-it-works-learners" className='text-wrapper-2 text-decoration-none'>How It Works</Link>
               <Link to="/reach-us" className='text-wrapper-2 text-decoration-none'>Reach Us</Link>
             </div>
             <div className='d-flex gap-5 nav-actions'>

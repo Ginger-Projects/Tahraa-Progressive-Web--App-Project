@@ -1,12 +1,26 @@
 // WelcomeCard.jsx
+import { useState } from "react";
 import { CheckCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import "./welcomeCard.css";
 import Smile from "../../assets/images/profile.png";
 
 export default function WelcomeCard() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleEditProfile = () => {
+    setMenuOpen(false);
+    navigate("/edit-traineeProfile");
+  };
+
   return (
     <div className="welcome-card">
-      <button type="button" className="welcome-hamburger">
+      <button
+        type="button"
+        className="welcome-hamburger"
+        onClick={() => setMenuOpen((open) => !open)}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="4"
@@ -28,6 +42,18 @@ export default function WelcomeCard() {
           />
         </svg>
       </button>
+
+      {menuOpen && (
+        <div className="welcome-menu">
+          <button
+            type="button"
+            className="welcome-menu-item"
+            onClick={handleEditProfile}
+          >
+            Edit Profile
+          </button>
+        </div>
+      )}
 
       <div className="welcome-content">
         <div className="welcome-image">

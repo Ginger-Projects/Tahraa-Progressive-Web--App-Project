@@ -1,14 +1,23 @@
-import { Link } from "react-router-dom"
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import ProfileEllipse from '../../assets/images/Ellipse 3077.png'
 import "./header.css"
 
 export default function ProfilePopup({ open, onClose }) {
+  const [confirmLogout, setConfirmLogout] = useState(false)
+  const navigate = useNavigate()
   if (!open) return null
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose && onClose()
     }
+  }
+
+  const handleConfirmLogout = () => {
+    setConfirmLogout(false)
+    onClose && onClose()
+    navigate("/login")
   }
 
   return (
@@ -122,7 +131,7 @@ export default function ProfilePopup({ open, onClose }) {
           </Link>
 
           <Link
-            to="/trainee"
+            to="/package-summary"
             className="profile-action-item"
             onClick={onClose}
           >
@@ -176,7 +185,11 @@ export default function ProfilePopup({ open, onClose }) {
             />
           </svg>
 
-          <button type="button" className="profile-logout-btn">
+          <button
+            type="button"
+            className="profile-logout-btn"
+            onClick={() => setConfirmLogout(true)}
+          >
             {/* Left vertical glow */}
             <span className="logout-glow-left">
               <svg
@@ -383,6 +396,31 @@ export default function ProfilePopup({ open, onClose }) {
               </svg>
             </span>
           </button>
+
+          {confirmLogout && (
+            <div className="logout-confirm">
+              <p className="logout-confirm-title">Are you sure you want to logout?</p>
+              <p className="logout-confirm-text">
+                You will be redirected to the login page.
+              </p>
+              <div className="logout-confirm-actions">
+                <button
+                  type="button"
+                  className="logout-confirm-btn logout-confirm-cancel"
+                  onClick={() => setConfirmLogout(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="logout-confirm-btn logout-confirm-primary"
+                  onClick={handleConfirmLogout}
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -74,17 +74,20 @@
     font-weight: bold;
     margin-bottom: 1rem;
     text-align: start;
+    max-width: 200px;
+    width: 100%;
+    color: #252525; /* strong title color */
   }
   .expert-role {
     font-size: 11.26px;
-    color: #44444f;
+    color: #252525; /* darker tutor name */
     font-family: "Poppins";
-    font-weight: bold;
+    font-weight: 600;
     margin-bottom: 0.5rem;
     text-align: start;
     span {
-      font-weight: lighter;
-      color: #535353;
+      font-weight: 400;
+      color: #6f6f6f; /* softer role text */
     }
   }
   .speak {
@@ -98,8 +101,8 @@
   .expert-price {
     p {
       font-size: 13px;
-      font-weight: bold;
-      color: #535353;
+      font-weight: 500;
+      color: #6f6f6f; /* meta text */
       margin-bottom: 0;
       display: flex;
       gap: 0.5rem;
@@ -107,12 +110,12 @@
 
       span {
         font-size: 13px;
-        color: #535353;
+        color: #6f6f6f;
       }
     }
     span {
       font-size: 13px;
-      color: #535353;
+      color: #6f6f6f;
       display: flex;
       gap: 0.5rem;
       align-items: center;

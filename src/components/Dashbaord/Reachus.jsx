@@ -29,7 +29,7 @@ const Reachus = () => {
             <Link to="/our-experts" className="reachus-nav-link">
               Our Experts and Packages
             </Link>
-            <Link to="/how-it-works-dashboard" className="reachus-nav-link">
+            <Link to="/how-it-works-learners" className="reachus-nav-link">
               How It Works
             </Link>
             <span className="reachus-nav-link reachus-nav-link-active">Reach Us</span>

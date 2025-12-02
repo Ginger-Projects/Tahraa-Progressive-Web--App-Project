@@ -192,7 +192,7 @@
 .profile-popup-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
 
@@ -211,6 +211,62 @@
   right: 60px; /* align with profile button area */
   transform: none;
   z-index: 1001;
+}
+
+.logout-confirm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 360px;
+  max-width: calc(100% - 48px);
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #eae9fe;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  padding: 20px 22px;
+  z-index: 1100;
+}
+
+.logout-confirm-title {
+  margin: 0 0 4px;
+  font-family: Poppins, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #252525;
+}
+
+.logout-confirm-text {
+  margin: 0 0 10px;
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  color: rgba(37, 37, 37, 0.7);
+}
+
+.logout-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.logout-confirm-btn {
+  min-width: 72px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: none;
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.logout-confirm-cancel {
+  background: #f4f0ff;
+  color: #252525;
+}
+
+.logout-confirm-primary {
+  background: #775da6;
+  color: #ffffff;
 }
 
 /* Notification popup card: larger dialog */

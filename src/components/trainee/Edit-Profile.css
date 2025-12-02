@@ -53,12 +53,13 @@ line-height: normal;
 
 .profile-email {
   color: #252525;
-font-family: Poppins;
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
-white-space: normal; /* allows email to wrap to next line */
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  opacity: 0.5; /* 50% like Figma */
+  white-space: normal; /* allows email to wrap to next line */
   word-break: break-word; /* breaks long email addresses */
 }
 
@@ -208,9 +209,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .form-group select {
   padding: 12px 14px;
   border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #f8f9fa;
-  font-size: 15px;
+  border: 1px solid #EAE9FE; /* match Figma border color */
+  background: #F9F9F9;       /* match Figma field background */
+  font-size: 16px;
   outline: none;
 }
 .form-group input,.form-group select{

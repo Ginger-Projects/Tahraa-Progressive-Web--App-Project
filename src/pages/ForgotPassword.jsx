@@ -41,7 +41,7 @@ const ForgotPassword = () => {
           </form>
 
           <p className='fp-help m-0'>
-            Want to help? <button className='fp-link'>Call customer service</button>
+            Want to help? <button className='fp-link'>Contact us on WhatsApp</button>
           </p>
 
           <p className='fp-footer-note'>

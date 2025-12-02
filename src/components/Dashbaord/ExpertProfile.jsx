@@ -549,6 +549,75 @@ const ExpertProfile = () => {
                           <span className='ep-detail-text'>{pkg.duration} Min / Session</span>
                         </div>
                       </div>
+
+                      <button className='ep-package-learn-btn' type='button'>
+                        <span className='ep-package-btn-left'>
+                          <svg xmlns='http://www.w3.org/2000/svg' width='8' height='25' viewBox='0 0 8 25' fill='none'>
+                            <g filter='url(#filter0_f_183_5275)'>
+                              <path
+                                d='M1.84416 2.59381C2.01105 1.33146 4.444 1.46282 5.49959 1.58055C5.67084 1.59965 5.723 1.82292 5.58558 1.92689C5.05143 2.33101 4.1415 3.11601 3.91325 3.92164C2.79266 7.87688 3.0281 14.5671 3.22138 17.7256C3.2918 18.8764 3.10497 20.0299 2.63998 21.085L1.84415 22.8907C1.84415 22.8907 1.09178 8.28454 1.84416 2.59381Z'
+                                fill='white'
+                                fillOpacity='0.3'
+                              />
+                              <path
+                                d='M1.84416 2.59381C2.01105 1.33146 4.444 1.46282 5.49959 1.58055C5.67084 1.59965 5.723 1.82292 5.58558 1.92689C5.05143 2.33101 4.1415 3.11601 3.91325 3.92164C2.79266 7.87688 3.0281 14.5671 3.22138 17.7256C3.2918 18.8764 3.10497 20.0299 2.63998 21.085L1.84415 22.8907C1.84415 22.8907 1.09178 8.28454 1.84416 2.59381Z'
+                                fill='url(#paint0_linear_183_5275)'
+                              />
+                            </g>
+                            <defs>
+                              <filter
+                                id='filter0_f_183_5275'
+                                x='0.000808239'
+                                y='-4.62532e-05'
+                                width='7.17221'
+                                height='24.3998'
+                                filterUnits='userSpaceOnUse'
+                                colorInterpolationFilters='sRGB'
+                              >
+                                <feFlood floodOpacity='0' result='BackgroundImageFix' />
+                                <feBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape' />
+                                <feGaussianBlur stdDeviation='0.754479' result='effect1_foregroundBlur_183_5275' />
+                              </filter>
+                              <linearGradient
+                                id='paint0_linear_183_5275'
+                                x1='1.50977'
+                                y1='2.07798'
+                                x2='3.40493'
+                                y2='3.76933'
+                                gradientUnits='userSpaceOnUse'
+                              >
+                                <stop stopColor='white' />
+                                <stop offset='1' stopColor='white' stopOpacity='0' />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                        </span>
+
+                        <span className='ep-package-btn-line'>
+                          <svg xmlns='http://www.w3.org/2000/svg' width='89' height='4' viewBox='0 0 89 4' fill='none'>
+                            <g filter='url(#filter0_f_183_5276)'>
+                              <path d='M1.60352 1.60327H86.7906' stroke='white' strokeWidth='0.18862' strokeLinecap='round' />
+                            </g>
+                            <defs>
+                              <filter
+                                id='filter0_f_183_5276'
+                                x='0.000808239'
+                                y='-4.62532e-05'
+                                width='88.3929'
+                                height='3.20664'
+                                filterUnits='userSpaceOnUse'
+                                colorInterpolationFilters='sRGB'
+                              >
+                                <feFlood floodOpacity='0' result='BackgroundImageFix' />
+                                <feBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape' />
+                                <feGaussianBlur stdDeviation='0.754479' result='effect1_foregroundBlur_183_5276' />
+                              </filter>
+                            </defs>
+                          </svg>
+                        </span>
+
+                        <span className='ep-package-btn-label'>Learn More</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1038,155 +1107,6 @@ const ExpertProfile = () => {
           </div>
         </section>
 
-        {/* YOU MIGHT ALSO LIKE */}
-        <section className='ep-suggest-section mt-5 mb-5'>
-          <div className='d-flex justify-content-between align-items-center mb-3'>
-            <div>
-              <h3 className='ep-section-title mb-0'>You Might Also Like</h3>
-              <p className='ep-suggest-sub'>Commodo condimentum est massa in enim fermentum. Mauris turpis et pellentesque.</p>
-            </div>
-            <button className='ep-view-all-btn'>
-              <svg style={{ width: '6.142857px', height: '29.178571px', position: 'absolute', left: '6.5px', top: '6.5px', opacity: 0.3, zIndex: 1 }} viewBox='0 0 7 30' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                <defs>
-                  <filter id='filter0_f_140_6659'>
-                    <feGaussianBlur in='SourceGraphic' stdDeviation='1.2619' />
-                  </filter>
-                  <linearGradient id='grad0_140_6659' x1='0%' y1='0%' x2='0%' y2='100%'>
-                    <stop offset='0%' style={{ stopColor: 'white', stopOpacity: 1 }} />
-                    <stop offset='100%' style={{ stopColor: 'white', stopOpacity: 0 }} />
-                  </linearGradient>
-                </defs>
-                <path d='M0 0 Q0 15 7 30' fill='url(#grad0_140_6659)' filter='url(#filter0_f_140_6659)' />
-              </svg>
-              <svg style={{ width: '117px', height: '0px', position: 'absolute', left: '6.5px', top: '6.5px', opacity: 0.2, zIndex: 1 }} viewBox='0 0 117 1' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                <defs>
-                  <filter id='filter0_f_140_6660'>
-                    <feGaussianBlur in='SourceGraphic' stdDeviation='1.2619' />
-                  </filter>
-                  <linearGradient id='grad0_140_6660' x1='0%' y1='0%' x2='100%' y2='0%'>
-                    <stop offset='0%' style={{ stopColor: 'white', stopOpacity: 1 }} />
-                    <stop offset='100%' style={{ stopColor: 'white', stopOpacity: 0 }} />
-                  </linearGradient>
-                </defs>
-                <line x1='0' y1='0.5' x2='117' y2='0.5' stroke='url(#grad0_140_6660)' strokeWidth='1' filter='url(#filter0_f_140_6660)' />
-              </svg>
-              <span style={{ position: 'relative', zIndex: 2, marginLeft: '8px' }}>View All</span>
-            </button>
-          </div>
-
-          <div className='ep-suggest-row-wrapper'>
-            <div className='ep-suggest-slider' ref={suggestSliderRef}>
-              {packages.map((pkg, idx) => (
-                <div key={idx} className='ep-suggest-card-wrapper'>
-                  {/* Purple border background */}
-                  <div className='ep-suggest-card-border'></div>
-                  
-                  {/* White content area */}
-                  <div className='ep-suggest-card-content'>
-                    {/* Image at top */}
-                    <div className='ep-suggest-img-wrapper'>
-                      <img src={pkg.image} alt={pkg.title} className='ep-suggest-img' />
-                    </div>
-                    
-                    {/* White info card */}
-                    <div className='ep-suggest-info-card'>
-                      {/* Name with verified badge */}
-                      <div className='ep-suggest-name-row'>
-                        <span className='ep-suggest-name'>{pkg.mentor}</span>
-                        <svg width='11.639' height='11.639' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                          <path d='M5.19 0.58C5.51 0.35 5.95 0.35 6.27 0.58L7.45 1.65C7.56 1.74 7.71 1.78 7.85 1.77L9.38 1.7C9.85 1.68 10.24 2.06 10.22 2.53L10.15 4.06C10.14 4.2 10.18 4.35 10.27 4.46L11.34 5.64C11.57 5.96 11.57 6.4 11.34 6.72L10.27 7.9C10.18 8.01 10.14 8.16 10.15 8.3L10.22 9.83C10.24 10.3 9.85 10.68 9.38 10.66L7.85 10.59C7.71 10.58 7.56 10.62 7.45 10.71L6.27 11.78C5.95 12.01 5.51 12.01 5.19 11.78L4.01 10.71C3.9 10.62 3.75 10.58 3.61 10.59L2.08 10.66C1.61 10.68 1.22 10.3 1.24 9.83L1.31 8.3C1.32 8.16 1.28 8.01 1.19 7.9L0.12 6.72C-0.11 6.4 -0.11 5.96 0.12 5.64L1.19 4.46C1.28 4.35 1.32 4.2 1.31 4.06L1.24 2.53C1.22 2.06 1.61 1.68 2.08 1.7L3.61 1.77C3.75 1.78 3.9 1.74 4.01 1.65L5.19 0.58Z' fill='url(#paint0_linear_verify)'/>
-                          <path fillRule='evenodd' clipRule='evenodd' d='M8.45 4.12C8.68 4.31 8.71 4.66 8.52 4.89L6.09 7.84C5.82 8.17 5.33 8.19 5.04 7.88L3.73 6.42C3.52 6.19 3.54 5.84 3.77 5.63C4 5.42 4.35 5.44 4.56 5.67L5.52 6.73L7.61 4.19C7.8 3.96 8.15 3.93 8.38 4.12H8.45Z' fill='white'/>
-                          <defs>
-                            <linearGradient id='paint0_linear_verify' x1='0.41' y1='5.64' x2='11.75' y2='5.64' gradientUnits='userSpaceOnUse'>
-                              <stop stopColor='#049A0E'/>
-                              <stop offset='1' stopColor='#02B346'/>
-                            </linearGradient>
-                          </defs>
-                        </svg>
-                      </div>
-                      
-                      {/* Subtitle */}
-                      <div className='ep-suggest-subtitle'>
-                        <span className='ep-suggest-role'>Vocal Trainer</span>
-                        <span className='ep-suggest-separator'> | </span>
-                        <span className='ep-suggest-experience'>10 Years of experience</span>
-                      </div>
-                      
-                      {/* Languages */}
-                      <div className='ep-suggest-speaks'>
-                        <svg width='8.504' height='8.487' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                          <path d='M4.252 0C1.905 0 0 1.905 0 4.252C0 6.599 1.905 8.504 4.252 8.504C6.599 8.504 8.504 6.599 8.504 4.252C8.504 1.905 6.599 0 4.252 0ZM7.227 2.551H5.953C5.826 2.033 5.636 1.531 5.388 1.063C6.204 1.346 6.897 1.876 7.227 2.551ZM4.252 0.85C4.604 1.346 4.889 1.926 5.093 2.551H3.411C3.615 1.926 3.9 1.346 4.252 0.85ZM0.935 5.103C0.85 4.827 0.85 4.677 0.85 4.252C0.85 3.827 0.935 3.677 0.935 3.401H2.38C2.346 3.677 2.312 3.953 2.312 4.252C2.312 4.551 2.346 4.827 2.38 5.103H0.935ZM1.277 5.953H2.551C2.678 6.471 2.868 6.973 3.116 7.441C2.3 7.158 1.607 6.628 1.277 5.953ZM2.551 2.551H1.277C1.607 1.876 2.3 1.346 3.116 1.063C2.868 1.531 2.678 2.033 2.551 2.551ZM4.252 7.654C3.9 7.158 3.615 6.578 3.411 5.953H5.093C4.889 6.578 4.604 7.158 4.252 7.654ZM5.297 5.103H3.207C3.173 4.827 3.162 4.551 3.162 4.252C3.162 3.953 3.173 3.677 3.207 3.401H5.297C5.331 3.677 5.342 3.953 5.342 4.252C5.342 4.551 5.331 4.827 5.297 5.103ZM5.388 7.441C5.636 6.973 5.826 6.471 5.953 5.953H7.227C6.897 6.628 6.204 7.158 5.388 7.441ZM6.124 5.103C6.158 4.827 6.192 4.551 6.192 4.252C6.192 3.953 6.158 3.677 6.124 3.401H7.569C7.653 3.677 7.654 3.827 7.654 4.252C7.654 4.677 7.653 4.827 7.569 5.103H6.124Z' fill='#888888'/>
-                        </svg>
-                        <span>Speaks: <span className='ep-suggest-lang-highlight'>English, Arabic +2</span></span>
-                      </div>
-                      
-                      {/* Fee and Students Row */}
-                      <div className='ep-suggest-pricing-row'>
-                        <div className='ep-suggest-fee'>
-                          <span className='ep-suggest-fee-label'>Fee range:</span>
-                          <span className='ep-suggest-fee-value'>QAR 250/hr</span>
-                        </div>
-                        <div className='ep-suggest-students'>140 Active Student</div>
-                      </div>
-                      
-                      {/* Action Buttons */}
-                      <div className='ep-suggest-btn-row'>
-                        <button className='ep-suggest-btn ep-suggest-btn-purple'>
-                          <svg style={{ width: '4.641px', height: '22.003px', position: 'absolute', left: '3.4px', top: '5.2px', opacity: 0.3, zIndex: 1 }} viewBox='0 0 5 23' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                            <defs>
-                              <filter id={`filter_suggest_book_${idx}`}>
-                                <feGaussianBlur in='SourceGraphic' stdDeviation='1.2619' />
-                              </filter>
-                              <linearGradient id={`grad_suggest_book_${idx}`} x1='0%' y1='0%' x2='0%' y2='100%'>
-                                <stop offset='0%' style={{ stopColor: 'white', stopOpacity: 0.3 }} />
-                                <stop offset='100%' style={{ stopColor: 'white', stopOpacity: 0 }} />
-                              </linearGradient>
-                            </defs>
-                            <path d='M0.5 0.5 Q1 11 4.5 22' fill={`url(#grad_suggest_book_${idx})`} filter={`url(#filter_suggest_book_${idx})`} />
-                          </svg>
-                          <svg style={{ width: '88.4px', height: '1px', position: 'absolute', left: '3.4px', top: '5.2px', opacity: 0.2, zIndex: 1 }} viewBox='0 0 89 1' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                            <line x1='0' y1='0.5' x2='89' y2='0.5' stroke='white' strokeWidth='0.315' />
-                          </svg>
-                          <span style={{ position: 'relative', zIndex: 2 }}>Book Session</span>
-                        </button>
-                        <button className='ep-suggest-btn ep-suggest-btn-green'>
-                          <svg style={{ width: '4.641px', height: '22.003px', position: 'absolute', left: '3.4px', top: '5.2px', opacity: 0.3, zIndex: 1 }} viewBox='0 0 5 23' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                            <defs>
-                              <filter id={`filter_suggest_enquire_${idx}`}>
-                                <feGaussianBlur in='SourceGraphic' stdDeviation='1.2619' />
-                              </filter>
-                              <linearGradient id={`grad_suggest_enquire_${idx}`} x1='0%' y1='0%' x2='0%' y2='100%'>
-                                <stop offset='0%' style={{ stopColor: 'white', stopOpacity: 0.3 }} />
-                                <stop offset='100%' style={{ stopColor: 'white', stopOpacity: 0 }} />
-                              </linearGradient>
-                            </defs>
-                            <path d='M0.5 0.5 Q1 11 4.5 22' fill={`url(#grad_suggest_enquire_${idx})`} filter={`url(#filter_suggest_enquire_${idx})`} />
-                          </svg>
-                          <svg style={{ width: '88.4px', height: '1px', position: 'absolute', left: '3.4px', top: '5.2px', opacity: 0.2, zIndex: 1 }} viewBox='0 0 89 1' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                            <line x1='0' y1='0.5' x2='89' y2='0.5' stroke='white' strokeWidth='0.315' />
-                          </svg>
-                          <span style={{ position: 'relative', zIndex: 2 }}>Enquire</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button className='ep-arrow-btn left' onClick={handleSuggestSlideLeft}>
-              <svg style={{ width: '16px', height: '16px', position: 'relative', zIndex: 2 }} viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                <path d='M10 2L4 8L10 14' stroke='#775DA6' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-              </svg>
-            </button>
-
-            <button className='ep-arrow-btn right' onClick={handleSuggestSlideRight}>
-              <svg style={{ width: '16px', height: '16px', position: 'relative', zIndex: 2 }} viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                <path d='M6 2L12 8L6 14' stroke='#775DA6' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-              </svg>
-            </button>
-          </div>
-        </section>
       </div>
     </main>
   );

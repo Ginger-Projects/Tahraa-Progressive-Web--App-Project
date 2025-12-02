@@ -1,8 +1,10 @@
 import React from 'react';
 import { Clock, CheckCircle, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import "./GroupCourse.css";
 
 export default function ViolinClassCard() {
+  const navigate = useNavigate();
   return (
     <div className="page-wrapper">
       <div className="card-container">
@@ -159,7 +161,11 @@ export default function ViolinClassCard() {
         </div>
 
         {/* CTA Button */}
-  <button className="course-button">
+        <button
+          className="course-button"
+          type="button"
+          onClick={() => navigate('/confirm-booking')}
+        >
   <div className="button-decoration-top">
     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="37" viewBox="0 0 10 37" fill="none" className="decoration-vertical">
       <g filter="url(#filter0_f_178_1828)">

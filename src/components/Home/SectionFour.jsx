@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./SectionFour.css";
 
 import BgImage from "../../assets/images/footer-bg.png";
@@ -23,20 +24,22 @@ export const SectionFour = () => {
               to mastery
             </h2>
 
-            <button className="BTNFOUR">
-              <div className="rectangle-2" />
-              <img
-                className="vector-2"
-                alt="Vector"
-                src="https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg"
-              />
-              <img
-                className="line"
-                alt="Line"
-                src="https://c.animaapp.com/RRnEyncc/img/line-1.svg"
-              />
-              <div className="label">Find Yourself Here</div>
-            </button>
+            <Link to="/how-it-works-learners" className="text-decoration-none">
+              <button className="BTNFOUR" type="button">
+                <div className="rectangle-2" />
+                <img
+                  className="vector-2"
+                  alt="Vector"
+                  src="https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg"
+                />
+                <img
+                  className="line"
+                  alt="Line"
+                  src="https://c.animaapp.com/RRnEyncc/img/line-1.svg"
+                />
+                <div className="label">Find Yourself Here</div>
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -54,20 +57,22 @@ export const SectionFour = () => {
               to grow your business
             </h2>
 
-            <button className="BTNFOUR BTNFOUR-secondary">
-              <div className="rectangle-2" />
-              <img
-                className="vector-2"
-                alt="Vector"
-                src="https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg"
-              />
-              <img
-                className="line"
-                alt="Line"
-                src="https://c.animaapp.com/RRnEyncc/img/line-1.svg"
-              />
-              <div className="label">Register as an Expert</div>
-            </button>
+            <Link to="/how-it-works-experts" className="text-decoration-none">
+              <button className="BTNFOUR BTNFOUR-secondary" type="button">
+                <div className="rectangle-2" />
+                <img
+                  className="vector-2"
+                  alt="Vector"
+                  src="https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg"
+                />
+                <img
+                  className="line"
+                  alt="Line"
+                  src="https://c.animaapp.com/RRnEyncc/img/line-1.svg"
+                />
+                <div className="label">Register as an Expert</div>
+              </button>
+            </Link>
           </div>
         </div>
       </div>

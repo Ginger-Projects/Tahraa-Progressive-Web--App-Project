@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./VideSection.css";
 
 // replace with your real image paths
@@ -29,15 +30,17 @@ export const VideSection = () => {
               Follow these steps to find your ideal coach, book your first session and begin your journey.
             </p>
 
-            <button className='BTN'>
-              <div className='rectangle-2' />
+            <Link to="/how-it-works-learners" className='text-decoration-none'>
+              <button className='BTN' type='button'>
+                <div className='rectangle-2' />
 
-              <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
+                <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
-              <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
+                <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-              <div className='label'>Explore More</div>
-            </button>
+                <div className='label'>Explore More</div>
+              </button>
+            </Link>
           </div>
 
           {/* Card 2 */}
@@ -48,15 +51,17 @@ export const VideSection = () => {
             <h2 className='heading-text'>For Experts</h2>
             <p className='how-text'>Learn how Tahraa manages your schedule, find clients for you, and secures more earnings.</p>
 
-            <button className='BTN'>
-              <div className='rectangle-2' />
+            <Link to="/how-it-works-experts" className='text-decoration-none'>
+              <button className='BTN' type='button'>
+                <div className='rectangle-2' />
 
-              <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
+                <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
-              <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
+                <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-              <div className='label'>Explore More</div>
-            </button>
+                <div className='label'>Explore More</div>
+              </button>
+            </Link>
           </div>
         </div>
       </div>

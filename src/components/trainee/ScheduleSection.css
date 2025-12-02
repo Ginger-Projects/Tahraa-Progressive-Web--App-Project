@@ -28,6 +28,7 @@ font-style: normal;
 font-weight: 500;
 line-height: normal;
 text-transform: capitalize;
+
 }
 
 /* Navigation buttons */
@@ -139,6 +140,8 @@ font-style: normal;
 font-weight: 500;
 line-height: 22.009px; /* 125% */  /* reduced slightly */
   margin-bottom: 12px; /* extra gap before session tag */
+  max-width: 200px;
+  width: 100%;
 }
 
 /* Session tag */

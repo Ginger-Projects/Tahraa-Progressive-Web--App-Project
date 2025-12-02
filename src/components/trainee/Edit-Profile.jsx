@@ -1,10 +1,12 @@
 import React, { useState } from "react"
 import { Eye, EyeOff, Calendar } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import './Edit-Profile.css'
 const LOCATIONS = ["Lusail, Qatar", "Doha, Qatar", "Al Wakrah, Qatar", "Al Khor, Qatar", "Umm Salal, Qatar"]
 const GENDERS = ["Female", "Male", "Other"]
 
 export default function EditProfileForm() {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     fullName: "Kate Bishop",
@@ -32,9 +34,13 @@ export default function EditProfileForm() {
       {/* Header */}
       <div className="edit-profile-header">
         <div className="profile-info">
-          <div className="avatar-wrapper">
+          <button
+            type="button"
+            className="avatar-wrapper"
+            onClick={() => navigate('/edit-traineeProfilePicture')}
+          >
             <img src={formData.avatar} alt="Avatar" className="avatar-img" />
-          </div>
+          </button>
           <div>
             <h2 className="profile-name">{formData.fullName}</h2>
             <p className="profile-email">{formData.email}</p>

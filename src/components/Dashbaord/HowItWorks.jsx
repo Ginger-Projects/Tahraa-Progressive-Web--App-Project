@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./HowItWorks.css";
 
-const HowItWorks = () => {
-  const [audience, setAudience] = useState("learners");
+const HowItWorks = ({ initialAudience = "learners", tabMode = "local" }) => {
+  const [audience, setAudience] = useState(initialAudience);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
+  const navigate = useNavigate();
 
   const copyByAudience = {
     learners: {
@@ -48,6 +50,26 @@ const HowItWorks = () => {
 
   const currentCopy = audience === "experts" ? copyByAudience.experts : copyByAudience.learners;
 
+  const handleSelectLearners = () => {
+    if (tabMode === "routes") {
+      if (audience !== "learners") {
+        navigate("/how-it-works-learners");
+      }
+    } else {
+      setAudience("learners");
+    }
+  };
+
+  const handleSelectExperts = () => {
+    if (tabMode === "routes") {
+      if (audience !== "experts") {
+        navigate("/how-it-works-experts");
+      }
+    } else {
+      setAudience("experts");
+    }
+  };
+
   return (
     <div className="hiw-page">
       <section className="hiw-hero">
@@ -61,14 +83,14 @@ const HowItWorks = () => {
             <button
               className={`hiw-toggle-btn ${audience === "learners" ? "active" : ""}`}
               type="button"
-              onClick={() => setAudience("learners")}
+              onClick={handleSelectLearners}
             >
               For Learners
             </button>
             <button
               className={`hiw-toggle-btn ${audience === "experts" ? "active" : ""}`}
               type="button"
-              onClick={() => setAudience("experts")}
+              onClick={handleSelectExperts}
             >
               For Experts
             </button>

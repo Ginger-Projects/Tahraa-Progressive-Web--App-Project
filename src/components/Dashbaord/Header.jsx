@@ -7,8 +7,14 @@ const Header = () => {
   const location = useLocation();
   const { pathname } = location;
 
-  const navLinkClass = (path) =>
-    `${pathname === path ? "active" : ""} text-decoration-none`.trim();
+  const navLinkClass = (path) => {
+    const isHowItWorks = path === "/how-it-works-learners";
+    const isActive = isHowItWorks
+      ? pathname === "/how-it-works-learners" || pathname === "/how-it-works-experts"
+      : pathname === path;
+
+    return `${isActive ? "active" : ""} text-decoration-none`.trim();
+  };
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [language, setLanguage] = useState("EN");
@@ -21,7 +27,7 @@ const Header = () => {
 
         <nav className={`exp-nav ${mobileMenuOpen ? 'active' : ''}`}>
           <Link to="/our-experts" className={navLinkClass("/our-experts")}>Our Experts and Packages</Link>
-          <Link to="/how-it-works-dashboard" className={navLinkClass("/how-it-works-dashboard")}>How It Works</Link>
+          <Link to="/how-it-works-learners" className={navLinkClass("/how-it-works-learners")}>How It Works</Link>
           <Link to="/reach-us" className={navLinkClass("/reach-us")}>Reach Us</Link>
         </nav>
       </div>
