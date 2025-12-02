@@ -14,6 +14,7 @@ import ReachusMain from './pages/Dashboard/ReachusMain'
 
 import Trainer from './pages/Trainer/Trainer'
 import TrainerCalendar from './pages/Trainer/TrainerCalendar'
+import PackageSummaryPage from './pages/Trainer/PackageSummaryPage'
 
 import RegistrationBasicsMain from './pages/Dashboard/RegistrationBasicsMain'
 import RegistrationEducationMain from './pages/Dashboard/RegistrationEducationMain'
