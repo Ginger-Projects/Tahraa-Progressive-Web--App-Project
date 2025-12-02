@@ -8,12 +8,12 @@ export default function NotFound() {
     <div className="notfound-page">
       <div className="notfound-inner">
         <header className="notfound-header">
-          <img src={Logo}  alt="Tahraa" className="notfound-logo " />
+          <Link to='/'><img src={Logo}  alt="Tahraa" className="notfound-logo " /></Link>
         </header>
 
         <main className="notfound-content">
           <div className="notfound-illustration" aria-hidden="true" >
-            <img src={NotFoundImage} alt="" />
+           <img src={NotFoundImage} alt="" /> 
             </div>
 
           <h1 className="notfound-title">Oops! 404 - Page Not Found</h1>
