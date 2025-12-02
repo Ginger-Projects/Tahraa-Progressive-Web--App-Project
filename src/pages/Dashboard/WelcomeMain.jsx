@@ -85,7 +85,6 @@ const WelcomeMain = () => {
                   background: "#02b346",
                   color: "#ffffff",
                   padding: "0 32px",
-                  width: "auto",
                   height: 53,
                   borderRadius: 10,
                   boxShadow: "-3.7px -3.7px 6.3px rgba(0,0,0,0.3) inset",

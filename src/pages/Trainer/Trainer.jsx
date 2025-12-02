@@ -4,7 +4,7 @@ import ScheduleSection from "../../components/trainee/ScheduleSection";
 import MyExperts from "../../components/trainee/MyExperts";
 import SavedExperts from "../../components/trainee/SavedExperts";
 import CourseCard from "../../components/trainee/GroupCourse";
-import PackageSummary from "../../components/trainee/packageSummary";
+import PackageSummary from "../../components/trainee/PackageSummary";
 import { Footer } from "../../components/Home/Footer";
 import "./Trainer.css";
 
