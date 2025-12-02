@@ -1,4 +1,4 @@
-import "./Header.css"
+import "./header.css"
 
 export default function NotificationPopup({ open, onClose }) {
   if (!open) return null

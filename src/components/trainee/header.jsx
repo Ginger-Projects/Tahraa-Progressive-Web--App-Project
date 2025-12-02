@@ -1,4 +1,4 @@
-import "./Header.css";
+import "./header.css";
 import { useState } from "react";
 import { HiOutlineChat, HiOutlineBell } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";

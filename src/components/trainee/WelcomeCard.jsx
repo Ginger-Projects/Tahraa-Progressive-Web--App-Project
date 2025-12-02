@@ -1,6 +1,6 @@
 // WelcomeCard.jsx
 import { CheckCircle } from "lucide-react";
-import "./WelcomeCard.css";
+import "./welcomeCard.css";
 import Smile from "../../assets/images/profile.png";
 
 export default function WelcomeCard() {

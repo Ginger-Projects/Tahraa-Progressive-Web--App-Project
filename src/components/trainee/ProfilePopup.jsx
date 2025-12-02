@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import ProfileEllipse from '../../assets/images/Ellipse 3077.png'
-import "./Header.css"
+import "./header.css"
 
 export default function ProfilePopup({ open, onClose }) {
   if (!open) return null
