@@ -4,7 +4,7 @@ import Music from "../../assets/images/music.png";
 import Art from "../../assets/images/art.png";
 import Yoga from "../../assets/images/yoga.png";
 import Gym from "../../assets/images/gym.png";
-import Next from "../../assets/images/Next.png";
+import Next from "../../assets/images/next.png";
 import Prev from "../../assets/images/Prev.png";
 
 
