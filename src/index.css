@@ -7,15 +7,13 @@
   font-family: "Poppins", sans-serif;
 }
 h2,h1{
-    span{
-         font-family: "Hahmlet", serif !important;
-    }
-     font-family: "Hahmlet", serif !important;
+
+      font-family: "Poppins", sans-serif !important;
      font-weight: bold;
 }
 p{
      color: #FFF;
-font-family: Poppins;
+font-family: Poppins !important;
 font-size: 18px;
 font-style: normal;
 font-weight: 400;

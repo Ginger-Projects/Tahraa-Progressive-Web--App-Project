@@ -1,0 +1,129 @@
+.notfound-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(90deg, #eaecf2 26%, rgba(119, 93, 166, 0.66));
+}
+
+.notfound-inner {
+  width: 100%;
+  max-width: 1400px;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 40px 32px 60px;
+  box-sizing: border-box;
+}
+
+.notfound-header {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.notfound-logo {
+  height: 40px;
+  width: auto;
+}
+
+.notfound-content {
+  max-width: 960px;
+  margin: 40px auto 0;
+  text-align: center;
+}
+
+/* Placeholder illustration area matching Figma proportions */
+.notfound-illustration {
+  width: 100%;
+  max-width: 952px;
+  margin: 0 auto 40px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.notfound-illustration img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.notfound-title {
+  margin: 0 0 16px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1.2;
+  color: #252525;
+}
+
+.notfound-text {
+  margin: 0 0 32px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.5;
+  color: rgba(37, 37, 37, 0.5);
+}
+
+.notfound-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 40px;
+  border-radius: 10px;
+  border: none;
+  background-color: #02b346;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  box-shadow: inset -3.3px -3.3px 6.3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.notfound-button:hover {
+  opacity: 0.95;
+}
+
+.notfound-btn-glow {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+.notfound-btn-line {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 6px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .notfound-inner {
+    padding: 24px 18px 32px;
+  }
+
+  .notfound-title {
+    font-size: 28px;
+  }
+
+  .notfound-text {
+    font-size: 16px;
+  }
+
+  .notfound-illustration {
+    margin-bottom: 24px;
+  }
+}

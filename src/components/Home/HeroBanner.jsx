@@ -27,7 +27,13 @@ const HeroBanner = () => {
         <img className='vector' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector.svg' />
 
         <img className='img' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1.svg' />
+        <img className='women-KB-copy' alt='Women KB copy' src='https://c.animaapp.com/RRnEyncc/img/women-kb-copy-1.png' />
 
+        <img
+          className='basket-ball-man-copy'
+          alt='Basket ball man copy'
+          src='https://c.animaapp.com/RRnEyncc/img/basket-ball-man-copy-1.png'
+        />
         <nav className={`navbar ${scrolled || navOpen ? "nav-white" : ""}`}>
           <img src={Logo} className='div' alt='Logo' />
 
@@ -65,7 +71,7 @@ const HeroBanner = () => {
 
               <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-              <div className='label'>Join for Free</div>
+            <Link to='/registration'> <div className='label'>Join for Free</div></Link>
             </button>
             {/* <FormSelectoption
               className='form-selectoption-instance'
@@ -93,17 +99,11 @@ const HeroBanner = () => {
 
             <img className='line-2' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-1.svg' />
 
-            <div className='label-2'>Start Your Discovery</div>
+            <Link to='/our-packages'><div className='label-2'>Start Your Discovery</div></Link>
           </button>
         </div>
 
-        <img className='women-KB-copy' alt='Women KB copy' src='https://c.animaapp.com/RRnEyncc/img/women-kb-copy-1.png' />
 
-        <img
-          className='basket-ball-man-copy'
-          alt='Basket ball man copy'
-          src='https://c.animaapp.com/RRnEyncc/img/basket-ball-man-copy-1.png'
-        />
       </div>
     </div>
   );

@@ -380,11 +380,40 @@ body {
   color: #5e4beb;
   text-decoration: underline;
 }
-/* Stagger second column vertically */
-.tahraa-cards-track > .tahraa-card:nth-child(odd) {
-  transform: translateY(-100px);
+/* Terms / agreement line above buttons */
+.tahraa-agreement {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 18px;
 }
 
+.tahraa-agreement-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid #eae9fe;
+  background-color: #ffffff;
+  flex-shrink: 0;
+}
+
+.tahraa-agreement-checkbox:checked {
+  border-color: #775da6;
+  background-color: #775da6;
+  accent-color: #775da6; /* modern browsers */
+}
+
+.tahraa-agreement-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #252525;
+}
+
+.tahraa-agreement-text a {
+  color: #775da6;
+  text-decoration: underline;
+}
 /* RIGHT PANEL */
 
 .tahraa-right-panel {
@@ -402,16 +431,30 @@ body {
   height: 100%;
   max-height: 100%;
   overflow: hidden;
-  padding-right: 4px;
+  display: flex;
+  gap: 32px;
 }
 
-/* vertical marquee */
+.tahraa-cards-column {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* vertical marquee tracks for each column */
 
 .tahraa-cards-track {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* TWO COLUMN GRID */
-  gap: 22px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.tahraa-cards-track--up {
   animation: tahraaScrollUp 20s linear infinite;
+}
+
+.tahraa-cards-track--down {
+  animation: tahraaScrollDown 20s linear infinite;
 }
 
 @keyframes tahraaScrollUp {
@@ -420,6 +463,15 @@ body {
   }
   100% {
     transform: translateY(-50%);
+  }
+}
+
+@keyframes tahraaScrollDown {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 

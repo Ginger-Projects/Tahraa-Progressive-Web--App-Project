@@ -2,9 +2,7 @@
   height: 100vh;
   position: relative;
   width: 100%;
-  min-height: 100vh;
-
-  
+  background-color: #eaecf2;
 }
 
 .hero-content {
@@ -192,7 +190,7 @@
 }
 
 .box .rectangle {
-  height: 746px;
+  height: 100%;
   object-fit: cover;
   position: absolute;
   top: 0;
@@ -531,11 +529,11 @@
 .box .women-KB-copy {
   aspect-ratio: 0.67;
   height: 642px;
-  left: 0;
   object-fit: cover;
   position: absolute;
-  top: 115px;
+  bottom: 0;
   width: 428px;
+  left: 0;
 }
 
 .box .women-KB-copy {
@@ -550,8 +548,9 @@
   right: 0;
   object-fit: cover;
   position: absolute;
-  top: 89px;
+  bottom: 0;
   width: 450px;
+
 }
 
 /* Scale hero characters down on smaller screens to avoid overlapping text */

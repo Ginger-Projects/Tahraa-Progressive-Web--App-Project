@@ -4,6 +4,7 @@ import { Home } from './pages/Home'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
 import ForgotPassword from './pages/ForgotPassword'
+import NotFound from './pages/NotFound'
 import ExpertsPage from './pages/Dashboard/ExpertsPage'
 import PackagesPage from './pages/Dashboard/PackagesPage'
 import ExpertsProfileMain from './pages/Dashboard/ExpertProfileMain'
@@ -54,6 +55,7 @@ function App() {
         <Route path="/regitraion-education" element={<RegistrationEducationMain />} />
         <Route path="/registration-work" element={<RegistrationWorkMain />} />
         <Route path="/welcome" element={<WelcomeMain />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   )

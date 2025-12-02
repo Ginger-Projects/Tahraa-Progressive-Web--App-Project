@@ -2,7 +2,7 @@ import React from "react";
 import "./Footer.css";
 import Fb from "../../assets/images/fb.png"; 
 import Insta from "../../assets/images/insta.png"; 
-import Logo from "../../assets/images/logo-white.png"; 
+import Logo from "../../assets/images/footer-logo.png"; 
 
 
 export const Footer = () => {

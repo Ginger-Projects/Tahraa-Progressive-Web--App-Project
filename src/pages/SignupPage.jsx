@@ -96,6 +96,16 @@ const TahraaSignup = () => {
     []
   );
 
+  const leftColumnMentors = useMemo(
+    () => marqueeCards.filter((_, idx) => idx % 2 === 0),
+    [marqueeCards]
+  );
+
+  const rightColumnMentors = useMemo(
+    () => marqueeCards.filter((_, idx) => idx % 2 === 1),
+    [marqueeCards]
+  );
+
   return (
     <div className="tahraa-page">
       <div className="tahraa-wrapper">
@@ -199,6 +209,21 @@ const TahraaSignup = () => {
               </div>
             </div>
 
+            {/* Terms / Agreement */}
+            <div className="tahraa-agreement">
+              <input
+                type="checkbox"
+                className="tahraa-agreement-checkbox"
+              />
+              <p className="tahraa-agreement-text">
+                <span>By signing up you agree to our </span>
+                <a href="#terms-of-use">Terms of use</a>
+                <span> and </span>
+                <a href="#privacy-policy">Privacy policy</a>
+                <span>.</span>
+              </p>
+            </div>
+
             {/* Buttons */}
           <button className='BTN-2'>
             <div className='rectangle-2' />
@@ -288,37 +313,73 @@ const TahraaSignup = () => {
           </form>
         </div>
 
-        {/* RIGHT – AUTO SCROLLING CARDS */}
+        {/* RIGHT – AUTO SCROLLING CARDS (LEFT COLUMN UP, RIGHT COLUMN DOWN) */}
         <div className="tahraa-right-panel">
           <div className="tahraa-cards-scroller">
-            <div className="tahraa-cards-track">
-              {marqueeCards.map((mentor, idx) => (
-                <article
-                  className="tahraa-card"
-                  key={`${mentor.name}-${idx}`}
-                >
-                  <div className="tahraa-card-image-wrapper">
-                    <img
-                      src={mentor.image}
-                      alt={mentor.name}
-                      className="tahraa-card-image"
-                    />
-                  </div>
-                  <div className="tahraa-card-body">
-                    <div className="tahraa-card-name-row">
-                      <h3 className="tahraa-card-name">{mentor.name}</h3>
-                      <img src={Tick} alt="" />
+            {/* Left column – scrolls upward */}
+            <div className="tahraa-cards-column tahraa-cards-column--up">
+              <div className="tahraa-cards-track tahraa-cards-track--up">
+                {leftColumnMentors.map((mentor, idx) => (
+                  <article
+                    className="tahraa-card"
+                    key={`left-${mentor.name}-${idx}`}
+                  >
+                    <div className="tahraa-card-image-wrapper">
+                      <img
+                        src={mentor.image}
+                        alt={mentor.name}
+                        className="tahraa-card-image"
+                      />
                     </div>
-                    <p className="tahraa-card-meta">
-                      {mentor.role}{" "}
-                      <span className="dot-separator">|</span>{" "}
-                      <span className="tahraa-card-years">
-                        {mentor.years}
-                      </span>
-                    </p>
-                  </div>
-                </article>
-              ))}
+                    <div className="tahraa-card-body">
+                      <div className="tahraa-card-name-row">
+                        <h3 className="tahraa-card-name">{mentor.name}</h3>
+                        <img src={Tick} alt="" />
+                      </div>
+                      <p className="tahraa-card-meta">
+                        {mentor.role}{" "}
+                        <span className="dot-separator">|</span>{" "}
+                        <span className="tahraa-card-years">
+                          {mentor.years}
+                        </span>
+                      </p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            {/* Right column – scrolls downward */}
+            <div className="tahraa-cards-column tahraa-cards-column--down">
+              <div className="tahraa-cards-track tahraa-cards-track--down">
+                {rightColumnMentors.map((mentor, idx) => (
+                  <article
+                    className="tahraa-card"
+                    key={`right-${mentor.name}-${idx}`}
+                  >
+                    <div className="tahraa-card-image-wrapper">
+                      <img
+                        src={mentor.image}
+                        alt={mentor.name}
+                        className="tahraa-card-image"
+                      />
+                    </div>
+                    <div className="tahraa-card-body">
+                      <div className="tahraa-card-name-row">
+                        <h3 className="tahraa-card-name">{mentor.name}</h3>
+                        <img src={Tick} alt="" />
+                      </div>
+                      <p className="tahraa-card-meta">
+                        {mentor.role}{" "}
+                        <span className="dot-separator">|</span>{" "}
+                        <span className="tahraa-card-years">
+                          {mentor.years}
+                        </span>
+                      </p>
+                    </div>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </div>
