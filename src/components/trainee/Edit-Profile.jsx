@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Eye, EyeOff, Calendar } from "lucide-react"
-import './Edit-profile.css'
+import './Edit-Profile.css'
 const LOCATIONS = ["Lusail, Qatar", "Doha, Qatar", "Al Wakrah, Qatar", "Al Khor, Qatar", "Umm Salal, Qatar"]
 const GENDERS = ["Female", "Male", "Other"]
 
