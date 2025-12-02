@@ -44,6 +44,7 @@ function App() {
         <Route path="/traineeCalendar" element={<TrainerCalendar />} />
         <Route path='/edit-traineeProfile' element={<EditProfile/>} />
          <Route path='/edit-traineeProfilePicture' element={<EditTraineeProfilePicture />} />
+         <Route path='/package-summary' element={<PackageSummaryPage/>} />
 
         {/* Chat */}
         <Route path="/chat" element={<Chat />} />

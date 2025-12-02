@@ -1,0 +1,228 @@
+/* Main container */
+.package-summary-card {
+  background: #ffffff;          /* bg-card */
+  border: 1px solid #e5e7eb;   /* border-border */
+  border-radius: 12px;          /* rounded-lg */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* shadow-sm */
+  overflow: hidden;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Header */
+.package-summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 24px 18px 24px; /* no bottom padding so table starts immediately below */
+  border-bottom: none;       /* remove separator line between header and table */
+}
+
+.package-summary-title {
+  color: #202020;
+font-family: Poppins;
+font-size: 21px;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
+}
+
+.package-summary-date-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #202020;
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap; /* keep dd-mm-yy on one line */
+}
+
+.package-summary-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.package-summary-search {
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-family: Poppins, sans-serif;
+  color: #202020;
+  background-color: #ffffff;
+}
+
+.package-summary-search {
+  min-width: 180px;
+}
+
+.package-summary-download {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #775DA6;
+  color: #ffffff;
+  font-size: 12px;
+  font-family: Poppins, sans-serif;
+  transition: background 0.2s;
+}
+
+.package-summary-download:hover {
+  background: #5f4890;
+}
+
+.package-summary-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #EAE9FE;
+  background: #ffffff; /* light pill background */
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 12px;
+  color: #202020;
+}
+
+.package-summary-button:hover {
+  background: #f3f4ff; /* subtle hover tint */
+}
+
+.package-summary-icon-btn {
+  padding: 6px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: transparent; /* no background behind three-dot SVG */
+  transition: background 0.2s;
+}
+
+.package-summary-icon-btn:hover {
+  background: transparent; /* keep transparent on hover as well */
+}
+
+/* Table container */
+.package-summary-table-container {
+  overflow-x: auto;
+  width: 100%;
+  padding: 0 24px 16px 24px; /* horizontal gap + bottom padding */
+  margin-top: 8px;           /* small vertical gap between header and table */
+  box-sizing: border-box;
+}
+
+/* Table */
+.package-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.package-summary-table th,
+.package-summary-table td {
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.package-summary-table thead {
+  background: #775DA6; /* bg-primary */
+  color: #ffffff;      /* text-primary-foreground */
+}
+
+.package-summary-table th {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Round header row corners */
+.package-summary-table thead th:first-child {
+  border-top-left-radius: 4px;
+}
+
+.package-summary-table thead th:last-child {
+  border-top-right-radius: 4px;
+}
+
+.package-summary-table tbody tr:hover {
+  background: rgba(243, 244, 246, 0.5); /* hover:bg-muted/50 */
+  transition: background 0.2s;
+}
+
+.package-summary-table td p {
+  margin: 0;
+}
+
+/* First line (e.g., session.name) in each cell */
+.package-summary-table td p:first-child {
+  color: var(--Black, #242E2C);
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%; /* 15.6px */
+}
+
+.package-summary-table .text-muted {
+  color: var(--Gray-30, #6B7271);
+  font-family: Poppins, sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 124%; /* 13.64px */
+}
+
+/* Fees column (4th column) text */
+.package-summary-table td:nth-child(4) {
+  color: var(--Black, #242E2C);
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%; /* 15.6px */
+}
+
+/* Status pill */
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 4px; /* base radius, can be overridden per status */
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 83px;
+  height: 26px; /* fixed size so Completed and Ongoing match */
+}
+
+.status-completed {
+  background-color: #02B346;  /* completed: green from Figma */
+  color: #ffffff;              /* text-accent-foreground */
+}
+
+.status-ongoing {
+  background-color: #FDB73E;  /* amber-500 */
+  color: #ffffff;
+}
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .package-summary-table th,
+  .package-summary-table td {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .package-summary-button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}

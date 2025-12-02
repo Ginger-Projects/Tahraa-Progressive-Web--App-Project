@@ -1,0 +1,9 @@
+.package-summary-page {
+	margin: 0;
+	background-color: #EAECF2;
+	min-height: 100vh;
+}
+
+.package-summary-container {
+	margin: 0 5%;
+}
