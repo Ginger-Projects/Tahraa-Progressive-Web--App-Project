@@ -1,5 +1,5 @@
 import TraineeHeader from "../../components/trainee/header";
-import PackageSummaryMain from "../../components/trainee/packageSummaryMain";
+import PackageSummaryMain from "../../components/trainee/PackageSummaryMain";
 import "./PackageSummaryPage.css";
 
 export default function PackageSummaryPage() {
