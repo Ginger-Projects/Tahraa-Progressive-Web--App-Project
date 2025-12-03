@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./FAQSection.css";
 import Thumb from "../../assets/images/thumb.png";
+import PlayBtn from "../../assets/images/play-btn.png";
 
 const faqItems = [
   {
@@ -62,9 +63,26 @@ const FAQSection = () => {
           <div className='exp-video-card'>
             <div className='exp-video-thumb'>
               <img src={Thumb} alt='How Tahraa works' />
+
+              <button className='exp-video-play-btn' type='button' aria-label='Play video'>
+                <img src={PlayBtn} alt='Play video' className='exp-video-play-icon' />
+              </button>
+
+              <div className='exp-video-progress'>
+                <div className='exp-video-progress-track'>
+                  <div className='exp-video-progress-filled'>
+                    <span className='exp-video-progress-dot' />
+                  </div>
+                </div>
+                <div className='exp-video-progress-meta'>
+                  <span className='exp-video-time-current'>17:49</span>
+                  <span className='exp-video-time-total'>34:00</span>
+                </div>
+              </div>
             </div>
+
             <div className='exp-video-body'>
-              <h3>How Tahraa works</h3>
+              <h3>How Yanmu works</h3>
               <p>Lorem ipsum is placeholder</p>
             </div>
           </div>

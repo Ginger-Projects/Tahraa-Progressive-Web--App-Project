@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegistrationBasics.css";
 import leftImage from "../../assets/images/work-bg.png";
+import logoImage from "../../assets/images/logo.png";
 
 const RegistrationWork = () => {
   const navigate = useNavigate();
@@ -10,6 +11,13 @@ const RegistrationWork = () => {
       <div className="registration-page">
         {/* LEFT PANEL - image + text */}
         <div className="registration-left">
+          <button
+            type="button"
+            className="registration-logo"
+            onClick={() => navigate("/")}
+          >
+            <img src={logoImage} alt="Yanmu logo" />
+          </button>
           <div className="registration-left-image-wrap">
             <img src={leftImage} alt="Expert working" />
           </div>
@@ -117,10 +125,10 @@ const RegistrationWork = () => {
                   <label>Do you have an office address?*</label>
                   <div className="registration-radio-group">
                     <label>
-                      <input type="radio" name="officeAddress" /> Yes
+                      <input style={{padding : "10px"}} type="radio" name="officeAddress" /> Yes
                     </label>
                     <label>
-                      <input type="radio" name="officeAddress" /> No
+                      <input style={{padding : "10px"}} type="radio" name="officeAddress" /> No
                     </label>
                   </div>
                 </div>

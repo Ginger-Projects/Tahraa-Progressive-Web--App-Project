@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "./ExpertProfile.css";
 import LineSrc from "../../assets/images/bigline.png";
 
@@ -15,6 +15,8 @@ import Button from "../../components/Button";
 import { Link } from "react-router-dom";
 
 const ExpertProfile = () => {
+  const [isSaved, setIsSaved] = useState(false);
+  const [showSavedToast, setShowSavedToast] = useState(false);
   const packageSliderRef = useRef(null);
   const prevWorksSliderRef = useRef(null);
   const suggestSliderRef = useRef(null);
@@ -153,6 +155,21 @@ const ExpertProfile = () => {
       const scrollAmount = 300;
       suggestSliderRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
+  };
+
+  const handleSaveExpert = () => {
+    const next = !isSaved;
+    setIsSaved(next);
+    if (!next) {
+      // if unsaving, just hide any toast and exit
+      setShowSavedToast(false);
+      return;
+    }
+
+    setShowSavedToast(true);
+    setTimeout(() => {
+      setShowSavedToast(false);
+    }, 2500);
   };
 
   const certColumns = [
@@ -388,9 +405,14 @@ const ExpertProfile = () => {
               </div>
 
               <div className='ep-hero-btn-row'>
-                <Link className="w-100" to='/expert-booking'><Button to='/expert-book' label='Book Now' bg='#775DA6' /></Link>
+                <Link to='/expert-booking'><Button to='/expert-book' label='Book Now' bg='#775DA6' /></Link>
                 <Button label='Enquire' bg='#02B346' />
-                <button className='BTNmains'>
+                <button
+                  type='button'
+                  className={"BTNmains" + (isSaved ? " saved" : "")}
+                  onClick={handleSaveExpert}
+                  aria-label='Save expert'
+                >
                   <div className='rectangle-2' />
 
                   <img className='vector-2' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' alt='' />
@@ -435,6 +457,21 @@ const ExpertProfile = () => {
             </div>
           </div>
         </div>
+
+        {showSavedToast && (
+          <div
+            className='ep-toast-overlay'
+            onClick={() => setShowSavedToast(false)}
+          >
+            <div
+              className='ep-toast ep-toast-success'
+              onClick={(event) => event.stopPropagation()}
+            >
+              <span className='ep-toast-icon'>✓</span>
+              <span>Added to your saved experts.</span>
+            </div>
+          </div>
+        )}
 
         {/* BIO + VIDEO ROW */}
         <div className='row g-4 mt-4'>

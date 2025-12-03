@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+
 import './BookingConfirm.css';
 import Alert from '../../assets/images/exclamation.png';
 import bannerBg from '../../assets/images/cta-bg.png';
@@ -196,6 +197,9 @@ const ScheduleButtonSVG = ({ onClick, text = "Schedule" }) => (
 );
 
 const BookingConfirm = () => {
+  const [activeAction, setActiveAction] = useState(null); // 'schedule' | 'reschedule' | 'cancel'
+  const [activeSession, setActiveSession] = useState(null);
+
   const sessions = [
     {
       id: 1,
@@ -203,8 +207,9 @@ const BookingConfirm = () => {
       year: 'Saturday, 2025',
       time: '18:00 - 19:00',
       dayOfWeek: 'Saturday',
-      slotCount: '2/5',
-      hasScheduled: true,
+      slotCount: null,
+      hasScheduled: false,
+      isInactive: true, // matches Figma: greyed card with no actions
     },
     {
       id: 2,
@@ -212,8 +217,8 @@ const BookingConfirm = () => {
       year: 'Sunday, 2025',
       time: '18:00 - 19:00',
       dayOfWeek: 'Sunday',
-      slotCount: null,
-      hasScheduled: false,
+      slotCount: '2/5',
+      hasScheduled: true,
     },
     {
       id: 3,
@@ -221,8 +226,8 @@ const BookingConfirm = () => {
       year: 'Saturday, 2025',
       time: '18:00 - 19:00',
       dayOfWeek: 'Saturday',
-      slotCount: null,
-      hasScheduled: false,
+      slotCount: '2/5',
+      hasScheduled: true,
     },
     {
       id: 4,
@@ -253,24 +258,51 @@ const BookingConfirm = () => {
     },
   ];
 
-  const handleScheduleClick = (sessionId) => {
-    console.log('Scheduled session:', sessionId);
+  const openConfirm = (action, sessionId) => {
+    setActiveAction(action);
+    setActiveSession(sessionId);
   };
 
-  const handleRescheduleClick = (sessionId) => {
-    console.log('Rescheduled session:', sessionId);
+  const closeConfirm = () => {
+    setActiveAction(null);
+    setActiveSession(null);
   };
 
-  const handleCancelClick = (sessionId) => {
-    console.log('Cancelled session:', sessionId);
+  const handleConfirm = () => {
+    if (!activeAction || !activeSession) {
+      closeConfirm();
+      return;
+    }
+
+    if (activeAction === 'schedule') {
+      console.log('Scheduled session:', activeSession);
+    } else if (activeAction === 'reschedule') {
+      console.log('Rescheduled session:', activeSession);
+    } else if (activeAction === 'cancel') {
+      console.log('Cancelled session:', activeSession);
+    }
+
+    closeConfirm();
   };
 
   return (
     <div className="bc-main">
       {/* Main Content */}
       <div className="bc-container">
-        {/* Page Title */}
-        <h1 className="bc-page-title">Book Your Sessions</h1>
+        {/* Page Title + Package info (title | avatar + pencil + subtitle) */}
+        <div className="bc-page-header">
+          <h1 className="bc-page-title">Book Your Sessions</h1>
+
+          <span className="bc-page-header-divider" aria-hidden="true" />
+
+          <div className="bc-page-package">
+            <div className="bc-page-avatar" aria-hidden="true" />
+            <span className="bc-page-subtitle">
+              <span className="bc-page-pencil" aria-hidden="true">🎤</span>
+              Vocal Training Package - Beginner to Advanced
+            </span>
+          </div>
+        </div>
 
         {/* Info Banner */}
         <div className="bc-info-banner" style={{ backgroundImage: `url(${bannerBg})` }}>
@@ -280,37 +312,40 @@ const BookingConfirm = () => {
           </p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards (Completed / Remaining / Total Sessions per Figma) */}
         <div className="bc-stats-container">
-          <div className="bc-stat-card">
-            <div className="bc-stat-bg">
-              <PurpleBgSVG />
-            </div>
-            <img src={EmployeeIconImg} alt="Employee" className="bc-stat-icon-img" />
-            <div className="bc-stat-text">
-              <p className="bc-stat-label">Max Sessions</p>
-              <p className="bc-stat-value">5</p>
-            </div>
-          </div>
-
+          {/* Completed */}
           <div className="bc-stat-card">
             <div className="bc-stat-bg">
               <GreenBgSVG />
             </div>
-            <img src={CalendarIconImg} alt="Calendar" className="bc-stat-icon-img" />
+            <img src={CheckIconImg} alt="Completed" className="bc-stat-icon-img" />
             <div className="bc-stat-text">
-              <p className="bc-stat-label">Scheduled</p>
-              <p className="bc-stat-value">2/5</p>
+              <p className="bc-stat-label">Completed</p>
+              <p className="bc-stat-value">2</p>
             </div>
           </div>
 
+          {/* Remaining */}
+          <div className="bc-stat-card">
+            <div className="bc-stat-bg">
+              <PurpleBgSVG />
+            </div>
+            <img src={CalendarIconImg} alt="Remaining" className="bc-stat-icon-img" />
+            <div className="bc-stat-text">
+              <p className="bc-stat-label">Remaining</p>
+              <p className="bc-stat-value">3</p>
+            </div>
+          </div>
+
+          {/* Total Sessions */}
           <div className="bc-stat-card">
             <div className="bc-stat-bg">
               <YellowBgSVG />
             </div>
-            <img src={CheckIconImg} alt="Check" className="bc-stat-icon-img" />
+            <img src={EmployeeIconImg} alt="Total Sessions" className="bc-stat-icon-img" />
             <div className="bc-stat-text">
-              <p className="bc-stat-label">Slot Limit per sessions</p>
+              <p className="bc-stat-label">Total Sessions</p>
               <p className="bc-stat-value">5</p>
             </div>
           </div>
@@ -320,7 +355,12 @@ const BookingConfirm = () => {
         <h2 className="bc-sessions-title">Available Sessions</h2>
         <div className="bc-sessions-grid">
           {sessions.map((session) => (
-            <div key={session.id} className="bc-session-card">
+            <div
+              key={session.id}
+              className={
+                "bc-session-card" + (session.isInactive ? " bc-session-card--inactive" : "")
+              }
+            >
               <div className="bc-session-header">
                 <div>
                   <p className="bc-session-date">{session.date}</p>
@@ -343,19 +383,70 @@ const BookingConfirm = () => {
                 <p className="bc-day-text">{session.dayOfWeek}</p>
               </div>
 
-              <div className="bc-session-actions">
-                {session.hasScheduled ? (
-                  <>
-                    <CancelButtonSVG onClick={() => handleCancelClick(session.id)} />
-                    <ScheduleButtonSVG onClick={() => handleRescheduleClick(session.id)} text="Reschedule" />
-                  </>
-                ) : (
-                  <ScheduleButtonSVG onClick={() => handleScheduleClick(session.id)} text="Schedule" />
-                )}
-              </div>
+              {!session.isInactive && (
+                <div className="bc-session-actions">
+                  {session.hasScheduled ? (
+                    <>
+                      <CancelButtonSVG onClick={() => openConfirm('cancel', session.id)} />
+                      <ScheduleButtonSVG onClick={() => openConfirm('reschedule', session.id)} text="Reschedule" />
+                    </>
+                  ) : (
+                    <ScheduleButtonSVG onClick={() => openConfirm('schedule', session.id)} text="Schedule" />
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
+
+        {activeAction && (
+          <div
+            className="bc-modal-overlay"
+            onClick={closeConfirm}
+          >
+            <div
+              className={
+                `bc-modal ` +
+                (activeAction === 'cancel'
+                  ? 'bc-modal-cancel'
+                  : activeAction === 'reschedule'
+                  ? 'bc-modal-reschedule'
+                  : 'bc-modal-schedule')
+              }
+              onClick={(event) => event.stopPropagation()}
+            >
+              <h3 className="bc-modal-title">
+                {activeAction === 'schedule' && 'Confirm Schedule'}
+                {activeAction === 'reschedule' && 'Confirm Reschedule'}
+                {activeAction === 'cancel' && 'Confirm Cancel'}
+              </h3>
+              <p className="bc-modal-text">
+                {activeAction === 'cancel' && 'Are you sure you want to cancel the session booking?'}
+                {activeAction === 'schedule' && 'Are you sure you want to schedule the session?'}
+                {activeAction === 'reschedule' && 'Are you sure you want to reschedule this session?'}
+              </p>
+              <div className="bc-modal-actions">
+                <button type="button" className="bc-modal-btn bc-modal-btn-secondary" onClick={closeConfirm}>
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className={
+                    `bc-modal-btn bc-modal-btn-primary ` +
+                    (activeAction === 'cancel'
+                      ? 'bc-modal-btn-primary-cancel'
+                      : activeAction === 'reschedule'
+                      ? 'bc-modal-btn-primary-reschedule'
+                      : 'bc-modal-btn-primary-schedule')
+                  }
+                  onClick={handleConfirm}
+                >
+                  Yes, continue
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

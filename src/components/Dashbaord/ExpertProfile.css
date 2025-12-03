@@ -43,7 +43,7 @@
   margin-bottom: 1rem;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1150px) {
   .ep-top-row {
     flex-direction: column !important;
   }
@@ -249,6 +249,16 @@
   margin-top: 18px;
 }
 
+/* Expert hero buttons: pill style and consistent width on desktop */
+.ep-hero-btn-row .BTNmain {
+  width: auto !important;
+  min-width: 135px;
+}
+
+.ep-hero-btn-row .BTNmain .label {
+  font-size: 14px;
+}
+
 @media (max-width: 768px) {
   .ep-hero-btn-row {
     flex-wrap: wrap;
@@ -260,6 +270,12 @@
   .ep-hero-btn-row {
     flex-direction: column;
     width: 100%;
+    justify-content: center;
+    align-items: center;
+    a{
+      width: fit-content !important;
+    }
+
   }
   
   .ep-hero-btn-row > * {
@@ -1798,7 +1814,8 @@ color: rgba(0, 0, 0, 0.50);
   height: 43px;
   position: relative;
   display: block;
-  width: 100px !important;
+  max-width: 48px !important;
+  width: 100% !important;
   /* rectangle background is dynamic */
   .rectangle-2 {
     background-color: #fdb73e;
@@ -1842,6 +1859,11 @@ color: rgba(0, 0, 0, 0.50);
     top: 11px;
     white-space: nowrap;
   }
+}
+
+/* Dimmer yellow when expert is already saved */
+.BTNmains.saved .rectangle-2 {
+  background-color: #e4a728;
 }
 
 /* ===== REVIEWS SECTION ===== */
@@ -1943,6 +1965,54 @@ color: rgba(0, 0, 0, 0.50);
   color: rgba(37, 37, 37, 0.5);
   resize: none;
   width: 100%;
+}
+
+/* === Saved Expert Toast (popup) === */
+.ep-toast-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35); /* dim bg to focus popup */
+}
+
+.ep-toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(20, 16, 80, 0.25);
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+}
+
+.ep-toast-success {
+  background: #ffffff;
+  border: 1px solid #02b346;
+  color: #252525;
+}
+
+.ep-toast-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #02b346;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+@media (max-width: 576px) {
+  .ep-toast {
+    width: calc(100% - 48px);
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 .ep-form-char-count {

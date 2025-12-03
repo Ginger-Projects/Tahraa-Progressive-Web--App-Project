@@ -18,14 +18,59 @@
   padding-bottom: 40px;
 }
 
+/* Page Header */
+.bc-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  margin-bottom: 30px;
+}
+
 /* Page Title */
 .bc-page-title {
   font-size: 24px;
   font-weight: 600;
   color: #252525;
-  margin: 0 0 30px 0;
+  margin: 0;
   font-family: "Poppins", sans-serif;
   letter-spacing: -0.5px;
+}
+
+.bc-page-subtitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #252525;
+  font-family: "Poppins", sans-serif;
+}
+
+.bc-page-header-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(37, 37, 37, 0.1);
+}
+
+.bc-page-package {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bc-page-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  overflow: hidden;
+}
+
+.bc-page-pencil {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  font-size: 14px;
+  line-height: 1;
 }
 
 /* Info Banner */
@@ -145,13 +190,19 @@
 
 /* Session Card */
 .bc-session-card {
-  background-color: white;
-  border: 1.076px solid #eae9fe;
-  border-radius: 13px;
+  background-color: #ffffff;
+  border: 1.26px solid #eae9fe; /* closer to Figma stroke */
+  border-radius: 15px;          /* match Figma rounded corners */
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  box-shadow: 0 0 25px rgba(222, 222, 222, 0.03); /* subtle card shadow */
+}
+
+/* Inactive session card (e.g., Nov 1): greyed content, no actions */
+.bc-session-card--inactive {
+  opacity: 0.45;
 }
 
 .bc-session-header {
@@ -161,7 +212,7 @@
 }
 
 .bc-session-date {
-  font-size: 18px;
+  font-size: 17px; /* slightly smaller, like Figma */
   font-weight: 600;
   color: #252525;
   margin: 0;
@@ -169,7 +220,7 @@
 }
 
 .bc-session-year {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   color: rgba(37, 37, 37, 0.6);
   margin: 4px 0 0 0;
@@ -228,7 +279,7 @@
 }
 
 .bc-time-text {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   color: rgba(37, 37, 37, 0.6);
   margin: 0;
@@ -236,9 +287,9 @@
 }
 
 .bc-day-text {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
-  color: rgba(37, 37, 37, 0.6);
+  color: rgba(37, 37, 37, 0.5);
   margin: 0;
   font-family: "Poppins", sans-serif;
 }
@@ -247,6 +298,92 @@
   display: flex;
   gap: 10px;
   margin-top: 5px;
+}
+
+/* ===== Confirmation Modal ===== */
+.bc-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.bc-modal {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 24px rgba(20, 16, 80, 0.25);
+  font-family: "Poppins", sans-serif;
+}
+
+/* Modal accent border by action */
+.bc-modal-schedule {
+  border-top: 3px solid #775da6;
+}
+
+.bc-modal-reschedule {
+  border-top: 3px solid #02b346;
+}
+
+.bc-modal-cancel {
+  border-top: 3px solid #fdb73e;
+}
+
+.bc-modal-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #252525;
+}
+
+.bc-modal-text {
+  margin: 0 0 18px;
+  font-size: 14px;
+  color: rgba(37, 37, 37, 0.7);
+}
+
+.bc-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.bc-modal-btn {
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.bc-modal-btn-secondary {
+  background: #f5f5f5;
+  color: #252525;
+}
+
+.bc-modal-btn-primary {
+  background: #775da6;
+  color: #ffffff;
+}
+
+/* Primary button color per action */
+.bc-modal-btn-primary-schedule {
+  background: #775da6;
+}
+
+.bc-modal-btn-primary-reschedule {
+  background: #02b346;
+}
+
+.bc-modal-btn-primary-cancel {
+  background: #fdb73e;
+  color: #252525;
 }
 
 /* Buttons */

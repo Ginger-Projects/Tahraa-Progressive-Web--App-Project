@@ -77,9 +77,12 @@
   }
 
   .exp-video-thumb {
+    position: relative;
     width: 428px;
     height: 419px;
     flex-shrink: 0;
+    border-radius: 18px;
+    overflow: hidden;
   }
 
   .exp-video-thumb img {
@@ -88,32 +91,102 @@
     object-fit: cover;
   }
 
-  .exp-play-btn {
+  .exp-video-play-btn {
     position: absolute;
-    bottom: 16px;
-    left: 16px;
-    width: 42px;
-    height: 42px;
-    border-radius: 999px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border: none;
-    background: rgba(0, 0, 0, 0.4);
-    color: #ffffff;
-    font-size: 18px;
+    padding: 0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+  }
+
+  .exp-video-play-icon {
+    display: block;
+    width: 50px;
+    height: 50px;
+  }
+
+  .exp-video-progress {
+    position: absolute;
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%);
+    width: 82%;
+  }
+
+  .exp-video-progress-track {
+    position: relative;
+    height: 3px;
+    border-radius: 999px;
+    /* Unplayed part: light blue */
+    background: #b9d3ea;
+    /* allow circular knob to sit above the bar */
+    overflow: visible;
+  }
+
+  .exp-video-progress-filled {
+    position: relative;
+    width: 65%;
+    height: 100%;
+    /* Played part: red */
+    background: #ff4a4a;
+  }
+
+  .exp-video-progress-dot {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    /* red center */
+    background: #ff4a4a;
+    /* white ring around red center */
+    box-shadow: 0 0 0 3px #ffffff;
+  }
+
+  .exp-video-progress-meta {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  .exp-video-time-current {
+    opacity: 0.9;
+  }
+
+  .exp-video-time-total {
+    opacity: 0.9;
   }
 
   .exp-video-body {
     padding: 14px 18px 16px;
+    padding-left: .3rem;
+    margin-top: .5rem;
   }
 
   .exp-video-body h3 {
     margin: 0 0 4px;
-    font-size: 16px;
+    font-size: 20px;
+    font-weight: 600;
+    /* Figma: #272727 */
+    color: #272727;
   }
 
   .exp-video-body p {
     margin: 0;
-    font-size: 13px;
-    color: #86879a;
+    font-size: 14px;
+    /* Figma: #929292 */
+    color: #929292;
   }
 }

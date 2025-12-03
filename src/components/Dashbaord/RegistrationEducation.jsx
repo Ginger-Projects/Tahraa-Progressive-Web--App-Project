@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegistrationBasics.css";
 import leftImage from "../../assets/images/education-bg.png";
+import logoImage from "../../assets/images/logo.png";
 
 const RegistrationEducation = () => {
   const navigate = useNavigate();
@@ -11,6 +12,14 @@ const RegistrationEducation = () => {
       <div className="registration-page">
         {/* LEFT PANEL - same as Basics */}
         <div className="registration-left">
+          <button
+            type="button"
+            className="registration-logo"
+            onClick={() => navigate("/")}
+          >
+            <img src={logoImage} alt="Yanmu logo" />
+          </button>
+
           <div className="registration-left-image-wrap">
             <img src={leftImage} alt="Freelancer playing guitar" />
           </div>
@@ -103,10 +112,24 @@ const RegistrationEducation = () => {
                     <option value="" disabled>
                       What do you teach?*
                     </option>
-                    <option value="math">Math</option>
+                    <option value="boxing">Boxing</option>
+                    <option value="candle_making">Candle making</option>
+                    <option value="chess">Chess</option>
+                    <option value="crafts">Crafts</option>
+                    <option value="crochet">Crochet</option>
+                    <option value="culinary_arts">Culinary Arts</option>
+                    <option value="jewellery_making">Jewellery making</option>
+                    <option value="macrame">Macrame</option>
+                    <option value="meditation">Meditation</option>
+                    <option value="mixed_martial_arts">Mixed Martial Arts</option>
                     <option value="music">Music</option>
-                    <option value="language">Language</option>
-                    <option value="other">Other</option>
+                    <option value="origami">Origami</option>
+                    <option value="personal_training">Personal Training</option>
+                    <option value="pilates">Pilates</option>
+                    <option value="pottery">Pottery</option>
+                    <option value="quilling">Quilling</option>
+                    <option value="sewing">Sewing</option>
+                    <option value="soap_making">Soap making</option>
                   </select>
                 </div>
               </div>
@@ -124,7 +147,15 @@ const RegistrationEducation = () => {
                   </select>
                 </div>
                 <div className="registration-field">
-                  <input type="text" placeholder="Fee range*" />
+                  <select className="registration-select" defaultValue="">
+                    <option value="" disabled>
+                      Fee range per session (QAR)*
+                    </option>
+                    <option value="50_100">50-100</option>
+                    <option value="100_300">100-300</option>
+                    <option value="300_500">300 - 500</option>
+                    <option value="500_plus">500 and above</option>
+                  </select>
                 </div>
               </div>
 
@@ -141,10 +172,10 @@ const RegistrationEducation = () => {
                   <label>Do you have existing learners/students?*</label>
                   <div className="registration-radio-group">
                     <label>
-                      <input type="radio" name="existingLearners" /> Yes
+                      <input style={{padding : "10px"}} type="radio" name="existingLearners" /> Yes
                     </label>
                     <label>
-                      <input type="radio" name="existingLearners" /> No
+                      <input style={{padding : "10px"}} type="radio" name="existingLearners" /> No
                     </label>
                   </div>
                 </div>
@@ -153,7 +184,7 @@ const RegistrationEducation = () => {
               {/* Upload section */}
               <div className="registration-row registration-row-textarea area">
                 <div className="registration-field registration-field-full">
-                  <label>Please upload photos of your previous work or a self introductory video*</label>
+                  <label style={{fontFamily : "poppins" }}>Please upload photos of your previous work or a self introductory video*</label>
                   <div className="registration-upload-input">
                     <input
                       type="text"
@@ -161,21 +192,17 @@ const RegistrationEducation = () => {
                       placeholder="Link from YouTube"
                     />
                     <span className="registration-upload-icon">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                      >
-                        <path
-                          d="M6.5 10.5L9.5 7.5M6 6.5L4.5 8C3.39543 9.10457 3.39543 10.8954 4.5 12C5.60457 13.1046 7.39543 13.1046 8.5 12L10 10.5M10 5.5L11.5 4C12.6046 2.89543 14.3954 2.89543 15.5 4C16.6046 5.10457 16.6046 6.89543 15.5 8L14 9.5"
-                          stroke="#898989"
-                          strokeWidth="1.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+  <g clip-path="url(#clip0_189_1019)">
+    <path d="M0.8409 13.159C1.9621 14.2803 3.78003 14.2803 4.90123 13.159L8.0651 9.99517C6.94753 10.1248 6.27365 9.74823 6.04839 9.69172L3.74115 11.999C3.26136 12.4787 2.48078 12.4787 2.00098 11.999C1.52118 11.5193 1.52118 10.7386 2.00098 10.2589C2.08953 10.1702 5.73362 6.52616 5.61847 6.64141C6.08652 6.17326 6.87842 6.16129 7.35854 6.64141C7.39742 6.68029 7.42669 6.7244 7.45916 6.76681C7.63219 6.75025 7.79732 6.78272 7.93863 6.64141L8.77411 5.80593C8.69315 5.69538 8.6187 5.58142 8.51862 5.48133C7.4065 4.36911 5.54851 4.39111 4.45829 5.48133L0.8409 9.09871C-0.2803 10.2199 -0.2803 12.0378 0.8409 13.159Z" fill="#898989"/>
+    <path d="M13.1593 0.840898C12.0381 -0.280299 10.2202 -0.280299 9.09901 0.840898L6.0723 3.86761C7.18987 3.73794 7.86374 4.11466 8.089 4.17106L10.2592 2.00097C10.739 1.52118 11.5195 1.52118 11.9993 2.00097C12.4791 2.48077 12.4791 3.26135 11.9993 3.74114L9.18617 6.55423L8.51892 7.22137C8.05087 7.68963 7.25897 7.7016 6.77885 7.22137C6.73997 7.1826 6.71071 7.13849 6.67824 7.09608C6.5052 7.11264 6.34007 7.08006 6.19876 7.22137L5.36328 8.05685C5.44424 8.1674 5.51869 8.28147 5.61877 8.38156C6.7309 9.49378 8.58888 9.47167 9.67911 8.38156L13.1593 4.90122C14.2805 3.78002 14.2805 1.9621 13.1593 0.840898Z" fill="#898989"/>
+  </g>
+  <defs>
+    <clipPath id="clip0_189_1019">
+      <rect width="14" height="14" fill="white"/>
+    </clipPath>
+  </defs>
+</svg>
                     </span>
                   </div>
 
@@ -233,10 +260,10 @@ const RegistrationEducation = () => {
                   <label>Have you received any certification for what you teach?*</label>
                   <div className="registration-radio-group">
                     <label>
-                      <input type="radio" name="certification" /> Yes
+                      <input style={{padding : "10px"}} type="radio" name="certification" /> Yes
                     </label>
                     <label>
-                      <input type="radio" name="certification" /> No
+                      <input style={{padding : "10px"}} type="radio" name="certification" /> No
                     </label>
                   </div>
                 </div>

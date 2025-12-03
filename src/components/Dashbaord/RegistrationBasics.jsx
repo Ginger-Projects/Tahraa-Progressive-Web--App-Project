@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegistrationBasics.css";
 import leftImage from "../../assets/images/registration-left.png"; // TODO: replace with actual asset if different
+import logoImage from "../../assets/images/logo.png";
 
 const RegistrationBasics = () => {
   const navigate = useNavigate();
@@ -48,6 +49,13 @@ const RegistrationBasics = () => {
       <div className="registration-page">
         {/* LEFT PANEL - Image + text */}
         <div className="registration-left">
+          <button
+            type="button"
+            className="registration-logo"
+            onClick={() => navigate("/")}
+          >
+            <img src={logoImage} alt="Yanmu logo" />
+          </button>
           <div className="registration-left-image-wrap">
             <img src={leftImage} alt="Freelancer playing guitar" />
           </div>
@@ -152,7 +160,7 @@ const RegistrationBasics = () => {
                   <input
                     ref={dobInputRef}
                     type="text"
-                    placeholder="dd-mm-yyyy*"
+                    placeholder="Date of birth*"
                     className="registration-date-input-field"
                     value={dobValue}
                     onChange={(e) => setDobValue(e.target.value)}
@@ -224,7 +232,18 @@ const RegistrationBasics = () => {
                 </div>
               </div>
               <div className="registration-field">
-                <input type="text" placeholder="Gender*" />
+                <select
+                  className="registration-timezone-select"
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Gender*
+                  </option>
+                  <option value="female">Female</option>
+                  <option value="male">Male</option>
+                  <option value="other">Other</option>
+                  <option value="prefer_not_to_say">Prefer not to say</option>
+                </select>
               </div>
             </div>
 
@@ -234,7 +253,7 @@ const RegistrationBasics = () => {
                 <div className="registration-flag-input">
                   <span className="registration-flag-icon">{getFlagFromCountry(nationalityValue)}</span>
                   <span className="registration-flag-divider">|</span>
-                  <select
+                  <select style={{border : 'none'}}
                     className="registration-select"
                     value={nationalityValue}
                     onChange={(e) => setNationalityValue(e.target.value)}
@@ -251,7 +270,7 @@ const RegistrationBasics = () => {
                 <div className="registration-flag-input">
                   <span className="registration-flag-icon">{getFlagFromCountry(residenceValue)}</span>
                   <span className="registration-flag-divider">|</span>
-                  <select
+                  <select style={{border : 'none'}}
                     className="registration-select"
                     value={residenceValue}
                     onChange={(e) => setResidenceValue(e.target.value)}
@@ -273,10 +292,10 @@ const RegistrationBasics = () => {
                 </label>
                 <div className="registration-radio-group">
                   <label>
-                    <input type="radio" name="visa" /> Yes
+                    <input style={{padding : "10px"}} type="radio" name="visa" /> Yes
                   </label>
                   <label>
-                    <input type="radio" name="visa" /> No
+                    <input style={{padding : "10px"}} type="radio" name="visa" /> No
                   </label>
                 </div>
               </div>
