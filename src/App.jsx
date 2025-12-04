@@ -61,10 +61,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
-  path="/signin"
+  path="/signup"
   element={
     <PublicRoute>
-      <LoginPage />
+      <SignupPage />
     </PublicRoute>
   }
 />
@@ -82,7 +82,7 @@ function App() {
   path="/forgot-password"
   element={
     <PublicRoute>
-      <LoginPage />
+      <ForgotPassword/>
     </PublicRoute>
   }
 />
