@@ -1,15 +1,24 @@
-import { MoreVertical } from "lucide-react";
+import { useEffect, useState } from "react";
 import "./SavedExperts.css";
+import { getTraineeSavedExperts } from "../../services/trainee/trainee";
+import { useSelector } from "react-redux";
 
 export default function SavedExperts() {
-  const savedExperts = [
-    { name: "Bruce Banner", role: "Folk & Traditional Music" },
-    { name: "Clint Barton", role: "Western Classical" },
-    { name: "Wanda Maximoff", role: "Contemporary Dance" },
-    { name: "Carol Danvers", role: "Yoga" },
-    { name: "James Rhodes", role: "Yoga" },
-    { name: "Scott Lang", role: "Singing" },
-  ];
+  const token = useSelector((state)=>state.trainee);
+  const [savedExperts,setSavedExperts] = useState([])
+
+  useEffect(()=>{
+   fetchSavedExperts()
+  },[])
+
+  const fetchSavedExperts = async() =>{
+    try {
+      const response = await getTraineeSavedExperts(token);
+      setSavedExperts(response.data.savedExperts)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className="saved-experts-card">
@@ -24,15 +33,17 @@ export default function SavedExperts() {
         </button>
       </div>
 
-      <div className="saved-experts-grid">
-        {savedExperts.map((expert, idx) => (
-          <div key={idx} className="expert-item">
-            <div className="expert-avatar saved"></div>
-            <p className="expert-name">{expert.name}</p>
-            <p className="expert-role">{expert.role}</p>
-          </div>
-        ))}
-      </div>
+      {savedExperts.length > 0 && (
+        <div className="saved-experts-grid">
+          {savedExperts.map((expert, idx) => (
+            <div key={idx} className="expert-item">
+              <div className="expert-avatar saved"></div>
+              <p className="expert-name">{expert.name}</p>
+              <p className="expert-role">{expert.role}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

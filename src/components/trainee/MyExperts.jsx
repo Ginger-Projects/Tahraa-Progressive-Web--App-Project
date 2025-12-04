@@ -1,13 +1,23 @@
-import { MoreVertical } from "lucide-react";
+import { useEffect, useState } from "react";
 import "./MyExperts.css";
+import { getTraineeMyExperts } from "../../services/trainee/trainee";
 
 export default function MyExperts() {
-  const experts = [
-    { name: "Tony Stork", role: "Folk & Traditional Music" },
-    { name: "Steve Rogers", role: "Western Classical" },
-    { name: "Peter Parker", role: "Contemporary Dance" },
-    { name: "Natasha Romanoff", role: "Yoga" },
-  ];
+  const [experts, setExperts] = useState([]);
+
+  useEffect(() => {
+    const fetchMyExperts = async () => {
+      try {
+        const response = await getTraineeMyExperts();
+        // adjust path if backend wraps result differently
+        setExperts(response.data.myExperts);
+      } catch (error) {
+        console.error("Failed to load my experts", error);
+      }
+    };
+
+    fetchMyExperts();
+  }, []);
 
   return (
     <div className="my-experts-card">
@@ -22,15 +32,27 @@ export default function MyExperts() {
         </button>
       </div>
 
-      <div className="my-experts-grid">
-        {experts.map((expert, idx) => (
-          <div key={idx} className="expert-item">
-            <div className="expert-avatar"></div>
-            <p className="expert-name">{expert.name}</p>
-            <p className="expert-role">{expert.role}</p>
-          </div>
-        ))}
-      </div>
+      {experts.length > 0 && (
+        <div className="my-experts-grid">
+          {experts.map((expert, idx) => (
+            <div key={idx} className="expert-item">
+              <div className="expert-avatar">
+                {(() => {
+                  const rawImage =
+                    expert.profileImage || expert.profilePicture;
+                  const isValid =
+                    typeof rawImage === "string" && rawImage.startsWith("http");
+                  return isValid ? (
+                    <img src={rawImage} alt={expert.name || "Expert"} />
+                  ) : null;
+                })()}
+              </div>
+              <p className="expert-name">{expert.name}</p>
+              <p className="expert-role">{expert.role}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

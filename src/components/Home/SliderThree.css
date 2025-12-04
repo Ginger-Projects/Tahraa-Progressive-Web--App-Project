@@ -77,6 +77,9 @@
     max-width: 200px;
     width: 100%;
     color: #252525; /* strong title color */
+    line-height: 1.2;              /* control vertical spacing */
+    min-height: calc(1.2em * 2);   /* reserve space for 2 lines */
+    word-break: break-word;        /* allow wrapping onto second line */
   }
   .expert-role {
     font-size: 11.26px;

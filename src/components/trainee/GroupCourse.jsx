@@ -1,23 +1,89 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Clock, CheckCircle, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import "./GroupCourse.css";
+import { getTraineeProgressSummary } from "../../services/trainee/trainee";
 
 export default function ViolinClassCard() {
   const navigate = useNavigate();
+  const [analytics, setAnalytics] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const data = await getTraineeProgressSummary();
+        const list = data?.data?.analytics || [];
+        setAnalytics(list);
+        setCurrentIndex(0);
+      } catch (error) {
+        console.error("Failed to load progress summary", error);
+      }
+    };
+
+    fetchProgress();
+  }, []);
+
+  const hasAnalytics = analytics && analytics.length > 0;
+  const current = hasAnalytics ? analytics[currentIndex] : null;
+
+  const packageName = current?.packageName || "";
+  const shortDescription = current?.shortDescription || "";
+
+  const packageStrengthType = current?.packageStrengthType || "";
+  const packageType = current?.packageType || "";
+
+  const formatLabel = (value) =>
+    typeof value === "string" && value.length > 0
+      ? value.charAt(0).toUpperCase() + value.slice(1)
+      : "";
+
+  const totalSessions = current?.totalSessions || 0;
+  const completedSessions = current?.completedSessions || 0;
+  const remainingSessions =
+    typeof current?.toBeCompleted === "number"
+      ? current.toBeCompleted
+      : Math.max(totalSessions - completedSessions, 0);
+
+  const progressPercent =
+    totalSessions > 0
+      ? Math.round((completedSessions / totalSessions) * 100)
+      : 0;
+
+  const handlePrev = () => {
+    if (!hasAnalytics) return;
+    setCurrentIndex((prev) =>
+      prev === 0 ? analytics.length - 1 : prev - 1
+    );
+  };
+
+  const handleNext = () => {
+    if (!hasAnalytics) return;
+    setCurrentIndex((prev) =>
+      prev === analytics.length - 1 ? 0 : prev + 1
+    );
+  };
+
   return (
     <div className="page-wrapper">
       <div className="card-container">
 
-        {/* Header */}
-        <div className="header-row">
-          <div className="badges">
-            <span className="badge badge-green">Group course</span>
-            <span className="badge badge-purple">Beginners</span>
-          </div>
+        {hasAnalytics && (
+          <>
+            {/* Header */}
+            <div className="header-row">
+              <div className="badges">
+                <span className="badge badge-green">
+                  {formatLabel(packageStrengthType)}
+                  {packageStrengthType && " course"}
+                </span>
+                <span className="badge badge-purple">
+                  {formatLabel(packageType)}
+                </span>
+              </div>
 
-          <div className="nav-buttons">
-            <button className="nav-btn">
+              <div className="nav-buttons">
+                <button className="nav-btn" type="button" onClick={handlePrev}>
               <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
   <circle cx="18" cy="18" r="18" transform="matrix(1 0 0 -1 0.5 36.5)" fill="white" stroke="#F5F5F5"/>
   <g opacity="0.5">
@@ -25,45 +91,46 @@ export default function ViolinClassCard() {
   </g>
 </svg>
             </button>
-            <button className="nav-btn">
+                <button className="nav-btn" type="button" onClick={handleNext}>
               <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
   <circle cx="18" cy="18" r="18" transform="matrix(-1 0 0 1 36.5 0.5)" fill="white" stroke="#F5F5F5"/>
   <path d="M16.25 14.25L20.75 18.75L16.25 23.25" stroke="#775DA6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Title + Description */}
-        <h1 className="title">Violin Class Made Easy</h1>
-        <p className="description">
-          Violin Class – Learn the basics without the struggle. Play with confidence and impress everyone with your skill.
-        </p>
-
-        {/* Progress Section */}
-        <div className="progress-section">
-          <div className="progress-header">
-            <span className="progress-number">20%</span>
-            <span className="progress-text">
-              <span>Total</span>
-              <span>Activity</span>
-            </span>
-          </div>
-
-          <div className="progress-bar-wrapper">
-            <div className="progress-bar">
-              <div className="progress-fill" style={{ width: "20%" }}></div>
+                </button>
+              </div>
             </div>
-            <div className="progress-labels">
-              <span>20%</span>
-              <span>100%</span>
-            </div>
-          </div>
-        </div>
 
-        {/* Stats Section */}
-        <div className="stats-box">
-          <div className="stats-grid">
+            {/* Title + Description */}
+            <h1 className="title">{packageName}</h1>
+            <p className="description">{shortDescription}</p>
+
+            {/* Progress Section */}
+            <div className="progress-section">
+              <div className="progress-header">
+                <span className="progress-number">{progressPercent}%</span>
+                <span className="progress-text">
+                  <span>Total</span>
+                  <span>Activity</span>
+                </span>
+              </div>
+
+              <div className="progress-bar-wrapper">
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${progressPercent}%` }}
+                  ></div>
+                </div>
+                <div className="progress-labels">
+                  <span>0%</span>
+                  <span>100%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats Section */}
+            <div className="stats-box">
+              <div className="stats-grid">
 
             <div className="stat-item">
               <div className="stat-icon green-bg">
@@ -89,7 +156,7 @@ export default function ViolinClassCard() {
                   </svg>
                 </div>
               </div>
-              <div className="stat-number">2</div>
+              <div className="stat-number">{completedSessions}</div>
               <div className="stat-label">Completed</div>
             </div>
 
@@ -113,7 +180,7 @@ export default function ViolinClassCard() {
                   />
                 </svg>
               </div>
-              <div className="stat-number">3</div>
+              <div className="stat-number">{remainingSessions}</div>
               <div className="stat-label">Remaining</div>
             </div>
 
@@ -153,12 +220,14 @@ export default function ViolinClassCard() {
   </div>
 </div>
 
-              <div className="stat-number">5</div>
+              <div className="stat-number">{totalSessions}</div>
               <div className="stat-label">Total Sessions</div>
             </div>
 
           </div>
         </div>
+          </>
+        )}
 
         {/* CTA Button */}
         <button

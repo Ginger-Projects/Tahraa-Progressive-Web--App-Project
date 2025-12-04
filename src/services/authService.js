@@ -1,0 +1,20 @@
+import api from "../api/axios";
+
+export const signupTrainee = async (payload) => {
+  try {
+    // Adjust the endpoint and payload shape if your backend expects different fields
+    const response = await api.post("/api/trainee/auth/register", payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const loginTrainee = async (payload) => {
+  try {
+    const response = await api.post("/api/trainee/auth/login", payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

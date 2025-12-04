@@ -7,7 +7,11 @@ import Logo from "../assets/images/logo.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { loginTrainee } from "../services/authService";
+import { useDispatch } from "react-redux";
+import { setTrainee } from "../features/slice/trainer/traineeSlice";
 
 const slides = [
   {
@@ -35,6 +39,52 @@ const slides = [
 
 const LoginPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      toast.error("Email is required");
+      return;
+    }
+
+    if (!password) {
+      toast.error("Password is required");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      const payload = { email, password };
+      const response = await loginTrainee(payload);
+
+      if (response && (response.success || response.token || response.user)) {
+        toast(
+  <div className="projected-toast-text">{response.message}</div>,
+  { className: "projected-toast" }  // optional if you're using the 3D box
+);
+navigate('/trainee');
+dispatch(setTrainee(response.data));
+
+
+      } else {
+        toast.error("Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Login failed. Please try again.";
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className='lp-page'>
@@ -48,28 +98,42 @@ const LoginPage = () => {
           <h1 className='lp-title'>Yay, you&apos;re back!</h1>
           <p className='lp-subtitle'>Let&apos;s pick up right where you left off.</p>
 
-          <form className='lp-form'>
+          <form className='lp-form' onSubmit={handleSubmit}>
             {/* Email */}
             <div className='lp-field'>
               <label className='lp-label'>Email address</label>
-              <input type='email' className='lp-input' placeholder='Enter your full name*' />
+              <input
+                type='email'
+                className='lp-input'
+                placeholder='Enter your email*'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={submitting}
+              />
             </div>
 
             {/* Password */}
             <div className='lp-field'>
               <label className='lp-label'>Password</label>
-              <input type='password' className='lp-input' placeholder='Enter your password*' />
+              <input
+                type='password'
+                className='lp-input'
+                placeholder='Enter your password*'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={submitting}
+              />
             </div>
 
             {/* Sign in button */}
-            <button className='BTN-2'>
+            <button className='BTN-2' type='submit' disabled={submitting}>
               <div className='rectangle-2' />
 
               <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
               <img className='line' alt='Line' src={BigLine} />
 
-              <div className='label'>Sign in</div>
+              <div className='label'>{submitting ? "Signing in..." : "Sign in"}</div>
             </button>
 
             {/* Remember / Forgot */}

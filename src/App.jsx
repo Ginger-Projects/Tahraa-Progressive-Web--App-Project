@@ -30,6 +30,10 @@ import Chat from './pages/Chat/Chat'
 import EditProfile from './pages/Trainer/EditProfile'
 import EditTraineeProfilePicture from './pages/Trainer/EditTraineeProfilePicture'
 import WhatsappFloat from './components/WhatsappFloat'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import PublicRoute from './routes/PublicRoute'
+import ProtectedRoute from './routes/ProtectedRoute'
 
 function App() {
   const location = useLocation()
@@ -56,9 +60,33 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route
+  path="/signin"
+  element={
+    <PublicRoute>
+      <LoginPage />
+    </PublicRoute>
+  }
+/>
+
+        <Route
+  path="/login"
+  element={
+    <PublicRoute>
+      <LoginPage />
+    </PublicRoute>
+  }
+/>
+
+        <Route
+  path="/forgot-password"
+  element={
+    <PublicRoute>
+      <LoginPage />
+    </PublicRoute>
+  }
+/>
+
         <Route path="/our-experts" element={<ExpertsPage />} />
         <Route path="/our-packages" element={<PackagesPage />} />
         <Route path="/expert-profile" element={<ExpertsProfileMain />} />
@@ -72,7 +100,14 @@ function App() {
         <Route path="/code-of-conduct" element={<CodeOfConduct />} />
 
         {/* Trainer */}
-        <Route path="/trainee" element={<Trainer />} />
+        <Route
+        path="/trainee"
+        element={
+          <ProtectedRoute>
+            <Trainer />
+          </ProtectedRoute>
+        }
+      />
         <Route path="/traineeCalendar" element={<TrainerCalendar />} />
         <Route path='/edit-traineeProfile' element={<EditProfile/>} />
          <Route path='/edit-traineeProfilePicture' element={<EditTraineeProfilePicture />} />
@@ -88,6 +123,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!hideWhatsapp && <WhatsappFloat />}
+      <ToastContainer />
     </>
   )
 }

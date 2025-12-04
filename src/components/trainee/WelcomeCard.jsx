@@ -3,12 +3,22 @@ import { useState } from "react";
 import { CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./welcomeCard.css";
-import Smile from "../../assets/images/profile.png";
+import { useSelector } from "react-redux";
 
 export default function WelcomeCard() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.trainee);
 
+  const displayName =
+    user?.name || user?.fullName || user?.username || user?.email || "User";
+
+  const rawImage =
+    user?.profilePicture || user?.imageUrl || user?.photo || user?.avatar;
+
+  const hasValidImage =
+    typeof rawImage === "string" && rawImage.startsWith("http");
+  
   const handleEditProfile = () => {
     setMenuOpen(false);
     navigate("/edit-traineeProfile");
@@ -57,7 +67,11 @@ export default function WelcomeCard() {
 
       <div className="welcome-content">
         <div className="welcome-image">
-          <img src={Smile} alt="" />
+          {hasValidImage ? (
+            <img src={rawImage} alt={displayName} />
+          ) : (
+            <div className="welcome-image-placeholder">Add image</div>
+          )}
         </div>
 
         <div className="welcome-text">
@@ -68,7 +82,7 @@ export default function WelcomeCard() {
             <span>Welcome back!</span>
           </div>
 
-          <h2 className="welcome-name">Kate Bishop</h2>
+          <h2 className="welcome-name">{displayName}</h2>
         </div>
       </div>
     </div>

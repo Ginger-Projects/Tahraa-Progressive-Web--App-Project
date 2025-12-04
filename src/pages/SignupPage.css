@@ -294,6 +294,39 @@ input[type="password"]::-webkit-clear-button {
   appearance: none;
 }
 
+/* custom gender select dropdown */
+
+.tahraa-custom-select {
+  position: relative;
+  cursor: pointer;
+}
+
+.tahraa-select-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 6px;
+  background: #ffffff;
+  border-radius: 9px;
+  border: 1px solid var(--tahraa-border);
+  box-shadow: 0 10px 24px rgba(76, 64, 168, 0.12);
+  z-index: 20;
+  overflow: hidden;
+}
+
+.tahraa-select-option {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #282a3d;
+  cursor: pointer;
+  display: block;
+}
+
+.tahraa-select-option:hover {
+  background-color: #f4f0ff;
+}
+
 /* Password strength */
 
 .tahraa-password-meta {

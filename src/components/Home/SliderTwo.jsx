@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./SliderTwo.css";
 
 // Import your images here (replace placeholders)
@@ -17,8 +17,16 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchExperts } from "../../features/slice/expertSlice";
 
 export const SliderTwo = () => {
+  const dispatch = useDispatch()
+  const {experts} = useSelector((state) => state.experts);
+  
+  useEffect(()=>{
+    dispatch(fetchExperts())
+  },[])
   return (
     <section className='experts-section container-fluid py-5'>
       <div className='wrap-div w-100'>
@@ -66,249 +74,106 @@ export const SliderTwo = () => {
             breakpoints={{
               0: { slidesPerView: 1, spaceBetween: 12 },
               768: { slidesPerView: 2, spaceBetween: 18 },
-               768: { slidesPerView: 2, spaceBetween: 18 },
               1130: { slidesPerView: 3, spaceBetween: 24 },
               1400: { slidesPerView: 4, spaceBetween: 24 },
             }}
             className='experts-swiper'
           >
             {/* Slide 1 */}
-            <SwiperSlide>
-              <div className='expert-card'>
-                <img src={Expert1} className='expert-img' alt='expert' />
-                <div className='expert-content'>
-                  <h4 className='expert-name'>
-                    Tony Stark <img src={Verified} className='img-fluid' alt='' />
-                  </h4>
-                  <p className='expert-role'>
-                    Vocal Trainer | <span>10 Years of experience</span>
-                  </p>
-                  <p className='speak'>
-                    <img src={Speak} alt='' />
-                    <span>Speaks :</span>English , Arabic +2
-                  </p>
-                  <div className='d-flex align-items-center justify-content-between expert-price'>
-                    <p>
-                      <span>Free range: </span>QAR 250/hr
-                    </p>
-                    <span>140 Active Students</span>
+            {experts && experts.map((expert) => {
+              const experience = expert.experienceAndQualifications || {};
+              const yearsOfExperience = experience.yearsOfExperience;
+              const feeRange = experience.feeRange;
+              const teachingCategory = experience.teachingCategory?.name;
+              const languages = (expert.languages || []).join(", ");
+
+              return (
+                <SwiperSlide key={expert._id}>
+                  <div className='expert-card'>
+                    <img
+                      src={
+                        expert.profileImage &&
+                        (expert.profileImage.startsWith("http://") ||
+                          expert.profileImage.startsWith("https://"))
+                          ? expert.profileImage
+                          : Expert4
+                      }
+                      className='expert-img'
+                      alt='expert'
+                    />
+                    <div className='expert-content'>
+                      <h4 className='expert-name'>
+                        {expert.name}{" "}
+                        <img src={Verified} className='img-fluid' alt='' />
+                      </h4>
+                      <p className='expert-role'>
+                        {teachingCategory && `${teachingCategory} | `}
+                        <span>
+                          {yearsOfExperience
+                            ? `${yearsOfExperience} Years of experience`
+                            : "N/A"}
+                        </span>
+                      </p>
+                      <p className='speak'>
+                        <img src={Speak} alt='' />
+                        <span>Speaks :</span>
+                        {languages || " English , Arabic +2"}
+                      </p>
+                      <div className='d-flex align-items-center justify-content-between expert-price'>
+                        <p>
+                          <span>Free range: </span>
+                          {feeRange || "QAR 250/hr"}
+                        </p>
+                        <span>
+                          {expert.traineeCount
+                            ? `${expert.traineeCount} Active Students`
+                            : ""}
+                        </span>
+                      </div>
+                      <div className='btn-box d-flex gap-3 mt-3'>
+                        {/* Primary Button */}
+                        <button className='BTNslider2'>
+                          <div className='rectangle-2' />
+
+                          <img
+                            className='vector-2'
+                            alt='Vector'
+                            src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg'
+                          />
+
+                          <img
+                            className='line'
+                            alt='Line'
+                            src='https://c.animaapp.com/RRnEyncc/img/line-1.svg'
+                          />
+
+                          <div className='label'>Book Session</div>
+                        </button>
+
+                        {/* Green Button */}
+                        <button className='BTN-2slider'>
+                          <div className='rectangle-2' />
+
+                          <img
+                            className='vector-2'
+                            alt='Vector'
+                            src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg'
+                          />
+
+                          <img
+                            className='line'
+                            alt='Line'
+                            src='https://c.animaapp.com/RRnEyncc/img/line-1.svg'
+                          />
+
+                          <div className='label'>Enquire</div>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className='btn-box d-flex gap-3 mt-3'>
-                    {/* Primary Button */}
-                    <button className='BTNslider2'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Book Session</div>
-                    </button>
-                    
-
-                    {/* Green Button */}
-                    <button className='BTN-2slider'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Enquire</div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-
-            {/* Slide 2 */}
-            <SwiperSlide>
-              <div className='expert-card'>
-                <img src={Expert2} className='expert-img' alt='expert' />
-                <div className='expert-content'>
-                  <h4 className='expert-name'>
-                    Natasha Romanoff <img src={Verified} className='img-fluid' alt='' />
-                  </h4>
-                  <p className='expert-role'>
-                    Yoga Instructor | <span>7 Years of experience</span>
-                  </p>
-                  <p className='speak'>
-                    <img src={Speak} alt='' />
-                    <span>Speaks :</span>English , Arabic +2
-                  </p>
-                  <div className='d-flex align-items-center justify-content-between expert-price'>
-                    <p>
-                      <span>Free range: </span>QAR 250/hr
-                    </p>
-                    <span>140 Active Students</span>
-                  </div>
-
-                  <div className='btn-box d-flex gap-3 mt-3'>
-                    <button className='BTNslider2'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Book Session</div>
-                    </button>
-
-                     <button className='BTN-2slider'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Enquire</div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-
-            {/* Slide 3 */}
-            <SwiperSlide>
-              <div className='expert-card'>
-                <img src={Expert3} className='expert-img' alt='expert' />
-                <div className='expert-content'>
-                  <h4 className='expert-name'>
-                    Bruce Banner <img src={Verified} className='img-fluid' alt='' />
-                  </h4>
-                  <p className='expert-role'>
-                    Fitness Coach | <span>12 Years of experience</span>
-                  </p>
-                  <p className='speak'>
-                    <img src={Speak} alt='' />
-                    <span>Speaks :</span>English , Arabic +2
-                  </p>
-                  <div className='d-flex align-items-center justify-content-between expert-price'>
-                    <p>
-                      <span>Free range: </span>QAR 250/hr
-                    </p>
-                    <span>140 Active Students</span>
-                  </div>
-
-                  <div className='btn-box d-flex gap-3 mt-3'>
-                    <button className='BTNslider2'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Book Session</div>
-                    </button>
-
-                     <button className='BTN-2slider'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Enquire</div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-
-            {/* Slide 4 */}
-            <SwiperSlide>
-              <div className='expert-card'>
-                <img src={Expert4} className='expert-img' alt='expert' />
-                <div className='expert-content'>
-                  <h4 className='expert-name'>
-                    Peter Parker <img src={Verified} className='img-fluid' alt='' />
-                  </h4>
-                  <p className='expert-role'>
-                    Photography Mentor | <span>5 Years</span>
-                  </p>
-
-                  <p className='speak'>
-                    <img src={Speak} alt='' />
-                    <span>Speaks :</span>English , Arabic +2
-                  </p>
-                  <div className='d-flex align-items-center justify-content-between expert-price'>
-                    <p>
-                      <span>Free range: </span>QAR 250/hr
-                    </p>
-                    <span>140 Active Students</span>
-                  </div>
-
-                  <div className='btn-box d-flex gap-3 mt-3'>
-                    <button className='BTNslider2'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Book Session</div>
-                    </button>
-
-                     <button className='BTN-2slider'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Enquire</div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <div className='expert-card'>
-                <img src={Expert1} className='expert-img' alt='expert' />
-                <div className='expert-content'>
-                  <h4 className='expert-name'>
-                    Tony Stark <img src={Verified} className='img-fluid' alt='' />
-                  </h4>
-                  <p className='expert-role'>
-                    Vocal Trainer | <span>10 Years of experience</span>
-                  </p>
-                  <p className='speak'>
-                    <img src={Speak} alt='' />
-                    <span>Speaks :</span>English , Arabic +2
-                  </p>
-                  <div className='d-flex align-items-center justify-content-between expert-price'>
-                    <p>
-                      <span>Free range: </span>QAR 250/hr
-                    </p>
-                    <span>140 Active Students</span>
-                  </div>
-                  <div className='btn-box d-flex gap-3 mt-3'>
-                    {/* Primary Button */}
-                    <button className='BTNslider2'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Book Session</div>
-                    </button>
-
-                    {/* Green Button */}
-                     <button className='BTN-2slider'>
-                      <div className='rectangle-2' />
-
-                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
-
-                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
-
-                      <div className='label'>Enquire</div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
 
           {/* Right Arrow */}

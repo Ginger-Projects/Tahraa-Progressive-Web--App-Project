@@ -36,6 +36,21 @@
   display: block;
 }
 
+.welcome-image-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  border: 1px dashed #d1d5db;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #777777;
+}
+
 /* Text section */
 .welcome-text {
   flex: 1;

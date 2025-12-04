@@ -1,48 +1,16 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import "./SignupPage.css";
 import Person from '../assets/images/person.png'
 import Tick from '../assets/images/verified.png'
 import Logo from '../assets/images/logo.png'
 import BigLine from '../assets/images/bigline.png'
 import { Link } from "react-router-dom";
-const mentors = [
-  {
-    name: "Peggy Carter",
-    role: "Vocal Trainer",
-    years: "10 Years of experience",
-    image: Person,
-  },
-  {
-    name: "Bucky Barnes",
-    role: "Vocal Trainer",
-    years: "10 Years of experience",
-    image: Person,
-  },
-  {
-    name: "Tony Stark",
-    role: "Vocal Trainer",
-    years: "10 Years of experience",
-    image: Person,
-  },
-  {
-    name: "Steve Rogers",
-    role: "Vocal Trainer",
-    years: "10 Years of experience",
-    image: Person,
-  },
-  {
-    name: "Natasha Romanoff",
-    role: "Vocal Trainer",
-    years: "10 Years of experience",
-    image: Person,
-  },
-  {
-    name: "Clint Barton",
-    role: "Vocal Trainer",
-    years: "10 Years of experience",
-    image: Person,
-  },
-];
+import { Calendar } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchExperts } from "../features/slice/expertSlice";
+import { signupTrainee } from "../services/authService";
+import { toast } from "react-toastify";
+
 
 const getPasswordStrength = (password) => {
   if (!password) {
@@ -84,18 +52,161 @@ const getPasswordStrength = (password) => {
 };
 
 const TahraaSignup = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [dob, setDob] = useState("");
+  const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const dobInputRef = useRef(null);
+  const [isGenderOpen, setIsGenderOpen] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const genderSelectRef = useRef(null);
+  const { experts } = useSelector((state) => state.experts);
+  const dispatch = useDispatch();
+
+  const today = new Date();
+  const maxDobDate = new Date(
+    today.getFullYear() - 5,
+    today.getMonth(),
+    today.getDate()
+  );
+  const maxDob = maxDobDate.toISOString().split("T")[0];
+
+  useEffect(() => {
+    if (experts.length === 0) {
+      dispatch(fetchExperts());
+    }
+  }, [dispatch, experts.length]);
 
   const strength = useMemo(
     () => getPasswordStrength(password),
     [password]
   );
 
+  const validate = () => {
+    const newErrors = {};
+
+    if (!fullName.trim()) {
+      newErrors.fullName = "Name is required";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(email)) {
+      newErrors.email = "Enter a valid email address";
+    } else if (!email.toLowerCase().endsWith("@gmail.com")) {
+      newErrors.email = "Email must be a gmail.com address";
+    }
+
+    if (!dob) {
+      newErrors.dob = "Date of birth is required";
+    } else {
+      const selected = new Date(dob);
+      if (selected > maxDobDate) {
+        newErrors.dob = "You must be at least 5 years old";
+      }
+    }
+
+    if (!gender) {
+      newErrors.gender = "Gender is required";
+    }
+
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 8 || !hasUpper || !hasLower) {
+      newErrors.password =
+        "Password must be 8+ chars with upper and lower case";
+    }
+
+    if (!agreed) {
+      newErrors.agreed = "You must agree to the terms to continue";
+    }
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      const firstError = Object.values(newErrors)[0];
+      toast.error(firstError || "Please fill all required fields correctly.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    try {
+      setSubmitting(true);
+      const payload = {
+        name: fullName,
+        email,
+        dateOfBirth: dob,
+        gender,
+        password,
+      };
+      console.log("pauload", payload);
+
+      await signupTrainee(payload);
+      toast.success("Signup Successfully");
+    } catch (error) {
+      console.error("Signup failed", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const baseMentors = useMemo(() => {
+    return experts.map((expert, index) => {
+      const name =
+        expert?.name ||
+        expert?.fullName ||
+        expert?.expertName ||
+        `Expert ${index + 1}`;
+
+      const role =
+        expert?.role ||
+        expert?.profession ||
+        expert?.specialization ||
+        "Expert";
+
+      const rawYears =
+        expert?.experienceYears ||
+        expert?.experience ||
+        expert?.yearsOfExperience;
+
+      const years = rawYears
+        ? `${rawYears} Years of experience`
+        : "Experienced mentor";
+
+      const rawImage =
+        expert?.imageUrl ||
+        expert?.profileImage ||
+        expert?.photo;
+
+      const image =
+        typeof rawImage === "string" && rawImage.startsWith("http")
+          ? rawImage
+          : Person;
+
+      return {
+        id: expert?._id || index,
+        name,
+        role,
+        years,
+        image,
+      };
+    });
+  }, [experts]);
+
   const marqueeCards = useMemo(
-    () => [...mentors, ...mentors], // duplicate for seamless loop
-    []
+    () => [...baseMentors, ...baseMentors], // duplicate for seamless loop
+    [baseMentors]
   );
 
   const leftColumnMentors = useMemo(
@@ -121,7 +232,7 @@ const TahraaSignup = () => {
             lifestyle Experts – Pick a package of your choice.
           </p>
 
-          <form className="tahraa-form">
+          <form className="tahraa-form" onSubmit={handleSubmit}>
             {/* Full name */}
             <div className="tahraa-field">
               <label className="tahraa-label">Full name</label>
@@ -129,6 +240,8 @@ const TahraaSignup = () => {
                 type="text"
                 className="tahraa-input"
                 placeholder="Enter your full name*"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
               />
             </div>
 
@@ -139,6 +252,8 @@ const TahraaSignup = () => {
                 type="email"
                 className="tahraa-input"
                 placeholder="Enter your email address*"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
@@ -146,39 +261,83 @@ const TahraaSignup = () => {
             <div className="tahraa-row">
               <div className="tahraa-field">
                 <label className="tahraa-label">Date of birth</label>
-                <div className="tahraa-input tahraa-input--with-icon">
+                <div className="tahraa-input tahraa-input--with-icon date-input-wrapper">
                   <input
-                    ref={dobInputRef}
+                    id="dob-input"
                     type="date"
+                    name="dateOfBirth"
                     className="tahraa-input-inner"
                     placeholder="Select your DOB*"
+                    value={dob}
+                    max={maxDob}
+                    onChange={(e) => setDob(e.target.value)}
                   />
-                  <span className="tahraa-input-icon">
-                    <span
-                      className="calendar-icon"
-                      onClick={() => {
-                        if (dobInputRef.current) {
-                          dobInputRef.current.showPicker?.();
-                          dobInputRef.current.focus();
-                        }
-                      }}
-                    />
-                  </span>
+
+                  <Calendar
+                    className="calendar-icon"
+                    size={20}
+                    onClick={() => {
+                      const el = document.getElementById("dob-input");
+                      if (el && el.showPicker) {
+                        el.showPicker();
+                      } else if (el) {
+                        el.focus();
+                      }
+                    }}
+                  />
                 </div>
               </div>
 
               <div className="tahraa-field">
                 <label className="tahraa-label">Gender</label>
-                <div className="tahraa-input tahraa-input--with-icon">
-                  <select className="tahraa-input-inner tahraa-select">
-                    <option value="">Select your gender*</option>
-                    <option value="female">Female</option>
-                    <option value="male">Male</option>
-                    <option value="other">Other</option>
-                  </select>
+                <div
+                  className="tahraa-input tahraa-input--with-icon tahraa-custom-select"
+                  onClick={() => setIsGenderOpen((prev) => !prev)}
+                  ref={genderSelectRef}
+                >
+                  <div className="tahraa-input-inner tahraa-custom-select-value">
+                    {gender === "female" && "Female"}
+                    {gender === "male" && "Male"}
+                    {gender === "other" && "Other"}
+                    {gender === "" && "Select your gender*"}
+                  </div>
                   <span className="tahraa-input-icon">
                     <span className="chevron-icon" />
                   </span>
+                  {isGenderOpen && (
+                    <div
+                      className="tahraa-select-menu"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div
+                        className="tahraa-select-option"
+                        onClick={() => {
+                          setGender("female");
+                          setIsGenderOpen(false);
+                        }}
+                      >
+                        Female
+                      </div>
+                      <div
+                        className="tahraa-select-option"
+                        onClick={() => {
+                          setGender("male");
+                          setIsGenderOpen(false);
+                        }}
+                      >
+                        Male
+                      </div>
+                      <div
+                        className="tahraa-select-option"
+                        onClick={() => {
+                          setGender("other");
+                          setIsGenderOpen(false);
+                        }}
+                      >
+                        Other
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -195,24 +354,43 @@ const TahraaSignup = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <span className="tahraa-input-icon">
-                  <button
-                    type="button"
-                    className={`eye-icon-btn ${showPassword ? "eye-icon-btn--active" : ""}`}
-                    onClick={() => setShowPassword((prev) => !prev)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="21"
-                      height="18"
-                      viewBox="0 0 21 18"
-                      fill="none"
-                    >
-                      <path
-                        d="M10.3687 0C15.5365 0 19.836 3.7184 20.7373 8.62568C19.836 13.5329 15.5365 17.2514 10.3687 17.2514C5.20079 17.2514 0.901393 13.5329 0 8.62568C0.901393 3.7184 5.20079 0 10.3687 0ZM10.3687 15.3345C14.4281 15.3345 17.9018 12.5091 18.781 8.62568C17.9018 4.74223 14.4281 1.91682 10.3687 1.91682C6.30917 1.91682 2.83553 4.74223 1.95625 8.62568C2.83553 12.5091 6.30917 15.3345 10.3687 15.3345ZM10.3687 12.9385C7.98675 12.9385 6.05582 11.0076 6.05582 8.62568C6.05582 6.24376 7.98675 4.31284 10.3687 4.31284C12.7505 4.31284 14.6815 6.24376 14.6815 8.62568C14.6815 11.0076 12.7505 12.9385 10.3687 12.9385ZM10.3687 11.0217C11.692 11.0217 12.7647 9.94895 12.7647 8.62568C12.7647 7.3024 11.692 6.22966 10.3687 6.22966C9.04542 6.22966 7.97264 7.3024 7.97264 8.62568C7.97264 9.94895 9.04542 11.0217 10.3687 11.0217Z"
-                        fill="#898989"
-                      />
-                    </svg>
-                  </button>
+                  <span onClick={() => setShowPassword((prev) => !prev)}>
+                    {showPassword ? (
+                      // Open eye (original SVG)
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="21"
+                        height="18"
+                        viewBox="0 0 21 18"
+                        fill="none"
+                      >
+                        <path
+                          d="M10.3687 0C15.5365 0 19.836 3.7184 20.7373 8.62568C19.836 13.5329 15.5365 17.2514 10.3687 17.2514C5.20079 17.2514 0.901393 13.5329 0 8.62568C0.901393 3.7184 5.20079 0 10.3687 0ZM10.3687 15.3345C14.4281 15.3345 17.9018 12.5091 18.781 8.62568C17.9018 4.74223 14.4281 1.91682 10.3687 1.91682C6.30917 1.91682 2.83553 4.74223 1.95625 8.62568C2.83553 12.5091 6.30917 15.3345 10.3687 15.3345ZM10.3687 12.9385C7.98675 12.9385 6.05582 11.0076 6.05582 8.62568C6.05582 6.24376 7.98675 4.31284 10.3687 4.31284C12.7505 4.31284 14.6815 6.24376 14.6815 8.62568C14.6815 11.0076 12.7505 12.9385 10.3687 12.9385ZM10.3687 11.0217C11.692 11.0217 12.7647 9.94895 12.7647 8.62568C12.7647 7.3024 11.692 6.22966 10.3687 6.22966C9.04542 6.22966 7.97264 7.3024 7.97264 8.62568C7.97264 9.94895 9.04542 11.0217 10.3687 11.0217Z"
+                          fill="#898989"
+                        />
+                      </svg>
+                    ) : (
+                      // Closed eye (same eye with strike-through)
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="21"
+                        height="18"
+                        viewBox="0 0 21 18"
+                        fill="none"
+                      >
+                        <path
+                          d="M10.3687 0C15.5365 0 19.836 3.7184 20.7373 8.62568C19.836 13.5329 15.5365 17.2514 10.3687 17.2514C5.20079 17.2514 0.901393 13.5329 0 8.62568C0.901393 3.7184 5.20079 0 10.3687 0ZM10.3687 15.3345C14.4281 15.3345 17.9018 12.5091 18.781 8.62568C17.9018 4.74223 14.4281 1.91682 10.3687 1.91682C6.30917 1.91682 2.83553 4.74223 1.95625 8.62568C2.83553 12.5091 6.30917 15.3345 10.3687 15.3345ZM10.3687 12.9385C7.98675 12.9385 6.05582 11.0076 6.05582 8.62568C6.05582 6.24376 7.98675 4.31284 10.3687 4.31284C12.7505 4.31284 14.6815 6.24376 14.6815 8.62568C14.6815 11.0076 12.7505 12.9385 10.3687 12.9385ZM10.3687 11.0217C11.692 11.0217 12.7647 9.94895 12.7647 8.62568C12.7647 7.3024 11.692 6.22966 10.3687 6.22966C9.04542 6.22966 7.97264 7.3024 7.97264 8.62568C7.97264 9.94895 9.04542 11.0217 10.3687 11.0217Z"
+                          fill="#898989"
+                        />
+                        <path
+                          d="M2 15L19 2"
+                          stroke="#898989"
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    )}
+                  </span>
                 </span>
               </div>
 
@@ -242,6 +420,8 @@ const TahraaSignup = () => {
               <input
                 type="checkbox"
                 className="tahraa-agreement-checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
               />
               <p className="tahraa-agreement-text">
                 <span>By signing up you agree to our </span>
@@ -253,14 +433,14 @@ const TahraaSignup = () => {
             </div>
 
             {/* Buttons */}
-          <button className='BTN-2'>
+          <button className='BTN-2' type="submit" disabled={submitting}>
             <div className='rectangle-2' />
 
             <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
             <img className='line' alt='Line' src={BigLine} />
 
-            <div className='label'>Sign Up</div>
+            <div className='label'>{submitting ? "Submitting..." : "Sign Up"}</div>
           </button>
 
             <button className='BTNaa'>
