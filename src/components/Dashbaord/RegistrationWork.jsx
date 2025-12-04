@@ -183,6 +183,110 @@ const RegistrationWork = () => {
                 className="registration-btn registration-btn-clear"
                 style={{ position: "relative", overflow: "hidden" }}
               >
+                {/* Left glossy strip */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 11 40"
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    height: "100%",
+                  }}
+                >
+                  <g filter="url(#filter0_f_62_2361)">
+                    <path
+                      d="M2.90067 4.20661C3.12969 2.15452 6.46543 2.36603 7.91731 2.55746C8.17774 2.59179 8.2636 2.92163 8.06746 3.09635C7.33809 3.74607 6.06 5.03936 5.74247 6.3671C4.15774 12.9935 4.54759 24.3379 4.81564 29.2692C4.90214 30.8606 4.6796 32.4494 4.1239 33.9432L2.90067 37.2312C2.90067 37.2312 1.86732 13.4659 2.90067 4.20661Z"
+                      fill="white"
+                      fillOpacity="0.3"
+                    />
+                    <path
+                      d="M2.90067 4.20661C3.12969 2.15452 6.46543 2.36603 7.91731 2.55746C8.17774 2.59179 8.2636 2.92163 8.06746 3.09635C7.33809 3.74607 6.06 5.03936 5.74247 6.3671C4.15774 12.9935 4.54759 24.3379 4.81564 29.2692C4.90214 30.8606 4.6796 32.4494 4.1239 33.9432L2.90067 37.2312C2.90067 37.2312 1.86732 13.4659 2.90067 4.20661Z"
+                      fill="url(#paint0_linear_62_2361)"
+                    />
+                  </g>
+                  <defs>
+                    <filter
+                      id="filter0_f_62_2361"
+                      x="0"
+                      y="0"
+                      width="10.6172"
+                      height="39.6726"
+                      filterUnits="userSpaceOnUse"
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend
+                        in="SourceGraphic"
+                        in2="BackgroundImageFix"
+                        mode="normal"
+                        result="shape"
+                      />
+                      <feGaussianBlur
+                        stdDeviation="1.2207"
+                        result="effect1_foregroundBlur_62_2361"
+                      />
+                    </filter>
+                    <linearGradient
+                      id="paint0_linear_62_2361"
+                      x1="2.44141"
+                      y1="3.36733"
+                      x2="5.4245"
+                      y2="5.61461"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="white" />
+                      <stop offset="1" stopColor="white" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                {/* Top highlight line */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 306 6"
+                  preserveAspectRatio="none"
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 4,
+                    width: "100%",
+                    height: 4,
+                  }}
+                >
+                  <g filter="url(#filter0_f_62_2362)">
+                    <path
+                      d="M2.59375 2.59399H302.594"
+                      stroke="white"
+                      strokeWidth="0.305174"
+                      strokeLinecap="round"
+                    />
+                  </g>
+                  <defs>
+                    <filter
+                      id="filter0_f_62_2362"
+                      x="0"
+                      y="0"
+                      width="305.187"
+                      height="5.18796"
+                      filterUnits="userSpaceOnUse"
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend
+                        in="SourceGraphic"
+                        in2="BackgroundImageFix"
+                        mode="normal"
+                        result="shape"
+                      />
+                      <feGaussianBlur
+                        stdDeviation="1.2207"
+                        result="effect1_foregroundBlur_62_2362"
+                      />
+                    </filter>
+                  </defs>
+                </svg>
+
                 Clear
               </button>
               <button
@@ -191,6 +295,110 @@ const RegistrationWork = () => {
                 style={{ position: "relative", overflow: "hidden" }}
                 onClick={() => navigate("/welcome")}
               >
+                {/* Left glossy strip */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 11 40"
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    height: "100%",
+                  }}
+                >
+                  <g filter="url(#filter0_f_62_2361)">
+                    <path
+                      d="M2.90067 4.20661C3.12969 2.15452 6.46543 2.36603 7.91731 2.55746C8.17774 2.59179 8.2636 2.92163 8.06746 3.09635C7.33809 3.74607 6.06 5.03936 5.74247 6.3671C4.15774 12.9935 4.54759 24.3379 4.81564 29.2692C4.90214 30.8606 4.6796 32.4494 4.1239 33.9432L2.90067 37.2312C2.90067 37.2312 1.86732 13.4659 2.90067 4.20661Z"
+                      fill="white"
+                      fillOpacity="0.3"
+                    />
+                    <path
+                      d="M2.90067 4.20661C3.12969 2.15452 6.46543 2.36603 7.91731 2.55746C8.17774 2.59179 8.2636 2.92163 8.06746 3.09635C7.33809 3.74607 6.06 5.03936 5.74247 6.3671C4.15774 12.9935 4.54759 24.3379 4.81564 29.2692C4.90214 30.8606 4.6796 32.4494 4.1239 33.9432L2.90067 37.2312C2.90067 37.2312 1.86732 13.4659 2.90067 4.20661Z"
+                      fill="url(#paint0_linear_62_2361)"
+                    />
+                  </g>
+                  <defs>
+                    <filter
+                      id="filter0_f_62_2361"
+                      x="0"
+                      y="0"
+                      width="10.6172"
+                      height="39.6726"
+                      filterUnits="userSpaceOnUse"
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend
+                        in="SourceGraphic"
+                        in2="BackgroundImageFix"
+                        mode="normal"
+                        result="shape"
+                      />
+                      <feGaussianBlur
+                        stdDeviation="1.2207"
+                        result="effect1_foregroundBlur_62_2361"
+                      />
+                    </filter>
+                    <linearGradient
+                      id="paint0_linear_62_2361"
+                      x1="2.44141"
+                      y1="3.36733"
+                      x2="5.4245"
+                      y2="5.61461"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="white" />
+                      <stop offset="1" stopColor="white" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                {/* Top highlight line */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 306 6"
+                  preserveAspectRatio="none"
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 4,
+                    width: "100%",
+                    height: 4,
+                  }}
+                >
+                  <g filter="url(#filter0_f_62_2362)">
+                    <path
+                      d="M2.59375 2.59399H302.594"
+                      stroke="white"
+                      strokeWidth="0.305174"
+                      strokeLinecap="round"
+                    />
+                  </g>
+                  <defs>
+                    <filter
+                      id="filter0_f_62_2362"
+                      x="0"
+                      y="0"
+                      width="305.187"
+                      height="5.18796"
+                      filterUnits="userSpaceOnUse"
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend
+                        in="SourceGraphic"
+                        in2="BackgroundImageFix"
+                        mode="normal"
+                        result="shape"
+                      />
+                      <feGaussianBlur
+                        stdDeviation="1.2207"
+                        result="effect1_foregroundBlur_62_2362"
+                      />
+                    </filter>
+                  </defs>
+                </svg>
+
                 Submit
               </button>
             </div>
