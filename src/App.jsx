@@ -48,7 +48,7 @@ function App() {
     pathname.startsWith('/edit-traineeProfile') ||
     pathname.startsWith('/edit-traineeProfilePicture') ||
     pathname.startsWith('/package-summary') ||
-    pathname.startsWith('/signin') ||
+    pathname.startsWith('/signup') ||
     pathname.startsWith('/login') ||
     pathname.startsWith('/forgot-password') ||
     pathname.startsWith('/registration') ||

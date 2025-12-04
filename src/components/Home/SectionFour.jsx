@@ -26,7 +26,7 @@ export const SectionFour = () => {
               to mastery
             </h2>
 
-            <Link to="/signin" className="text-decoration-none">
+            <Link to="/signup" className="text-decoration-none">
               <button className="BTNFOUR" type="button">
                 <div className="rectangle-2" />
                 <img className="vector-2" alt="Glow" src={BtnLeftGlow} />

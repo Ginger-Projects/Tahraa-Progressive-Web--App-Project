@@ -62,7 +62,7 @@ const HeroBanner = () => {
 
               <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1-2.svg' />
 
-              <Link to='/signin'><div className='label-3' >Sign In</div></Link>
+              <Link to='/signup'><div className='label-3' >Sign In</div></Link>
             </button>
             <button className='BTNns'>
               <div className='rectangle-2' />
