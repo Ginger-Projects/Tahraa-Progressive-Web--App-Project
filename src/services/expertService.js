@@ -13,6 +13,8 @@ export const getExpertService = async () => {
 export const getPackages = async () => {
   try {
     const response = await api.get("/api/trainee/public/packages?page=1&limit=10");
+    console.log("response",response);
+    
     return response.data;
   } catch (error) {
     throw error;
@@ -46,12 +48,12 @@ export const uploadPreviousWork = async (formData) => {
 
 export const registerExpert = async (payload) => {
   try {
-    const isFormData = payload instanceof FormData;
+    const isFormData = payload 
     const config = isFormData
       ? { headers: { "Content-Type": "multipart/form-data" } }
       : undefined;
 
-    const response = await api.post("/api/expert/auth/register", payload, config);
+    const response = await api.post("/api/expert/auth/onboarding", payload, config);
     return response.data;
   } catch (error) {
     throw error;

@@ -117,7 +117,7 @@ function App() {
         <Route path="/chat" element={<Chat />} />
         {/* Registration */}
         <Route path="/registration" element={<RegistrationBasicsMain />} />
-        <Route path="/regitraion-education" element={<RegistrationEducationMain />} />
+        <Route path="/registraion-education" element={<RegistrationEducationMain />} />
         <Route path="/registration-work" element={<RegistrationWorkMain />} />
         <Route path="/welcome" element={<WelcomeMain />} />
         <Route path="*" element={<NotFound />} />

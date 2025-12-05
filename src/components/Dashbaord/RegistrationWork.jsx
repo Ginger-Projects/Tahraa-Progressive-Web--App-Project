@@ -20,6 +20,20 @@ const RegistrationWork = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
+    // Guard: if basics or education data is missing (e.g. after reload), redirect to the appropriate step
+    const basics = registration?.basics || {};
+    const education = registration?.education || {};
+
+    if (!basics || !basics.name || !basics.email) {
+      navigate("/registration", { replace: true });
+      return;
+    }
+
+    if (!education || !education.yearsOfExperience || !education.teachingCategory) {
+      navigate("/registraion-education", { replace: true });
+      return;
+    }
+
     const handleBeforeUnload = (e) => {
       const message = "If you leave this page, your registration progress may be lost. Go to home page?";
       e.preventDefault();
@@ -42,11 +56,12 @@ const RegistrationWork = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("popstate", handlePopState);
     };
-  }, [navigate]);
+  }, [navigate, registration]);
 
   const handleSubmit = async () => {
     const missingFields = [];
-
+    console.log("hai");
+    
     if (!officeAddressOption) missingFields.push("Office address selection");
     if (!officeAddressText.trim()) missingFields.push("Office address");
     if (!zipCode.trim()) missingFields.push("ZIP code");
@@ -66,18 +81,32 @@ const RegistrationWork = () => {
       termsAccepted,
       stepCompleted: true,
     };
-
+    console.log("work",workData);
+    
     dispatch(setWork(workData));
+
+    // Debug identificationNumber type from basics
+    const basicsDebug = registration.basics || {};
+    console.log(
+      "identificationNumber in Work (value, type):",
+      basicsDebug.identificationNumber,
+      typeof basicsDebug.identificationNumber
+    );
 
     // Build main FormData for registerExpert: basics (with photo), education (including previous work), and work data
     const education = registration.education || {};
-    const { previousWorkFiles = [], previousWorkLink, ...educationWithoutFiles } = education;
+    const {
+      previousWorks = [],
+      previousWorksLinks = [],
+      certificates = [],
+      ...educationWithoutFiles
+    } = education;
 
     const formData = new FormData();
 
     // Append basics, separating photoFile so we can send it as a real file
     const basics = registration.basics || {};
-    const { photoFile, ...basicsWithoutPhotoFile } = basics;
+    const { photoFile, photoUrl, ...basicsWithoutPhotoFile } = basics; // exclude photoUrl from payload
     Object.entries(basicsWithoutPhotoFile).forEach(([key, value]) => {
       formData.append(key, value ?? "");
     });
@@ -85,31 +114,47 @@ const RegistrationWork = () => {
       formData.append("profilePicture", photoFile);
     }
 
-    // Append education without files
+    // Append education without files/arrays that we handle separately
     Object.entries(educationWithoutFiles).forEach(([key, value]) => {
-      if (key === "certificate" && Array.isArray(value)) {
-        formData.append("certificate", JSON.stringify(value));
+      if (value === undefined || value === null) {
+        formData.append(key, "");
+      } else if (key === "languages" && Array.isArray(value)) {
+        // Send languages as a JSON array
+        formData.append("languages", JSON.stringify(value));
+      } else if (typeof value === "boolean") {
+        formData.append(key, String(value));
       } else {
-        formData.append(key, value ?? "");
+        formData.append(key, value);
       }
     });
 
-    // Append work data as flat fields so backend can shape the object
-    formData.append("haveOfficeAddress", officeAddressOption);
-    formData.append("addressLine1", officeAddressText ?? "");
-    formData.append("zipCode", zipCode ?? "");
-    formData.append("registrationNumber", companyRegNumber ?? "");
-    formData.append("termsAccepted", String(termsAccepted));
+    // Append certificates as JSON array of objects
+    if (Array.isArray(certificates) && certificates.length > 0) {
+      formData.append("certificates", JSON.stringify(certificates));
+    }
 
-    // Append previous work link (e.g., YouTube) if present
-    if (previousWorkLink && previousWorkLink.trim()) {
-      formData.append("previousWorkLink", previousWorkLink.trim());
+    // Append work data (haveOfficeAddress as boolean)
+    formData.append("haveOfficeAddress", String(officeAddressOption === "yes"));
+
+    // OfficeAddress is a single key whose value is a JSON object
+    const officeAddress = {
+      addressLine1: officeAddressText ?? "",
+      zipCode: zipCode ?? "",
+      registrationNumber: companyRegNumber ?? "",
+    };
+    formData.append("officeAddress", JSON.stringify(officeAddress));
+
+    // Do not send termsAccepted to backend; only used for frontend validation
+
+    // Append previous work links (YouTube etc.) as JSON array
+    if (Array.isArray(previousWorksLinks) && previousWorksLinks.length > 0) {
+      formData.append("previousWorksLinks", JSON.stringify(previousWorksLinks));
     }
 
     // Append previous work files directly to FormData so backend can handle storage
-    (previousWorkFiles || []).forEach((file, index) => {
+    (previousWorks || []).forEach((file, index) => {
       if (file) {
-        formData.append(`previousWorkFiles[${index}]`, file);
+        formData.append(`previousWorks[${index}]`, file);
       }
     });
 
@@ -121,9 +166,14 @@ const RegistrationWork = () => {
           ? { name: value.name, type: value.type, size: value.size }
           : value;
     }
-    console.log("DEBUG FORMDATA ENTRIES", debugFormData);
+    console.log(
+      "DEBUG FORMDATA ENTRIES\n",
+      JSON.stringify(debugFormData, null, 2)
+    );
 
     try {
+      console.log("formData",formData);
+      
       const response = await registerExpert(formData);
       const message = response?.message || "Registration completed successfully";
       toast.success(message);

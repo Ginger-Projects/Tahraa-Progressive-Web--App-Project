@@ -106,7 +106,7 @@ export const SliderThree = () => {
           {pkg.expert?.name} • <span>{pkg.category?.name}</span>
         </p>
 
-        {/* SESSIONS + DURATION */}
+        {/* SESSIONS + TOTAL PRICE */}
         <div className='d-flex align-items-center justify-content-between expert-price'>
           <p>
             <img className="img-fluid" src={File} alt="" />{" "}
@@ -114,8 +114,7 @@ export const SliderThree = () => {
           </p>
 
           <span>
-            <img src={Clock} alt="" />
-            50 Min / Session
+            Total: QAR {pkg.packageTotalPrice}
           </span>
         </div>
 

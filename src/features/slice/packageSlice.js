@@ -4,10 +4,9 @@ import { getPackages } from "../../services/expertService";
 export const fetchPackages = createAsyncThunk(
     "experts/fetchPackages",
     async () =>{
-        const response = await getPackages();
-        console.log("packages",response);
-        
-        return response.data
+        const data = await getPackages(); 
+        console.log("packages", data);
+        return data; 
     }
 )
 
@@ -25,7 +24,11 @@ const packageSlice = createSlice({
       })
       .addCase(fetchPackages.fulfilled, (state, action) => {
         state.loading = false;
-        state.packages = action.payload.packages;
+        const payload = action.payload || {};
+        state.packages =
+          payload.data?.packages ||
+          payload.packages ||
+          [];
       })
       .addCase(fetchPackages.rejected, (state, action) => {
         state.loading = false;

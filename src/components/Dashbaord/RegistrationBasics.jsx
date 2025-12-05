@@ -15,7 +15,8 @@ const RegistrationBasics = () => {
   const [email, setEmail] = useState("");
   const [phoneValue, setPhoneValue] = useState("");
   const [qidPassport, setQidPassport] = useState("");
-  const [dobValue, setDobValue] = useState("");
+  const [dobValue, setDobValue] = useState(""); // display as DD-MM-YYYY
+  const [dobRaw, setDobRaw] = useState(""); // raw YYYY-MM-DD for backend
   const [gender, setGender] = useState("");
   const [nationalityValue, setNationalityValue] = useState("");
   const [residenceValue, setResidenceValue] = useState("");
@@ -27,6 +28,8 @@ const RegistrationBasics = () => {
   const [crop, setCrop] = useState({ aspect: 1 });
   const [croppedImageUrl, setCroppedImageUrl] = useState("");
   const [showCropper, setShowCropper] = useState(false);
+  const [pendingPhotoFile, setPendingPhotoFile] = useState(null);
+  const [pendingPhotoName, setPendingPhotoName] = useState("");
   const [about, setAbout] = useState("");
   const dobInputRef = useRef(null); // visible text field
   const dobPickerRef = useRef(null); // hidden native date input
@@ -201,7 +204,7 @@ const RegistrationBasics = () => {
     if (!email.trim()) missingFields.push("Email address");
     if (!phoneValue.trim()) missingFields.push("Phone number");
     if (!qidPassport.trim()) missingFields.push("QID/Passport");
-    if (!dobValue.trim()) missingFields.push("Date of birth");
+    if (!dobRaw.trim()) missingFields.push("Date of birth");
     if (!gender) missingFields.push("Gender");
     if (!nationalityValue) missingFields.push("Nationality");
     if (!residenceValue) missingFields.push("Country of residence");
@@ -212,6 +215,14 @@ const RegistrationBasics = () => {
 
     if (missingFields.length > 0) {
       toast.error(`${missingFields[0]} is required`);
+      return;
+    }
+
+    // Basic email format validation (any valid domain)
+    const trimmedEmail = email.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(trimmedEmail)) {
+      toast.error("Please enter a valid email address");
       return;
     }
 
@@ -230,23 +241,88 @@ const RegistrationBasics = () => {
         email,
         phone: phoneValue,
         countryCode,
-        identificationNumber: qidPassport,
-        dateOfBirth: dobValue,
+        identificationNumber: String(qidPassport),
+        dateOfBirth: dobRaw,
         gender,
         nationality: nationalityLower,
         countryOfResidence: residenceLower,
-        workVisa: visaStatus,
+        workVisa: visaStatus === "yes",
         about,
         timeZone,
         photoUrl: croppedImageUrl,
         photoFile,
       })
     );
-    navigate("/regitraion-education");
+    navigate("/registraion-education");
   };
 
   return (
     <section className="registration-main">
+      {showCropper && srcImage && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#fff",
+              padding: 24,
+              borderRadius: 12,
+              maxWidth: 400,
+              width: "90%",
+              textAlign: "center",
+            }}
+          >
+            <h3 style={{ marginBottom: 16 }}>Profile picture</h3>
+            <img
+              src={srcImage}
+              alt="Profile preview"
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                borderRadius: 8,
+                objectFit: "contain",
+                marginBottom: 16,
+              }}
+            />
+            <div style={{ display: "flex", justifyContent: "center", gap: 12 }}>
+              <button
+                type="button"
+                className="registration-btn registration-btn-clear"
+                onClick={() => {
+                  setShowCropper(false);
+                  setSrcImage(null);
+                  setPendingPhotoFile(null);
+                  setPendingPhotoName("");
+                }}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="registration-btn registration-btn-primary"
+                onClick={() => {
+                  setCroppedImageUrl(srcImage);
+                  setPhotoFile(pendingPhotoFile);
+                  setPhotoName(pendingPhotoName);
+                  setPendingPhotoFile(null);
+                  setPendingPhotoName("");
+                  setShowCropper(false);
+                }}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="registration-page">
         {/* LEFT PANEL - Image + text */}
         <div className="registration-left">
@@ -395,8 +471,10 @@ const RegistrationBasics = () => {
                       const v = e.target.value; // yyyy-mm-dd
                       if (!v) {
                         setDobValue("");
+                        setDobRaw("");
                         return;
                       }
+                      setDobRaw(v);
                       const [year, month, day] = v.split("-");
                       setDobValue(`${day}-${month}-${year}`);
                     }}
@@ -591,15 +669,16 @@ const RegistrationBasics = () => {
                       onChange={(e) => {
                         const file = e.target.files && e.target.files[0];
                         if (file) {
-                          setPhotoName(file.name);
-                          setPhotoFile(file);
+                          setPendingPhotoName(file.name);
+                          setPendingPhotoFile(file);
                           const reader = new FileReader();
                           reader.onloadend = async () => {
                             const result = typeof reader.result === "string" ? reader.result : null;
                             if (result) {
                               const resizedUrl = await create400x400Image(result);
                               if (resizedUrl) {
-                                setCroppedImageUrl(resizedUrl);
+                                setSrcImage(resizedUrl);
+                                setShowCropper(true);
                               }
                             }
                           };
@@ -608,6 +687,9 @@ const RegistrationBasics = () => {
                           setPhotoName("");
                           setPhotoFile(null);
                           setCroppedImageUrl("");
+                          setSrcImage(null);
+                          setPendingPhotoFile(null);
+                          setPendingPhotoName("");
                         }
                       }}
                     />
@@ -635,26 +717,6 @@ const RegistrationBasics = () => {
                     </svg>
                   </label>
 
-                  {croppedImageUrl && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "110%",
-                        right: 0,
-                        backgroundColor: "#fff",
-                        padding: 8,
-                        borderRadius: 8,
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                        zIndex: 10,
-                      }}
-                    >
-                      <img
-                        src={croppedImageUrl}
-                        alt="Profile preview"
-                        style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover" }}
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
             </div>

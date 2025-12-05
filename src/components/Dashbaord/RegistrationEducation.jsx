@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
 import { toast } from "react-toastify";
 import { setEducation } from "../../features/slice/registrationSlice";
 import { useRef } from "react";
@@ -13,6 +14,8 @@ import logoImage from "../../assets/images/logo.png";
 const RegistrationEducation = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const basics = useSelector((state) => state.registration?.basics || {});
+
   const [yearsOfExperience, setYearsOfExperience] = useState("");
   const [teachingCategory, setTeachingCategory] = useState("");
   const [modeOfDelivery, setModeOfDelivery] = useState("");
@@ -20,19 +23,28 @@ const RegistrationEducation = () => {
   const [languages, setLanguages] = useState([]);
   const [languageInput, setLanguageInput] = useState("");
   const [existingLearners, setExistingLearners] = useState("");
-  const [previousWorkLink, setPreviousWorkLink] = useState("");
-  const [previousWorkFiles, setPreviousWorkFiles] = useState([]);
+  const [previousWorksLinks, setPreviousWorksLinks] = useState([]);
+  const [previousWorkLinkInput, setPreviousWorkLinkInput] = useState("");
+  const [previousWorks, setPreviousWorks] = useState([]);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
-  const [hasCertification, setHasCertification] = useState("");
+  const [haveCertificate, setHaveCertificate] = useState("");
   const [certificationName, setCertificationName] = useState("");
-  const [certificationExpiry, setCertificationExpiry] = useState("");
+  const [certificationExpiry, setCertificationExpiry] = useState(""); // display (dd-mm-yyyy)
+  const [certificationExpiryRaw, setCertificationExpiryRaw] = useState(""); // raw yyyy-mm-dd
   const [certificates, setCertificates] = useState([]);
   const [categories, setCategories] = useState([]);
+
   const expiryInputRef = useRef(null);
   const expiryPickerRef = useRef(null);
   const uploadInputRef = useRef(null);
 
   useEffect(() => {
+    // If basics step data is missing (e.g. after a hard reload), redirect back to registration basics
+    if (!basics || !basics.name || !basics.email) {
+      navigate("/registration", { replace: true });
+      return;
+    }
+
     const handleBeforeUnload = (e) => {
       const message = "If you leave this page, your registration progress may be lost. Go to home page?";
       e.preventDefault();
@@ -69,6 +81,18 @@ const RegistrationEducation = () => {
     };
   }, [navigate]);
 
+  const handleAddYoutubeLink = () => {
+    const value = previousWorkLinkInput.trim();
+    if (!value) return;
+
+    setPreviousWorksLinks((prev) => {
+      if (prev.includes(value)) return prev;
+      return [...prev, value];
+    });
+
+    setPreviousWorkLinkInput("");
+  };
+
   const handleAddLanguage = () => {
     const value = languageInput.trim();
     if (!value) return;
@@ -81,6 +105,23 @@ const RegistrationEducation = () => {
     setLanguageInput("");
   };
 
+  const handleAddCertificate = () => {
+    if (!certificationName.trim() || !certificationExpiryRaw.trim()) return;
+
+    setCertificates((prev) => [
+      ...prev,
+      {
+        nameOfCertificate: certificationName.trim(),
+        expiryDate: certificationExpiryRaw.trim(),
+      },
+    ]);
+
+    // Clear both fields in the UI
+    setCertificationName("");
+    setCertificationExpiry("");
+    setCertificationExpiryRaw("");
+  };
+
   const handleNext = () => {
     const missingFields = [];
 
@@ -91,8 +132,8 @@ const RegistrationEducation = () => {
     if (!languages || languages.length === 0) missingFields.push("Languages spoken");
 
     if (!existingLearners) missingFields.push("Existing learners/students");
-    // Require EITHER a YouTube link OR at least one uploaded file
-    if (!previousWorkLink.trim() && previousWorkFiles.length === 0) {
+    // Require EITHER at least one YouTube link OR at least one uploaded file
+    if (previousWorksLinks.length === 0 && previousWorks.length === 0) {
       missingFields.push("Previous work or intro video (link or file)");
     }
 
@@ -101,31 +142,20 @@ const RegistrationEducation = () => {
       return;
     }
 
-    let certificateArray = certificates;
-    if (
-      certificateArray.length === 0 &&
-      certificationName.trim() &&
-      certificationExpiry.trim()
-    ) {
-      certificateArray = [
-        {
-          nameOfCertificate: certificationName.trim(),
-          expiryDate: certificationExpiry.trim(),
-        },
-      ];
-    }
+    const certificateArray = certificates;
 
     dispatch(
       setEducation({
-        yeaersOfExperience: yearsOfExperience,
+        yearsOfExperience: yearsOfExperience,
         teachingCategory,
         delivery: modeOfDelivery,
         feeRange,
-        languages: languages.join(", "),
+        languages: languages, // Changed from languages.join(", ") to languages
         existingTrainees: existingLearners === "yes",
-        previousWorkLink,
-        certificate: certificateArray,
-        previousWorkFiles,
+        haveCertificate: haveCertificate === "yes",
+        previousWorksLinks,
+        certificates: certificateArray,
+        previousWorks,
       })
     );
     navigate("/registration-work");
@@ -371,11 +401,14 @@ const RegistrationEducation = () => {
                       type="text"
                       className="registration-upload-text"
                       placeholder="Link from YouTube"
-                      value={previousWorkLink}
-                      onChange={(e) => setPreviousWorkLink(e.target.value)}
+                      value={previousWorkLinkInput}
+                      onChange={(e) => setPreviousWorkLinkInput(e.target.value)}
                     />
 
-                    <span className="registration-upload-icon">
+                    <span
+                      className="registration-upload-icon"
+                      onClick={handleAddYoutubeLink}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="14"
@@ -401,6 +434,21 @@ const RegistrationEducation = () => {
                       </svg>
                     </span>
                   </div>
+
+                  {previousWorksLinks.length > 0 && (
+                    <div
+                      style={{
+                        marginTop: 8,
+                        fontSize: 12,
+                        color: "#555",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {previousWorksLinks.join(", ")}
+                    </div>
+                  )}
 
                   <div
                     style={{
@@ -477,11 +525,11 @@ const RegistrationEducation = () => {
                     onChange={(e) => {
                       const files = Array.from(e.target.files || []);
                       if (files.length === 0) return;
-                      setPreviousWorkFiles((prev) => [...prev, ...files]);
+                      setPreviousWorks((prev) => [...prev, ...files]);
                     }}
                   />
 
-                  {previousWorkFiles.length > 0 && (
+                  {previousWorks.length > 0 && (
                     <div
                       style={{
                         marginTop: 8,
@@ -493,13 +541,13 @@ const RegistrationEducation = () => {
                       }}
                       onClick={() => setIsPreviewModalOpen(true)}
                     >
-                      View selected files ({previousWorkFiles.length})
+                      View selected files ({previousWorks.length})
                     </div>
                   )}
                 </div>
               </div>
 
-              {isPreviewModalOpen && previousWorkFiles.length > 0 && (
+              {isPreviewModalOpen && previousWorks.length > 0 && (
                 <div
                   style={{
                     position: "fixed",
@@ -559,7 +607,7 @@ const RegistrationEducation = () => {
                         gap: 12,
                       }}
                     >
-                      {previousWorkFiles.map((file, idx) => {
+                      {previousWorks.map((file, idx) => {
                         const url = URL.createObjectURL(file);
                         const isImage = file.type.startsWith("image/");
                         const isVideo = file.type.startsWith("video/");
@@ -622,8 +670,8 @@ const RegistrationEducation = () => {
                         type="radio"
                         name="certification"
                         value="yes"
-                        checked={hasCertification === "yes"}
-                        onChange={(e) => setHasCertification(e.target.value)}
+                        checked={haveCertificate === "yes"}
+                        onChange={(e) => setHaveCertificate(e.target.value)}
                       />{" "}
                       Yes
                     </label>
@@ -633,8 +681,8 @@ const RegistrationEducation = () => {
                         type="radio"
                         name="certification"
                         value="no"
-                        checked={hasCertification === "no"}
-                        onChange={(e) => setHasCertification(e.target.value)}
+                        checked={haveCertificate === "no"}
+                        onChange={(e) => setHaveCertificate(e.target.value)}
                       />{" "}
                       No
                     </label>
@@ -675,8 +723,10 @@ const RegistrationEducation = () => {
                         const v = e.target.value; // yyyy-mm-dd
                         if (!v) {
                           setCertificationExpiry("");
+                          setCertificationExpiryRaw("");
                           return;
                         }
+                        setCertificationExpiryRaw(v);
                         const [year, month, day] = v.split("-");
                         setCertificationExpiry(`${day}-${month}-${year}`);
                       }}
@@ -743,21 +793,7 @@ const RegistrationEducation = () => {
                       textDecoration: "underline",
                       cursor: "pointer",
                     }}
-                    onClick={() => {
-                      if (!certificationName.trim() || !certificationExpiry.trim()) {
-                        toast.error("Name of certification and expiry date are required");
-                        return;
-                      }
-                      setCertificates((prev) => [
-                        ...prev,
-                        {
-                          nameOfCertificate: certificationName.trim(),
-                          expiryDate: certificationExpiry.trim(),
-                        },
-                      ]);
-                      setCertificationName("");
-                      setCertificationExpiry("");
-                    }}
+                    onClick={handleAddCertificate}
                   >
                     Add certificate
                   </span>
@@ -767,13 +803,16 @@ const RegistrationEducation = () => {
                         marginTop: 8,
                         fontSize: 12,
                         color: "#555",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
                       }}
                     >
-                      {certificates.map((cert, idx) => (
-                        <div key={idx}>
-                          {cert.nameOfCertificate} - {cert.expiryDate}
-                        </div>
-                      ))}
+                      {certificates
+                        .map(
+                          (cert) => `${cert.nameOfCertificate} - ${cert.expiryDate}`
+                        )
+                        .join(", ")}
                     </div>
                   )}
                 </div>
