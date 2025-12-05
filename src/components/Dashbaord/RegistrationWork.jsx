@@ -1,11 +1,142 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { setWork, clearRegistration } from "../../features/slice/registrationSlice";
+import { registerExpert } from "../../services/expertService";
 import "./RegistrationBasics.css";
 import leftImage from "../../assets/images/work-bg.png";
 import logoImage from "../../assets/images/logo.png";
 
 const RegistrationWork = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const registration = useSelector((state) => state.registration);
+
+  const [officeAddressOption, setOfficeAddressOption] = useState("");
+  const [officeAddressText, setOfficeAddressText] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [companyRegNumber, setCompanyRegNumber] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const message = "If you leave this page, your registration progress may be lost. Go to home page?";
+      e.preventDefault();
+      e.returnValue = message;
+      return message;
+    };
+
+    const handlePopState = () => {
+      if (window.confirm("If you go back, your registration may be lost. Go to home page?")) {
+        navigate("/");
+      } else {
+        navigate(0);
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [navigate]);
+
+  const handleSubmit = async () => {
+    const missingFields = [];
+
+    if (!officeAddressOption) missingFields.push("Office address selection");
+    if (!officeAddressText.trim()) missingFields.push("Office address");
+    if (!zipCode.trim()) missingFields.push("ZIP code");
+    if (!companyRegNumber.trim()) missingFields.push("Company registration number");
+    if (!termsAccepted) missingFields.push("Acceptance of terms");
+
+    if (missingFields.length > 0) {
+      toast.error(`${missingFields[0]} is required`);
+      return;
+    }
+
+    const workData = {
+      officeAddressOption,
+      officeAddressText,
+      zipCode,
+      companyRegNumber,
+      termsAccepted,
+      stepCompleted: true,
+    };
+
+    dispatch(setWork(workData));
+
+    // Build main FormData for registerExpert: basics (with photo), education (including previous work), and work data
+    const education = registration.education || {};
+    const { previousWorkFiles = [], previousWorkLink, ...educationWithoutFiles } = education;
+
+    const formData = new FormData();
+
+    // Append basics, separating photoFile so we can send it as a real file
+    const basics = registration.basics || {};
+    const { photoFile, ...basicsWithoutPhotoFile } = basics;
+    Object.entries(basicsWithoutPhotoFile).forEach(([key, value]) => {
+      formData.append(key, value ?? "");
+    });
+    if (photoFile) {
+      formData.append("profilePicture", photoFile);
+    }
+
+    // Append education without files
+    Object.entries(educationWithoutFiles).forEach(([key, value]) => {
+      if (key === "certificate" && Array.isArray(value)) {
+        formData.append("certificate", JSON.stringify(value));
+      } else {
+        formData.append(key, value ?? "");
+      }
+    });
+
+    // Append work data as flat fields so backend can shape the object
+    formData.append("haveOfficeAddress", officeAddressOption);
+    formData.append("addressLine1", officeAddressText ?? "");
+    formData.append("zipCode", zipCode ?? "");
+    formData.append("registrationNumber", companyRegNumber ?? "");
+    formData.append("termsAccepted", String(termsAccepted));
+
+    // Append previous work link (e.g., YouTube) if present
+    if (previousWorkLink && previousWorkLink.trim()) {
+      formData.append("previousWorkLink", previousWorkLink.trim());
+    }
+
+    // Append previous work files directly to FormData so backend can handle storage
+    (previousWorkFiles || []).forEach((file, index) => {
+      if (file) {
+        formData.append(`previousWorkFiles[${index}]`, file);
+      }
+    });
+
+    // Log a readable snapshot of FormData entries (including files)
+    const debugFormData = {};
+    for (const [key, value] of formData.entries()) {
+      debugFormData[key] =
+        value instanceof File
+          ? { name: value.name, type: value.type, size: value.size }
+          : value;
+    }
+    console.log("DEBUG FORMDATA ENTRIES", debugFormData);
+
+    try {
+      const response = await registerExpert(formData);
+      const message = response?.message || "Registration completed successfully";
+      toast.success(message);
+      dispatch(clearRegistration());
+      navigate("/welcome");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Registration failed. Please try again.";
+      toast.error(message);
+    }
+  };
   return (
     <section className="registration-main">
       <div className="registration-page">
@@ -125,10 +256,26 @@ const RegistrationWork = () => {
                   <label>Do you have an office address?*</label>
                   <div className="registration-radio-group">
                     <label>
-                      <input style={{padding : "10px"}} type="radio" name="officeAddress" /> Yes
+                      <input
+                        style={{ padding: "10px" }}
+                        type="radio"
+                        name="officeAddress"
+                        value="yes"
+                        checked={officeAddressOption === "yes"}
+                        onChange={(e) => setOfficeAddressOption(e.target.value)}
+                      />{" "}
+                      Yes
                     </label>
                     <label>
-                      <input style={{padding : "10px"}} type="radio" name="officeAddress" /> No
+                      <input
+                        style={{ padding: "10px" }}
+                        type="radio"
+                        name="officeAddress"
+                        value="no"
+                        checked={officeAddressOption === "no"}
+                        onChange={(e) => setOfficeAddressOption(e.target.value)}
+                      />{" "}
+                      No
                     </label>
                   </div>
                 </div>
@@ -140,6 +287,8 @@ const RegistrationWork = () => {
                   <input
                     type="text"
                     placeholder="Office address (Street | Zone | Building No.)*"
+                    value={officeAddressText}
+                    onChange={(e) => setOfficeAddressText(e.target.value)}
                   />
                 </div>
               </div>
@@ -147,10 +296,23 @@ const RegistrationWork = () => {
               {/* ZIP code & Company registration number */}
               <div className="registration-row">
                 <div className="registration-field">
-                  <input type="text" placeholder="ZIP code*" />
+                  <input
+                    type="text"
+                    placeholder="ZIP code*"
+                    value={zipCode}
+                    onChange={(e) => {
+                      const onlyDigits = e.target.value.replace(/[^0-9]/g, "");
+                      setZipCode(onlyDigits);
+                    }}
+                  />
                 </div>
                 <div className="registration-field">
-                  <input type="text" placeholder="Company registration number*" />
+                  <input
+                    type="text"
+                    placeholder="Company registration number*"
+                    value={companyRegNumber}
+                    onChange={(e) => setCompanyRegNumber(e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -158,7 +320,12 @@ const RegistrationWork = () => {
               <div className="registration-row registration-row-textarea">
                 <div className="registration-field registration-field-full">
                   <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <input type="checkbox" style={{ marginRight: 8 }} />
+                    <input
+                      type="checkbox"
+                      style={{ marginRight: 8 }}
+                      checked={termsAccepted}
+                      onChange={(e) => setTermsAccepted(e.target.checked)}
+                    />
                     <span>
                       By signing up you agree to our
                       <span style={{ color: "#775da6", textDecoration: "underline" }}>
@@ -293,7 +460,7 @@ const RegistrationWork = () => {
                 type="button"
                 className="registration-btn registration-btn-next"
                 style={{ position: "relative", overflow: "hidden" }}
-                onClick={() => navigate("/welcome")}
+                onClick={handleSubmit}
               >
                 {/* Left glossy strip */}
                 <svg

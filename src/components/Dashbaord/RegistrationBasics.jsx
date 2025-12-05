@@ -1,31 +1,50 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setBasics } from "../../features/slice/registrationSlice";
+import "react-image-crop/dist/ReactCrop.css";
 import "./RegistrationBasics.css";
 import leftImage from "../../assets/images/registration-left.png"; // TODO: replace with actual asset if different
 import logoImage from "../../assets/images/logo.png";
 
 const RegistrationBasics = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [phoneValue, setPhoneValue] = useState("");
+  const [qidPassport, setQidPassport] = useState("");
+  const [dobValue, setDobValue] = useState("");
+  const [gender, setGender] = useState("");
   const [nationalityValue, setNationalityValue] = useState("");
   const [residenceValue, setResidenceValue] = useState("");
-  const [dobValue, setDobValue] = useState("");
+  const [visaStatus, setVisaStatus] = useState("");
+  const [timeZone, setTimeZone] = useState("");
+  const [photoName, setPhotoName] = useState("");
+  const [photoFile, setPhotoFile] = useState(null);
+  const [srcImage, setSrcImage] = useState(null);
+  const [crop, setCrop] = useState({ aspect: 1 });
+  const [croppedImageUrl, setCroppedImageUrl] = useState("");
+  const [showCropper, setShowCropper] = useState(false);
+  const [about, setAbout] = useState("");
   const dobInputRef = useRef(null); // visible text field
   const dobPickerRef = useRef(null); // hidden native date input
+  const imageRef = useRef(null);
 
   const detectCountryFromPhone = (value) => {
     const v = value.replace(/\s+/g, "");
-    if (v.startsWith("+91") || v.startsWith("91")) return { flag: "🇮🇳", name: "India" };
-    if (v.startsWith("+974") || v.startsWith("974")) return { flag: "🇶🇦", name: "Qatar" };
-    if (v.startsWith("+971") || v.startsWith("971")) return { flag: "🇦🇪", name: "United Arab Emirates" };
-    if (v.startsWith("+966") || v.startsWith("966")) return { flag: "🇸🇦", name: "Saudi Arabia" };
-    return { flag: "🇶🇦", name: "Qatar" }; // default
+    if (v.startsWith("+91") || v.startsWith("91")) return { flag: "🇮🇳", name: "India", code: "+91" };
+    if (v.startsWith("+974") || v.startsWith("974")) return { flag: "🇶🇦", name: "Qatar", code: "+974" };
+    if (v.startsWith("+971") || v.startsWith("971")) return { flag: "🇦🇪", name: "United Arab Emirates", code: "+971" };
+    if (v.startsWith("+966") || v.startsWith("966")) return { flag: "🇸🇦", name: "Saudi Arabia", code: "+966" };
+    return { flag: "🇶🇦", name: "Qatar", code: "+974" };
   };
 
   const getFlagFromPhone = (value) => {
     return detectCountryFromPhone(value).flag;
   };
-
+  
   const getFlagFromCountry = (value) => {
     const v = value.toLowerCase().replace(/\s+/g, "");
 
@@ -40,8 +59,190 @@ const RegistrationBasics = () => {
     if (v.startsWith("+974") || v.startsWith("974")) return "🇶🇦";
     if (v.startsWith("+971") || v.startsWith("971")) return "🇦🇪";
     if (v.startsWith("+966") || v.startsWith("966")) return "🇸🇦";
-
     return "🇶🇦"; // default
+  };
+
+  const getDialCodeFromCountry = (value) => {
+    const v = value.toLowerCase().replace(/\s+/g, "");
+
+    if (!v) return "";
+    if (v.includes("india")) return "91";
+    if (v.includes("qatar")) return "974";
+    if (v.includes("unitedarab") || v.includes("uae")) return "971";
+    if (v.includes("saudi")) return "966";
+
+    return "";
+  };
+
+
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const message = "If you leave this page, your registration progress may be lost. Go to home page?";
+      e.preventDefault();
+      e.returnValue = message;
+      return message;
+    };
+
+
+
+    const handlePopState = () => {
+      if (window.confirm("If you go back, your registration may be lost. Go to home page?")) {
+        navigate("/");
+      } else {
+        navigate(0);
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("popstate", handlePopState);
+
+    // Auto-detect browser time zone once on mount
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (tz) {
+        setTimeZone(tz);
+      }
+    } catch (err) {
+      // Ignore failures and let validation catch missing time zone
+    }
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [navigate]);
+
+  const create400x400Image = (src) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const size = 400;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+
+        const scale = Math.max(size / img.width, size / img.height);
+        const x = (size / 2) - (img.width / 2) * scale;
+        const y = (size / 2) - (img.height / 2) * scale;
+
+        ctx.clearRect(0, 0, size, size);
+        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              resolve(null);
+              return;
+            }
+            const url = URL.createObjectURL(blob);
+            resolve(url);
+          },
+          "image/jpeg",
+          0.8
+        );
+      };
+      img.src = src;
+    });
+  };
+
+  const onImageLoaded = (img) => {
+    imageRef.current = img;
+    return false;
+  };
+
+  const makeClientCrop = async (cropData) => {
+    if (!imageRef.current || !cropData.width || !cropData.height) {
+      return;
+    }
+
+    const canvas = document.createElement("canvas");
+    const scaleX = imageRef.current.naturalWidth / imageRef.current.width;
+    const scaleY = imageRef.current.naturalHeight / imageRef.current.height;
+
+    canvas.width = cropData.width;
+    canvas.height = cropData.height;
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(
+      imageRef.current,
+      cropData.x * scaleX,
+      cropData.y * scaleY,
+      cropData.width * scaleX,
+      cropData.height * scaleY,
+      0,
+      0,
+      cropData.width,
+      cropData.height
+    );
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          resolve(null);
+          return;
+        }
+        const fileUrl = URL.createObjectURL(blob);
+        setCroppedImageUrl(fileUrl);
+        resolve(fileUrl);
+      }, "image/jpeg");
+    });
+  };
+
+  const onCropComplete = (c, percentageCrop) => {
+    makeClientCrop(c);
+  };
+
+  const handleNext = () => {
+    const missingFields = [];
+
+    if (!fullName.trim()) missingFields.push("Full name");
+    if (!email.trim()) missingFields.push("Email address");
+    if (!phoneValue.trim()) missingFields.push("Phone number");
+    if (!qidPassport.trim()) missingFields.push("QID/Passport");
+    if (!dobValue.trim()) missingFields.push("Date of birth");
+    if (!gender) missingFields.push("Gender");
+    if (!nationalityValue) missingFields.push("Nationality");
+    if (!residenceValue) missingFields.push("Country of residence");
+    if (!visaStatus) missingFields.push("Work visa status");
+    if (!timeZone) missingFields.push("Time zone");
+    if (!croppedImageUrl) missingFields.push("Profile photo");
+    if (!about.trim()) missingFields.push("About yourself");
+
+    if (missingFields.length > 0) {
+      toast.error(`${missingFields[0]} is required`);
+      return;
+    }
+
+    const detected = detectCountryFromPhone(phoneValue);
+    const countryCode = detected && detected.code ? detected.code : "";
+    if (!countryCode) {
+      toast.error("Country code is required");
+      return;
+    }
+
+    const nationalityLower = nationalityValue.toLowerCase();
+    const residenceLower = residenceValue.toLowerCase();
+    dispatch(
+      setBasics({
+        name: fullName,
+        email,
+        phone: phoneValue,
+        countryCode,
+        identificationNumber: qidPassport,
+        dateOfBirth: dobValue,
+        gender,
+        nationality: nationalityLower,
+        countryOfResidence: residenceLower,
+        workVisa: visaStatus,
+        about,
+        timeZone,
+        photoUrl: croppedImageUrl,
+        photoFile,
+      })
+    );
+    navigate("/regitraion-education");
   };
 
   return (
@@ -124,10 +325,20 @@ const RegistrationBasics = () => {
             {/* Row 1: Full name, Email address */}
             <div className="registration-row">
               <div className="registration-field">
-                <input type="text" placeholder="Full name*" />
+                <input
+                  type="text"
+                  placeholder="Full name*"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
               </div>
               <div className="registration-field">
-                <input type="email" placeholder="Email address*" />
+                <input
+                  type="email"
+                  placeholder="Email address*"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
             </div>
 
@@ -142,14 +353,20 @@ const RegistrationBasics = () => {
                     placeholder="Phone number*"
                     value={phoneValue}
                     onChange={(e) => {
-                      const next = e.target.value;
-                      setPhoneValue(next);
+                      const raw = e.target.value;
+                      const onlyDigits = raw.replace(/[^0-9]/g, "");
+                      setPhoneValue(onlyDigits);
                     }}
                   />
                 </div>
               </div>
               <div className="registration-field">
-                <input type="text" placeholder="QID/Passport*" />
+                <input
+                  type="text"
+                  placeholder="QID/Passport*"
+                  value={qidPassport}
+                  onChange={(e) => setQidPassport(e.target.value)}
+                />
               </div>
             </div>
 
@@ -163,7 +380,12 @@ const RegistrationBasics = () => {
                     placeholder="Date of birth*"
                     className="registration-date-input-field"
                     value={dobValue}
-                    onChange={(e) => setDobValue(e.target.value)}
+                    readOnly
+                    onClick={() => {
+                      if (dobPickerRef.current && dobPickerRef.current.showPicker) {
+                        dobPickerRef.current.showPicker();
+                      }
+                    }}
                   />
                   <input
                     ref={dobPickerRef}
@@ -234,7 +456,8 @@ const RegistrationBasics = () => {
               <div className="registration-field">
                 <select
                   className="registration-timezone-select"
-                  defaultValue=""
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
                 >
                   <option value="" disabled>
                     Gender*
@@ -273,7 +496,24 @@ const RegistrationBasics = () => {
                   <select style={{border : 'none'}}
                     className="registration-select"
                     value={residenceValue}
-                    onChange={(e) => setResidenceValue(e.target.value)}
+                    onChange={(e) => {
+                      const country = e.target.value;
+                      setResidenceValue(country);
+
+                      const dial = getDialCodeFromCountry(country);
+                      if (!dial) return;
+
+                      setPhoneValue((prev) => {
+                        const onlyDigits = String(prev || "").replace(/[^0-9]/g, "");
+
+                        // If phone is empty or very short, replace with dial code
+                        if (!onlyDigits || onlyDigits.length <= 4) {
+                          return dial;
+                        }
+
+                        return onlyDigits;
+                      });
+                    }}
                   >
                     <option value="">Country of residence*</option>
                     <option value="Qatar">Qatar</option>
@@ -292,10 +532,26 @@ const RegistrationBasics = () => {
                 </label>
                 <div className="registration-radio-group">
                   <label>
-                    <input style={{padding : "10px"}} type="radio" name="visa" /> Yes
+                    <input
+                      style={{padding : "10px"}}
+                      type="radio"
+                      name="visa"
+                      value="yes"
+                      checked={visaStatus === "yes"}
+                      onChange={(e) => setVisaStatus(e.target.value)}
+                    />
+                    Yes
                   </label>
                   <label>
-                    <input style={{padding : "10px"}} type="radio" name="visa" /> No
+                    <input
+                      style={{padding : "10px"}}
+                      type="radio"
+                      name="visa"
+                      value="no"
+                      checked={visaStatus === "no"}
+                      onChange={(e) => setVisaStatus(e.target.value)}
+                    />
+                    No
                   </label>
                 </div>
               </div>
@@ -304,25 +560,27 @@ const RegistrationBasics = () => {
             <div className="registration-row">
               {/* Time Zone dropdown */}
               <div className="registration-field">
-                <select className="registration-select registration-timezone-select" defaultValue="">
-                  <option value="" disabled>
-                    Time Zone*
-                  </option>
-                  <option value="Asia/Qatar">Asia/Qatar (GMT+3)</option>
-                  <option value="Asia/Dubai">Asia/Dubai (GMT+4)</option>
-                  <option value="Asia/Riyadh">Asia/Riyadh (GMT+3)</option>
-                  <option value="Asia/Kolkata">Asia/Kolkata (GMT+5:30)</option>
-                </select>
+                <input
+                  type="text"
+                  className="registration-select registration-timezone-select"
+                  value={timeZone || "Detecting time zone..."}
+                  readOnly
+                  placeholder="Time Zone*"
+                />
               </div>
 
               {/* Photo upload with camera icon */}
               <div className="registration-field">
-                <div className="registration-upload-input">
+                <div
+                  className="registration-upload-input"
+                  style={{ position: "relative" }}
+                >
                   <input
                     type="text"
                     placeholder="Please upload a photo of yourself"
                     className="registration-upload-text"
                     readOnly
+                    value={photoName}
                   />
                   <label className="registration-upload-icon">
                     <input
@@ -330,6 +588,28 @@ const RegistrationBasics = () => {
                       accept="image/*"
                       capture="user"
                       className="registration-upload-hidden"
+                      onChange={(e) => {
+                        const file = e.target.files && e.target.files[0];
+                        if (file) {
+                          setPhotoName(file.name);
+                          setPhotoFile(file);
+                          const reader = new FileReader();
+                          reader.onloadend = async () => {
+                            const result = typeof reader.result === "string" ? reader.result : null;
+                            if (result) {
+                              const resizedUrl = await create400x400Image(result);
+                              if (resizedUrl) {
+                                setCroppedImageUrl(resizedUrl);
+                              }
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        } else {
+                          setPhotoName("");
+                          setPhotoFile(null);
+                          setCroppedImageUrl("");
+                        }
+                      }}
                     />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -354,13 +634,38 @@ const RegistrationBasics = () => {
                       />
                     </svg>
                   </label>
+
+                  {croppedImageUrl && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: "110%",
+                        right: 0,
+                        backgroundColor: "#fff",
+                        padding: 8,
+                        borderRadius: 8,
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        zIndex: 10,
+                      }}
+                    >
+                      <img
+                        src={croppedImageUrl}
+                        alt="Profile preview"
+                        style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover" }}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
             <div className="registration-row registration-row-textarea">
               <div className="registration-field registration-field-full">
-                <textarea placeholder="Please tell us more about yourself*" />
+                <textarea
+                  placeholder="Please tell us more about yourself*"
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                />
               </div>
             </div>
 
@@ -432,7 +737,7 @@ const RegistrationBasics = () => {
                 type="button"
                 className="registration-btn registration-btn-next"
                 style={{ position: "relative", overflow: "hidden" }}
-                onClick={() => navigate("/regitraion-education")}
+                onClick={handleNext}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

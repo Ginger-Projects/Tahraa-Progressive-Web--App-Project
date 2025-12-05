@@ -499,7 +499,9 @@ justify-content: center;
 
 .registration-btn {
   flex: 1;
-  height: 51px;
+  height: 40px;
+  background-color: black;
+  color: white;
   border-radius: 9.7px;
   border: none;
   font-family: "Poppins", sans-serif;
