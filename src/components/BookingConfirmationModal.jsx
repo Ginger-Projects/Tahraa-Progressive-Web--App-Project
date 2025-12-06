@@ -2,9 +2,8 @@ import React from "react";
 import "./BookingConfirmationModal.css";
 import glossyLeft from "../assets/images/glossy-left.svg";
 import glossyTop from "../assets/images/glossy-top.svg";
-import { Link } from "react-router-dom";
 
-const BookingConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
+const BookingConfirmationModal = ({ isOpen, onClose, onConfirm, validityStart, validityEnd }) => {
   if (!isOpen) return null;
 
   return (
@@ -30,7 +29,9 @@ const BookingConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
           <div className="bcm-text-section">
             <h2 className="bcm-title">Are you sure you want to book the package?</h2>
             <p className="bcm-description">
-              Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups.
+              {validityStart && validityEnd
+                ? `Your booking will be valid from ${validityStart} to ${validityEnd}.`
+                : "Please confirm your booking."}
             </p>
           </div>
         </div>

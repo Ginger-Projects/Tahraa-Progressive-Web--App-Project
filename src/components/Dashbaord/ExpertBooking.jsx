@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./ExpertBooking.css";
 import BookingConfirmationModal from "../BookingConfirmationModal";
 import ebCheckoutIcon from "../../assets/images/checkoutIcon.png";
@@ -7,12 +7,34 @@ import courseImg1 from "../../../.figma-assets/b1e25334add46d15c806cbbc2178bd036
 import courseImg2 from "../../../.figma-assets/2e27c8ec9b2e62d7e02b7a898460b9c85b07a4af.png";
 import courseImg3 from "../../../.figma-assets/8b3b31282497da4d053b4ebe389aa6f116046f55.png";
 import courseImg4 from "../../../.figma-assets/e7d3ea202e9dc8fead3d08e953408484251ce14c.png";
+import { useNavigate, useParams } from "react-router-dom";
+import { getPackageById, bookPackage } from "../../services/trainee/trainee";
+import { DELIVERY } from "../../utils/package.core";
+import { convertTimeTo12H } from "../../utils/helper";
+import { DateTime } from "luxon";
+import { toast } from "react-toastify";
 
 const ExpertBooking = () => {
-  const [currentMonthDate, setCurrentMonthDate] = useState(new Date(2025, 10, 1)); // November 2025
-  const [selectedDate, setSelectedDate] = useState(new Date(2025, 10, 6)); // 6 November 2025
+  const [packageData, setPackageData] = useState(null);
+  const today = new Date();
+  const navigate = useNavigate()
+  const [currentMonthDate, setCurrentMonthDate] = useState(
+    new Date(today.getFullYear(), today.getMonth(), 1)
+  );
+  const [selectedDate, setSelectedDate] = useState(today);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const {id} = useParams();
+  useEffect(()=>{
+   fetchPackageById()
+  },[])
+
+  const fetchPackageById = async() =>{
+   const response = await getPackageById(id)
+   console.log("response",response.data.package);
+   
+   setPackageData(response.data.package)
+  }
   // Calendar header should start from Sunday
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -51,6 +73,23 @@ const ExpertBooking = () => {
     year: "numeric",
   });
 
+  // Booking validity range based on selected date and packageValidityInDays
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const bookingStartDate = selectedDate
+    ? DateTime.fromJSDate(selectedDate).setZone(browserTimeZone)
+    : null;
+  const bookingEndDate =
+    bookingStartDate && packageData?.packageValidityInDays
+      ? bookingStartDate.plus({ days: packageData.packageValidityInDays - 1 })
+      : null;
+
+  const bookingStartLabel = bookingStartDate
+    ? bookingStartDate.toFormat("dd MMM yyyy")
+    : "";
+  const bookingEndLabel = bookingEndDate
+    ? bookingEndDate.toFormat("dd MMM yyyy")
+    : "";
+
   const isSameDay = (a, b) => {
     if (!a || !b) return false;
     return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -62,6 +101,15 @@ const ExpertBooking = () => {
     const day = dateObj.getDay();
     // 5 = Fri, 6 = Sat
     return day === 5 || day === 6;
+  };
+
+  // Disable all dates before today (including yesterday)
+  const normalizeDate = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const todayOnlyDate = normalizeDate(today);
+
+  const isBeforeToday = (dateObj) => {
+    if (!dateObj) return false;
+    return normalizeDate(dateObj) < todayOnlyDate;
   };
 
   const handlePrevMonth = () => {
@@ -142,6 +190,22 @@ const ExpertBooking = () => {
     },
   ];
 
+  const handleBookNow = () => {
+    if (!packageData || !bookingEndDate || !packageData.end) {
+      setIsBookingModalOpen(true);
+      return;
+    }
+
+    const packageEnd = DateTime.fromISO(packageData.end).setZone(browserTimeZone).endOf("day");
+
+    if (bookingEndDate > packageEnd) {
+      toast.error("Selected date exceeds the package validity period. Please choose an earlier date.");
+      return;
+    }
+
+    setIsBookingModalOpen(true);
+  };
+
   return (
     <div className='eb-page-shell'>
       <div className='eb-container'>
@@ -152,7 +216,7 @@ const ExpertBooking = () => {
             <div className='eb-expert-card'>
               <div className='eb-expert-avatar-wrap'>
                 <div className='eb-expert-avatar'>
-                  <img src={natsha} alt='Natasha Romanoff' />
+                  <img src={packageData?.expert?.profileImage} alt='Natasha Romanoff' />
                 </div>
                 <div className='eb-expert-crown'>
                   <svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'>
@@ -363,8 +427,9 @@ const ExpertBooking = () => {
                   />
                 </svg>
               </div>
-              <h2 className='eb-expert-name'>
-                Natasha Romanoff
+              {packageData && (
+                <h2 className='eb-expert-name'>
+                  {packageData.expert?.name}
                 <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'>
                   <path
                     d='M7.3558 0.821454C7.66006 0.495917 8.17631 0.495917 8.48056 0.821454L9.88868 2.32807C10.0404 2.49044 10.2549 2.57929 10.4771 2.57179L12.5381 2.50214C12.9834 2.48709 13.3485 2.85213 13.3334 3.29746L13.2638 5.35849C13.2562 5.5806 13.3451 5.79512 13.5075 5.94687L15.0141 7.35498C15.3396 7.65923 15.3396 8.17548 15.0141 8.47974L13.5075 9.88785C13.3451 10.0396 13.2562 10.2541 13.2638 10.4762L13.3334 12.5373C13.3485 12.9826 12.9834 13.3476 12.5381 13.3326L10.4771 13.2629C10.2549 13.2554 10.0404 13.3443 9.88868 13.5066L8.48056 15.0133C8.17631 15.3388 7.66006 15.3388 7.35581 15.0133L5.94769 13.5066C5.79594 13.3443 5.58142 13.2554 5.35931 13.2629L3.29828 13.3326C2.85295 13.3476 2.48791 12.9826 2.50296 12.5373L2.57261 10.4762C2.58012 10.2541 2.49126 10.0396 2.3289 9.88785L0.822278 8.47974C0.496741 8.17548 0.49674 7.65924 0.822278 7.35498L2.3289 5.94687C2.49126 5.79512 2.58012 5.5806 2.57261 5.35849L2.50296 3.29746C2.48791 2.85213 2.85295 2.48709 3.29828 2.50214L5.35931 2.57179C5.58142 2.57929 5.79594 2.49044 5.94769 2.32807L7.3558 0.821454Z'
@@ -408,12 +473,18 @@ const ExpertBooking = () => {
                   </defs>
                 </svg>
               </h2>
-              <p className='eb-expert-role'>Certified Vocal Instructor</p>
-              <p className='eb-expert-exp'>10 Years experience</p>
+              )}
+              <p className='eb-expert-role'>{packageData?.category?.name}</p>
+              {packageData?.expert?.experienceAndQualifications?.yearsOfExperience && (
+  <p className='eb-expert-exp'>
+    {packageData.expert.experienceAndQualifications.yearsOfExperience} Years of experience
+  </p>
+)}
+
               <button
                 className='eb-card-enquire-btn'
                 type='button'
-                onClick={() => setIsBookingModalOpen(true)}
+                onClick={()=>navigate('/expert-profile')}
               >
                 <span className='eb-card-btn-left'>
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
@@ -506,25 +577,31 @@ const ExpertBooking = () => {
                 <div className='eb-calendar-grid'>
                   {calendarDays.map((week, weekIdx) => (
                     <div key={weekIdx} className='eb-calendar-week'>
-                      {week.map((dayObj, dayIdx) => (
-                        <button
-                          key={dayIdx}
-                          className={`eb-calendar-day ${!dayObj ? "empty" : ""} ${
-                            isSameDay(dayObj, selectedDate) ? "selected" : ""
-                          } ${isSpecialDay(dayObj) ? "highlighted" : ""}`}
-                          onClick={() => dayObj && setSelectedDate(dayObj)}
-                          disabled={!dayObj}
-                        >
-                          {dayObj ? dayObj.getDate() : ""}
-                        </button>
-                      ))}
+                      {week.map((dayObj, dayIdx) => {
+                        const isDisabled = !dayObj || isBeforeToday(dayObj);
+                        return (
+                          <button
+                            key={dayIdx}
+                            className={`eb-calendar-day ${!dayObj ? "empty" : ""} ${
+                              isSameDay(dayObj, selectedDate) ? "selected" : ""
+                            } ${isSpecialDay(dayObj) ? "highlighted" : ""}`}
+                            onClick={() => {
+                              if (!dayObj || isDisabled) return;
+                              setSelectedDate(dayObj);
+                            }}
+                            disabled={isDisabled}
+                          >
+                            {dayObj ? dayObj.getDate() : ""}
+                          </button>
+                        );
+                      })}
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className='eb-action-buttons'>
-                <button className='eb-btn eb-btn-primary' type='button' onClick={() => setIsBookingModalOpen(true)}>
+                <button className='eb-btn eb-btn-primary' type='button' onClick={handleBookNow}>
                   <span className='eb-card-btn-left'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
                       <g filter="url(#filter0_f_178_1398)">
@@ -694,82 +771,113 @@ const ExpertBooking = () => {
           {/* Main Content Area */}
           <main className='eb-main-content'>
             {/* Hero Banner */}
-            <div className='eb-hero-banner'>
+            {packageData && (
+            <div className='eb-hero-banner' style={{backgroundImage:`url(${packageData.detailPageImage})`}}>
               <div className='eb-hero-left'>
                 <h1>
                   Book Your
                   <br />
-                  Vocal Training Session
+                  {packageData?.name}
                 </h1>
                 <p className='eb-hero-subtext'>
                   “Choose your package, schedule your sessions,
                   <br />
-                  and start your musical journey.”
+                  and start your journey.”
                 </p>
                 <div className='eb-hero-fee'>
                   <span className='eb-hero-fee-label'>Fee Range</span>
-                  <span className='eb-hero-fee-value'>QAR 250/hour</span>
+                  <span className='eb-hero-fee-value'>{`QAR ${packageData?.price}/Session`}</span>
                 </div>
               </div>
               <div className='eb-hero-image' />
             </div>
+            )}
+            
 
             {/* Package Details */}
-            <div className='eb-package-details'>
+            {packageData && (
+              <div className='eb-package-details'>
               <h3 className='eb-section-title'>Package Details</h3>
 
               <div className='eb-detail-section'>
-                <h4>🎤 Vocal Training Package - Beginner to Advanced</h4>
-                <p>
-                  Our comprehensive vocal teaching package is designed to help learners develop strong vocal techniques. Improve
-                  pitch, rhythm, and vocal performance with our expert guidance. The program covers breathing exercises, vocal
-                  warm-ups, tone development, range expansion and stage presentation skills.
-                </p>
+                <h4>{packageData.name}</h4>
+                <div
+        dangerouslySetInnerHTML={{ __html: packageData.description }}
+      />
               </div>
 
               <div className='eb-detail-section'>
                 <h4>Strength Level:</h4>
                 <ul>
                   <li>
-                    <strong>Suitable For:</strong>&nbsp;Beginners, intermediate, and advanced learners
+                    <strong>Suitable For:</strong>&nbsp;{packageData.skillLevel}
                   </li>
                   <li>
-                    <strong>Size:</strong>&nbsp;Small Group (14 Students)
+                    <strong>Size:</strong>&nbsp;{packageData.groupSettings.maxParticipants}
                   </li>
                 </ul>
               </div>
 
-              <div className='eb-warning-box'>
+              {/* <div className='eb-warning-box'>
                 <div className='eb-warning-icon' />
                 <p>
                   Seats are filling fast! Just 5 spots left — book now to secure yours.
                   <br />
                   Reserve your seat now before it's too late and ensure your place in this exclusive session.
                 </p>
-              </div>
+              </div> */}
 
               <div className='eb-detail-section eb-detail-section-divider'>
                 <h4>Scheduling &amp; Duration:</h4>
                 <ul>
-                  <li>Number of Sessions: 5 Sessions</li>
-                  <li>Validity: Start: "November 1" End: December 30"</li>
-                  <li>Duration per Session: 1 hour</li>
-                  <li>Preferred Timing: 10-7 PM - Saturday & Sunday</li>
-                  <li>Type of Audience: Ladies, Children</li>
+                  <li>Number of Sessions: {packageData.noOfSessions}</li>
+                  <li>
+      Validity: Start:{" "}
+      {DateTime.fromISO(packageData.start)
+        .setZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+        .toFormat("MMMM d")}{" "}
+      End:{" "}
+      {DateTime.fromISO(packageData.end)
+        .setZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+        .toFormat("MMMM d")}
+    </li>
+                   <li>
+  Preferred Timing:
+  <ul>
+    {packageData.timeSlots.map((slot) => {
+    const traineeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    const start = convertTimeTo12H(slot.startTime, packageData.timeZone, traineeZone);
+    const end = convertTimeTo12H(slot.endTime, packageData.timeZone, traineeZone);
+
+    return (
+      <li key={slot._id}>
+        {slot.day}: {start} - {end} 
+      </li>
+    );
+  })}
+  </ul>
+</li>
+
+                  <li>Type of Audience: {packageData.targetAudience.map((audience)=>{
+                     return `${audience}`
+                  }).join(", ")}</li>
                 </ul>
               </div>
 
               <div className='eb-detail-section'>
                 <h4>Mode of Delivery:</h4>
                 <ul>
-                  <li>
+                  {packageData.delivery === DELIVERY.ONLINE?(
+                    <li>
                     <strong>Online:</strong> Live interactive sessions via video conferencing with personalized feedback and
                     progress tracking.
                   </li>
-                  <li>
+                  ):( <li>
                     <strong>Offline:</strong> In-person classes at our training studio, including one-on-one guidance and group
                     practice sessions.
-                  </li>
+                  </li>)}
+                  
                 </ul>
               </div>
 
@@ -782,6 +890,8 @@ const ExpertBooking = () => {
                 </p>
               </div>
             </div>
+            )}
+          
 
             {/* Explore More Packages */}
             <div className='eb-more-packages'>
@@ -943,10 +1053,33 @@ const ExpertBooking = () => {
       <BookingConfirmationModal 
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
-        onConfirm={() => {
-          setIsBookingModalOpen(false);
-          setIsSuccessModalOpen(true);
+        onConfirm={async () => {
+          try {
+            if (!packageData || !bookingStartDate || !bookingEndDate) {
+              toast.error("Missing booking dates. Please select a valid date.");
+              return;
+            }
+            const startDateUtc = bookingStartDate.toUTC().toISO();
+            const endDateUtc = bookingEndDate.plus({ days: 1 }).toUTC().toISO();
+            console.log("endDateUtc", endDateUtc);
+            
+            await bookPackage({
+              packageId: packageData._id,
+              startDateUtc,
+              endDateUtc,
+            });
+            setIsBookingModalOpen(false);
+            setIsSuccessModalOpen(true);
+          } catch (error) {
+            const message =
+              error?.response?.data?.message ||
+              error?.message ||
+              "Failed to create booking. Please try again.";
+            toast.error(message);
+          }
         }}
+        validityStart={bookingStartLabel}
+        validityEnd={bookingEndLabel}
       />
 
       {/* Booking Success Modal */}

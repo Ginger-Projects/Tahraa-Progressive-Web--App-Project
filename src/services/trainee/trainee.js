@@ -36,3 +36,26 @@ export const getTraineeProgressSummary = async () => {
     throw error;
   }
 };
+
+export const getPackageById = async(id) =>{
+  try {
+    const packageId = id || '69328c9496d78780dadaefcf'
+    const response = await api.get(`/api/trainee/marketplace/package?packageId=${packageId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const bookPackage = async ({ packageId, startDateUtc, endDateUtc }) => {
+  try {
+    const response = await api.post("/api/trainee/marketplace/request-a-package", {
+      packageId,
+      startDate:startDateUtc,
+      endDate:endDateUtc,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
