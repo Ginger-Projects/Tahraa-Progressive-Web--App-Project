@@ -2,7 +2,7 @@ import TraineeHeader from "../../components/trainee/header";
 import WelcomeCard from "../../components/trainee/WelcomeCard";
 import ScheduleSection from "../../components/trainee/ScheduleSection";
 import MyExperts from "../../components/trainee/MyExperts";
-import SavedExperts from "../../components/trainee/SavedExperts";
+import Packages from "../../components/trainee/Packages";
 import CourseCard from "../../components/trainee/GroupCourse";
 import PackageSummary from "../../components/trainee/PackageSummary";
 import { Footer } from "../../components/Home/Footer";
@@ -26,7 +26,7 @@ const Trainer = () => {
             <ScheduleSection />
             <div className="experts-row">
               <MyExperts />
-              <SavedExperts />
+              <Packages />
             </div>
           </div>
         </div>

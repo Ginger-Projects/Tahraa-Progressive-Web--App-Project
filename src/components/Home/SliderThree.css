@@ -270,12 +270,36 @@
     white-space: nowrap;
   }
 
+  .arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: none;
+    background-color: #ffffff;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 0;
+  }
+
+  .arrow-icon {
+    font-size: 20px;
+    line-height: 1;
+  }
+
   .right-arrow {
     right: -2%;
   }
   .left-arrow {
     left: -2%;
   }
+
 
   .BTN-2 {
     all: unset;

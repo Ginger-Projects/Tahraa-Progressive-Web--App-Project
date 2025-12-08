@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import './BookingConfirm.css';
+
 import Alert from '../../assets/images/exclamation.png';
 import bannerBg from '../../assets/images/cta-bg.png';
 import CalendarIconImg from '../../assets/images/7294ad6b4133f244b20bf10ecc93834b64323081.svg';
 import EmployeeIconImg from '../../assets/images/e0663d042494bdd8f08913fc46b97ee79d191d53.svg';
 import CheckIconImg from '../../assets/images/orangeVerified.png';
 import ActivityIcon1 from '../../assets/images/f5521a80c629d845a167912a51e39629680d5d71.svg';
+import { getPackageAndBookingDetailsForSessionSchedule, getPackageSessions } from '../../services/trainee/trainee';
+import { generateLocalSessions } from '../../utils/helper';
 
 // Background SVG components
 const PurpleBgSVG = () => (
@@ -199,64 +202,77 @@ const ScheduleButtonSVG = ({ onClick, text = "Schedule" }) => (
 const BookingConfirm = () => {
   const [activeAction, setActiveAction] = useState(null); // 'schedule' | 'reschedule' | 'cancel'
   const [activeSession, setActiveSession] = useState(null);
+  const [searchParams] = useSearchParams();
+  const bookingId = searchParams.get('bookingId');
+  const [bookingDetails, setBookingDetails] = useState(null);
+  const [sessions,setSessions] = useState([]);
+  useEffect(() => {
+    if (!bookingId) return;
 
-  const sessions = [
-    {
-      id: 1,
-      date: 'Nov 1',
-      year: 'Saturday, 2025',
-      time: '18:00 - 19:00',
-      dayOfWeek: 'Saturday',
-      slotCount: null,
-      hasScheduled: false,
-      isInactive: true, // matches Figma: greyed card with no actions
-    },
-    {
-      id: 2,
-      date: 'Nov 2',
-      year: 'Sunday, 2025',
-      time: '18:00 - 19:00',
-      dayOfWeek: 'Sunday',
-      slotCount: '2/5',
-      hasScheduled: true,
-    },
-    {
-      id: 3,
-      date: 'Nov 8',
-      year: 'Saturday, 2025',
-      time: '18:00 - 19:00',
-      dayOfWeek: 'Saturday',
-      slotCount: '2/5',
-      hasScheduled: true,
-    },
-    {
-      id: 4,
-      date: 'Nov 9',
-      year: 'Sunday, 2025',
-      time: '18:00 - 19:00',
-      dayOfWeek: 'Sunday',
-      slotCount: null,
-      hasScheduled: false,
-    },
-    {
-      id: 5,
-      date: 'Nov 15',
-      year: 'Saturday, 2025',
-      time: '18:00 - 19:00',
-      dayOfWeek: 'Saturday',
-      slotCount: null,
-      hasScheduled: false,
-    },
-    {
-      id: 6,
-      date: 'Nov 16',
-      year: 'Sunday, 2025',
-      time: '18:00 - 19:00',
-      dayOfWeek: 'Sunday',
-      slotCount: null,
-      hasScheduled: false,
-    },
-  ];
+    
+    fetchDetails();
+  }, [bookingId]);
+
+  const fetchDetails = async () => {
+      try {
+        const res = await getPackageAndBookingDetailsForSessionSchedule(bookingId);
+        setBookingDetails(res?.data.bookingDetails);
+        const generated = generateLocalSessions(res?.data.bookingDetails);
+        let sessionsWithParticipants = generated;
+
+        const traineeId = res?.data?.bookingDetails?.trainee;
+
+        const packageId = res?.data?.bookingDetails?.packageDetails?._id;
+        if (packageId) {
+          const packageSessionsRes = await getPackageSessions(
+            packageId,
+            res?.data?.bookingDetails?.startDate,
+            res?.data?.bookingDetails?.endDate
+          );
+
+          const apiSessions = packageSessionsRes?.data?.sessions || [];
+
+          sessionsWithParticipants = generated.map((session) => {
+            const matchingSessions = apiSessions.filter((apiSession) => {
+              const apiStart =
+                apiSession.startLocalUTC ||
+                apiSession.startDate ||
+                apiSession.startDateUtc;
+              const apiEnd =
+                apiSession.endLocalUTC ||
+                apiSession.endDate ||
+                apiSession.endDateUtc;
+
+              return (
+                apiStart === session.startLocalUTC &&
+                apiEnd === session.endLocalUTC
+              );
+            });
+
+            const participantsCount = matchingSessions.length;
+
+            const hasScheduledForTrainee =
+              !!traineeId &&
+              matchingSessions.some((apiSession) => {
+                const apiTraineeId = apiSession.trainee;
+                return apiTraineeId  === traineeId;
+              });
+
+            return {
+              ...session,
+              participants: participantsCount,
+              hasScheduled: session.hasScheduled || hasScheduledForTrainee,
+            };
+          });
+        }
+
+        setSessions(sessionsWithParticipants);
+      } catch (error) {
+        console.error('Failed to load package and booking details for session schedule', error);
+      }
+    };
+
+
 
   const openConfirm = (action, sessionId) => {
     setActiveAction(action);
@@ -298,8 +314,8 @@ const BookingConfirm = () => {
           <div className="bc-page-package">
             <div className="bc-page-avatar" aria-hidden="true" />
             <span className="bc-page-subtitle">
-              <span className="bc-page-pencil" aria-hidden="true">🎤</span>
-              Vocal Training Package - Beginner to Advanced
+              <span className="bc-page-pencil" aria-hidden="true"></span>
+              {bookingDetails?.packageDetails?.name}
             </span>
           </div>
         </div>
@@ -368,6 +384,9 @@ const BookingConfirm = () => {
                 </div>
                 {session.slotCount && (
                   <div className="bc-slot-badge">
+                    <p className="bc-slot-text">{session.participants}</p>
+                    <p className="bc-slot-text">out of</p>
+                    
                     <p className="bc-slot-text">{session.slotCount}</p>
                   </div>
                 )}
@@ -379,10 +398,14 @@ const BookingConfirm = () => {
                 <div className="bc-time-info">
                   <img src={ActivityIcon1} alt="Activity" className="bc-activity-icon-img" />
                   <p className="bc-time-text">{session.time}</p>
+                  
                 </div>
+                
+                <p className="bc-time-text">{session.startLocalUTC}</p>
+                <p className="bc-time-text">{session.endLocalUTC}</p>
                 <p className="bc-day-text">{session.dayOfWeek}</p>
               </div>
-
+           
               {!session.isInactive && (
                 <div className="bc-session-actions">
                   {session.hasScheduled ? (

@@ -2,9 +2,12 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import ProfileEllipse from '../../assets/images/Ellipse 3077.png'
 import "./header.css"
+import { useDispatch } from "react-redux"
+import { logoutTrainee } from "../../features/slice/trainer/traineeSlice"
 
 export default function ProfilePopup({ open, onClose }) {
   const [confirmLogout, setConfirmLogout] = useState(false)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   if (!open) return null
 
@@ -17,6 +20,7 @@ export default function ProfilePopup({ open, onClose }) {
   const handleConfirmLogout = () => {
     setConfirmLogout(false)
     onClose && onClose()
+    dispatch(logoutTrainee())
     navigate("/login")
   }
 
@@ -190,7 +194,7 @@ export default function ProfilePopup({ open, onClose }) {
             />
           </svg>
 
-          <button
+          <button 
             type="button"
             className="profile-logout-btn"
             onClick={() => setConfirmLogout(true)}
@@ -253,7 +257,7 @@ export default function ProfilePopup({ open, onClose }) {
             </span>
 
             {/* Centered arrow + text */}
-            <span className="logout-main">
+            <span  className="logout-main">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="17.991"

@@ -1,20 +1,23 @@
 import api from "../api/axios";
 
-export const getExpertService = async () => {
+export const getExpertService = async (page = 1, limit = 10) => {
   try {
-    const response = await api.get("/api/trainee/public/experts?page=1&limit=10");
-    console.log("response", response);
+    const response = await api.get(
+      `/api/trainee/public/experts?page=${page}&limit=${limit}`
+    );
+    console.log("experts response", response.data);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const getPackages = async () => {
+export const getPackages = async (page = 1, limit = 10) => {
   try {
-    const response = await api.get("/api/trainee/public/packages?page=1&limit=10");
-    console.log("response",response);
-    
+    const response = await api.get(
+      `/api/trainee/public/packages?page=${page}&limit=${limit}`
+    );
+    console.log("packages response", response.data);
     return response.data;
   } catch (error) {
     throw error;

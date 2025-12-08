@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./SliderTwo.css";
 
 // Import your images here (replace placeholders)
@@ -13,7 +13,6 @@ import Prev from "../../assets/images/prev.png";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Link } from "react-router-dom";
@@ -23,10 +22,91 @@ import { fetchExperts } from "../../features/slice/expertSlice";
 export const SliderTwo = () => {
   const dispatch = useDispatch()
   const {experts} = useSelector((state) => state.experts);
+  const swiperRef = useRef(null);
+  const [page, setPage] = useState(1);
+  const [hasPrev, setHasPrev] = useState(false);
+  const [hasNext, setHasNext] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const [limit] = useState(() => {
+    if (typeof window === "undefined") return 3;
+    const width = window.innerWidth;
+    if (width >= 1400) return 4;
+    if (width >= 1130) return 3;
+    if (width >= 768) return 2;
+    return 1;
+  });
   
   useEffect(()=>{
-    dispatch(fetchExperts())
-  },[])
+    dispatch(fetchExperts({ page: 1, limit }))
+  },[dispatch, limit])
+
+  const updateNavState = (swiper, more) => {
+    if (!swiper) return;
+    const canPrev = !swiper.isBeginning;
+    const canNext = more || !swiper.isEnd;
+    setHasPrev(canPrev);
+    setHasNext(canNext);
+  };
+
+  const handlePrev = () => {
+    if (!hasPrev || !swiperRef.current) return;
+    swiperRef.current.slidePrev();
+    updateNavState(swiperRef.current, hasMore);
+  };
+
+  const handleNext = async () => {
+    if (!hasNext || !swiperRef.current) return;
+
+    const oldLength = experts ? experts.length : 0;
+    const nextPage = page + 1;
+    let moreFlag = hasMore;
+
+    try {
+      const payload = await dispatch(
+        fetchExperts({ page: nextPage, limit })
+      ).unwrap();
+
+      const newExperts = payload?.data?.experts || [];
+
+      if (newExperts.length > 0) {
+        setPage(nextPage);
+        const reachedEnd = newExperts.length < limit;
+        const nextHasMore = !reachedEnd;
+        setHasMore(nextHasMore);
+        moreFlag = nextHasMore;
+
+        const targetIndex = oldLength;
+
+        setTimeout(() => {
+          if (!swiperRef.current) return;
+          if (typeof swiperRef.current.update === "function") {
+            swiperRef.current.update();
+          }
+          if (typeof swiperRef.current.slideToLoop === "function") {
+            swiperRef.current.slideToLoop(targetIndex);
+          } else if (typeof swiperRef.current.slideTo === "function") {
+            swiperRef.current.slideTo(targetIndex);
+          }
+          updateNavState(swiperRef.current, nextHasMore);
+        }, 0);
+
+        return;
+      } else {
+        setHasMore(false);
+        moreFlag = false;
+      }
+    } catch (error) {
+      console.error("Failed to load more experts", error);
+    }
+
+    const swiper = swiperRef.current;
+    if (!swiper) return;
+    const lastIndex = (swiper.slides?.length || 1) - 1;
+    if (swiper.activeIndex < lastIndex) {
+      swiper.slideNext();
+    }
+    updateNavState(swiper, moreFlag);
+  };
   return (
     <section className='experts-section container-fluid py-5'>
       <div className='wrap-div w-100'>
@@ -49,28 +129,30 @@ export const SliderTwo = () => {
 
         <div className='experts-slider-container position-relative'>
           {/* Left Arrow */}
-          <button className='arrow-btn left-arrow'>
-            <img src={Prev} alt='' />
+          <button
+            className={`arrow-btn left-arrow ${hasPrev ? "" : "disabled"}`}
+            onClick={handlePrev}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="21" viewBox="0 0 12 21" fill="none">
+              <path
+                d="M10.5 1.5L1.5 10.5L10.5 19.5"
+                stroke={hasPrev ? "#775DA6" : "rgba(119, 93, 166, 0.50)"}
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
 
           {/* Swiper Slider */}
           <Swiper
-            modules={[Navigation]}
-            navigation={{
-              nextEl: ".right-arrow",
-              prevEl: ".left-arrow",
-            }}
-            onInit={(swiper) => {
-              setTimeout(() => {
-                swiper.params.navigation.prevEl = ".left-arrow";
-                swiper.params.navigation.nextEl = ".right-arrow";
-                swiper.navigation.init();
-                swiper.navigation.update();
-              });
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+              updateNavState(swiper, hasMore);
             }}
             slidesPerView={4}
             spaceBetween={24}
-            loop={true}
+            loop={false}
             breakpoints={{
               0: { slidesPerView: 1, spaceBetween: 12 },
               768: { slidesPerView: 2, spaceBetween: 18 },
@@ -86,99 +168,73 @@ export const SliderTwo = () => {
               const feeRange = experience.feeRange;
               const teachingCategory = experience.teachingCategory?.name;
               const languages = (expert.languages || []).join(", ");
-
-              return (
-                <SwiperSlide key={expert._id}>
-                  <div className='expert-card'>
-                    <img
-                      src={
-                        expert.profileImage &&
-                        (expert.profileImage.startsWith("http://") ||
-                          expert.profileImage.startsWith("https://"))
-                          ? expert.profileImage
-                          : Expert4
-                      }
-                      className='expert-img'
-                      alt='expert'
-                    />
-                    <div className='expert-content'>
-                      <h4 className='expert-name'>
-                        {expert.name}{" "}
-                        <img src={Verified} className='img-fluid' alt='' />
-                      </h4>
-                      <p className='expert-role'>
-                        {teachingCategory && `${teachingCategory} | `}
-                        <span>
-                          {yearsOfExperience
-                            ? `${yearsOfExperience} Years of experience`
-                            : "N/A"}
-                        </span>
-                      </p>
-                      <p className='speak'>
-                        <img src={Speak} alt='' />
-                        <span>Speaks :</span>
-                        {languages || " English , Arabic +2"}
-                      </p>
-                      <div className='d-flex align-items-center justify-content-between expert-price'>
-                        <p>
-                          <span>Free range: </span>
-                          {feeRange || "QAR 250/hr"}
-                        </p>
-                        <span>
-                          {expert.traineeCount
-                            ? `${expert.traineeCount} Active Students`
-                            : ""}
-                        </span>
-                      </div>
-                      <div className='btn-box d-flex gap-3 mt-3'>
-                        {/* Primary Button */}
-                        <button className='BTNslider2'>
-                          <div className='rectangle-2' />
-
-                          <img
-                            className='vector-2'
-                            alt='Vector'
-                            src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg'
-                          />
-
-                          <img
-                            className='line'
-                            alt='Line'
-                            src='https://c.animaapp.com/RRnEyncc/img/line-1.svg'
-                          />
-
-                          <div className='label'>Book Session</div>
-                        </button>
-
-                        {/* Green Button */}
-                        <button className='BTN-2slider'>
-                          <div className='rectangle-2' />
-
-                          <img
-                            className='vector-2'
-                            alt='Vector'
-                            src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg'
-                          />
-
-                          <img
-                            className='line'
-                            alt='Line'
-                            src='https://c.animaapp.com/RRnEyncc/img/line-1.svg'
-                          />
-
-                          <div className='label'>Enquire</div>
-                        </button>
-                      </div>
-                    </div>
+              return(
+            <SwiperSlide>
+              <div className='expert-card'>
+                <img src={expert.profileImage} className='expert-img' alt='expert' />
+                <div className='expert-content'>
+                  <h4 className='expert-name'>
+                    Tony Stark <img src={Verified} className='img-fluid' alt='' />
+                  </h4>
+                  <p className='expert-role'>
+                    Vocal Trainer | <span>10 Years of experience</span>
+                  </p>
+                  <p className='speak'>
+                    <img src={Speak} alt='' />
+                    <span>Speaks :</span>English , Arabic +2
+                  </p>
+                  <div className='d-flex align-items-center justify-content-between expert-price'>
+                    <p>
+                      <span>Free range: </span>QAR 250/hr
+                    </p>
+                    <span>140 Active Students</span>
                   </div>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
+                  <div className='btn-box d-flex gap-3 mt-3'>
+                    {/* Primary Button */}
+                    <button className='BTNslider2'>
+                      <div className='rectangle-2' />
 
+                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
+
+                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
+
+                      <div className='label'>Book Session</div>
+                    </button>
+                    
+
+                    {/* Green Button */}
+                    <button className='BTN-2slider'>
+                      <div className='rectangle-2' />
+
+                      <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
+
+                      <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
+
+                      <div className='label'>Enquire</div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+            </SwiperSlide>
+            )
+            })}
+</Swiper>
           {/* Right Arrow */}
-          <button className='arrow-btn right-arrow'>
-            <img src={Next} alt='' />
+          <button
+            className={`arrow-btn right-arrow ${hasNext ? "" : "disabled"}`}
+            onClick={handleNext}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" fill="none">
+              <circle cx="36" cy="36" r="36" transform="matrix(-1 0 0 1 72 0)" fill="white" />
+              <path
+                d="M31.5 27.5L40.5 36.5L31.5 45.5"
+                stroke={hasNext ? "#775DA6" : "rgba(119, 93, 166, 0.50)"}
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
         </div>
       </div>

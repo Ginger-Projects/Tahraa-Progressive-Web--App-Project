@@ -14,7 +14,7 @@ import { convertTimeTo12H } from "../../utils/helper";
 import { DateTime } from "luxon";
 import { toast } from "react-toastify";
 
-const ExpertBooking = () => {
+const ExpertBooking = ({ setLoading = () => {} }) => {
   const [packageData, setPackageData] = useState(null);
   const today = new Date();
   const navigate = useNavigate()
@@ -30,10 +30,19 @@ const ExpertBooking = () => {
   },[])
 
   const fetchPackageById = async() =>{
-   const response = await getPackageById(id)
-   console.log("response",response.data.package);
-   
-   setPackageData(response.data.package)
+   try {
+    setLoading(true);
+    const response = await getPackageById(id)
+    console.log("response",response.data.package);
+    setPackageData(response.data.package)
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+   } catch (error) {
+    console.error("Failed to load package", error);
+   } finally {
+    setLoading(false);
+   }
   }
   // Calendar header should start from Sunday
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

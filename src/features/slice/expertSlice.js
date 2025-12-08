@@ -3,10 +3,10 @@ import { getExpertService } from "../../services/expertService";
 
 export const fetchExperts = createAsyncThunk(
     "experts/fetchExperts",
-    async () =>{
-        const response = await getExpertService();
-        console.log("response",response.data);
-        return response.data
+    async ({ page = 1, limit = 10 } = {}) =>{
+        const data = await getExpertService(page, limit);
+        console.log("experts thunk payload", data);
+        return data;
     }
 )
 
@@ -24,7 +24,14 @@ const expertSlice = createSlice({
       })
       .addCase(fetchExperts.fulfilled, (state, action) => {
         state.loading = false;
-        state.experts = action.payload.experts;
+        const newExperts = action.payload?.data?.experts || [];
+        const page = action.meta?.arg?.page ?? 1;
+
+        if (page > 1 && state.experts && state.experts.length) {
+          state.experts = [...state.experts, ...newExperts];
+        } else {
+          state.experts = newExperts;
+        }
       })
       .addCase(fetchExperts.rejected, (state, action) => {
         state.loading = false;

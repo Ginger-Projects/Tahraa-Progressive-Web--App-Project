@@ -3,8 +3,8 @@ import { getPackages } from "../../services/expertService";
 
 export const fetchPackages = createAsyncThunk(
     "experts/fetchPackages",
-    async () =>{
-        const data = await getPackages(); 
+    async ({ page = 1, limit = 10 } = {}) =>{
+        const data = await getPackages(page, limit); 
         console.log("packages", data);
         return data; 
     }
@@ -25,10 +25,17 @@ const packageSlice = createSlice({
       .addCase(fetchPackages.fulfilled, (state, action) => {
         state.loading = false;
         const payload = action.payload || {};
-        state.packages =
+        const newPackages =
           payload.data?.packages ||
           payload.packages ||
           [];
+        const page = action.meta?.arg?.page ?? 1;
+
+        if (page > 1 && state.packages && state.packages.length) {
+          state.packages = [...state.packages, ...newPackages];
+        } else {
+          state.packages = newPackages;
+        }
       })
       .addCase(fetchPackages.rejected, (state, action) => {
         state.loading = false;

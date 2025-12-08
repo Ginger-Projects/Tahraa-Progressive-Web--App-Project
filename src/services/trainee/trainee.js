@@ -13,6 +13,37 @@ export const getTraineeSavedExperts = async () => {
   }
 };
 
+export const getPackageAndBookingDetailsForSessionSchedule = async (bookingId) => {
+  try {
+    
+    const response = await api.get(
+      `/api/trainee/package-and-booking-details-for-session-schedule?bookingId=${bookingId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getPackageSessions = async (packageId, startDate, endDate) => {
+  try {
+    const packageId = '692eb8ded93c9c77f8633b3a'
+    const startDate = '2025-12-08T11:30:00.000Z'
+    const endDate = '2025-12-31T12:30:00.000Z'
+    const response = await api.get("/api/trainee/get-package-sessions", {
+      params: {
+        packageId,
+        startDate,
+        endDate,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 export const getTraineeMyExperts = async () => {
   try {
     const response = await api.get(
@@ -36,6 +67,19 @@ export const getTraineeProgressSummary = async () => {
     throw error;
   }
 };
+
+export const getTraineeMyPackages = async (page = 1, limit = 3) => {
+  try {
+    const response = await api.get(
+      `/api/trainee/my-packages?page=${page}&limit=${limit}`
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 export const getPackageById = async(id) =>{
   try {
