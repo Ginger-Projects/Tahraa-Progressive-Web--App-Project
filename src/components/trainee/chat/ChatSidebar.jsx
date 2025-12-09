@@ -2,51 +2,24 @@ import React, { useState } from "react";
 import "./Chat.css";
 import KateAvatar from "../../../assets/images/kate.png";
 
-const dummyChats = [
-  {
-    id: 1,
-    name: "Tony Stark",
-    lastMessage: "I went there yesterday",
-    time: "9:16 AM",
-    unread: true,
-    unreadCount: 3,
-  },
-  {
-    id: 2,
-    name: "Natasha Romanoff",
-    lastMessage: "I went there yesterday",
-    time: "9:16 AM",
-    unread: true,
-    unreadCount: 1,
-  },
-  {
-    id: 3,
-    name: "Bruce Banner",
-    lastMessage: "Thank you for confirming...",
-    time: "9:15 AM",
-    active: true,
-    unread: false,
-    unreadCount: 0,
-  },
-];
-export function getChatById(id) {
-  return dummyChats.find((c) => c.id === id) || null;
-}
-
 export default function ChatSidebar({
   activeFilter = "all",
   onChangeFilter,
   selectedChatId,
   onSelectChat,
+  chats = [],
+  trainee,
 }) {
   const [search, setSearch] = useState("");
 
   const normalizedSearch = search.trim().toLowerCase();
 
+  const baseChats = Array.isArray(chats) ? chats : [];
+
   let chatsToShow =
     activeFilter === "unread"
-      ? dummyChats.filter((c) => c.unread)
-      : dummyChats;
+      ? baseChats.filter((c) => c.unread)
+      : baseChats;
 
   if (normalizedSearch) {
     chatsToShow = chatsToShow.filter((chat) => {
@@ -54,13 +27,22 @@ export default function ChatSidebar({
       return haystack.includes(normalizedSearch);
     });
   }
+  const traineeName = trainee?.name || "";
+  const traineeAvatar =
+    trainee?.profileImage || trainee?.profilePicture 
+  console.log("tarine",traineeAvatar);
+  
   return (
     <aside className="chat-sidebar">
       <div className="chat-sidebar-header">
         <div className="chat-sidebar-user">
-          <img src={KateAvatar} alt="Kate" className="chat-avatar-large" />
+          <img
+            src={traineeAvatar}
+            alt={traineeName}
+            className="chat-avatar-large"
+          />
           <div>
-            <div className="chat-sidebar-title">Kate Bishop</div>
+            <div className="chat-sidebar-title">{traineeName}</div>
             <div className="chat-sidebar-subtitle">
               Good Morning <span className="chat-sun-icon">🌤</span>
             </div>
@@ -81,8 +63,8 @@ export default function ChatSidebar({
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div>
-        <div className="chat-filter-tabs">
+        </div>  
+        {/* <div className="chat-filter-tabs">
           <button
             className={
               "chat-filter-tab " +
@@ -103,7 +85,7 @@ export default function ChatSidebar({
           >
             Unread
           </button>
-        </div>
+        </div> */}
       </div>
 
       <div className="chat-list-label">CHATS</div>
@@ -118,7 +100,11 @@ export default function ChatSidebar({
             type="button"
             onClick={() => onSelectChat && onSelectChat(chat.id)}
           >
-            <img src={KateAvatar} alt={chat.name} className="chat-avatar" />
+            <img
+              src={chat.profileImage || KateAvatar}
+              alt={chat.name}
+              className="chat-avatar"
+            />
             <div className="chat-list-text">
               <div className="chat-list-row">
                 <span className="chat-list-name">{chat.name}</span>

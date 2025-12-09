@@ -266,6 +266,20 @@
   gap: 12px;
 }
 
+.chat-date-separator {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0;
+  font-size: 11px;
+  color: rgba(37, 37, 37, 0.6);
+}
+
+.chat-date-separator span {
+  background: #eaecf2;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
 .chat-bubble-row {
   display: flex;
   align-items: flex-start;

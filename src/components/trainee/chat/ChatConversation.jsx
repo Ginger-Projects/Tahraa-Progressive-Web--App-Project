@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import "./Chat.css";
-import KateAvatar from "../../../assets/images/kate.png";
 
 export default function ChatConversation({ messages }) {
   const endRef = useRef(null);
@@ -11,61 +10,73 @@ export default function ChatConversation({ messages }) {
     }
   }, [messages]);
 
+  const renderedMessages = [];
+  const todayKey = new Date().toISOString().slice(0, 10);
+  let lastDateKey = null;
+
+  messages.forEach((msg) => {
+    const isTrainee = msg.author === "trainee";
+    const time = msg.time || "";
+
+    const created = msg.createdAt ? new Date(msg.createdAt) : null;
+    const dateKey = created ? created.toISOString().slice(0, 10) : null;
+
+    let dateLabel = null;
+    if (dateKey && dateKey !== lastDateKey) {
+      lastDateKey = dateKey;
+      dateLabel =
+        dateKey === todayKey
+          ? "Today"
+          : created.toLocaleDateString(undefined, {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            });
+    }
+
+    if (dateLabel) {
+      renderedMessages.push(
+        <div key={`date-${dateKey}`} className="chat-date-separator">
+          <span>{dateLabel}</span>
+        </div>
+      );
+    }
+
+    renderedMessages.push(
+      <div
+        key={msg.id}
+        className={
+          "chat-bubble-row " +
+          (isTrainee ? "chat-bubble-row-right" : "chat-bubble-row-left")
+        }
+      >
+        <div className="chat-bubble-block">
+          {time && (
+            <div className="chat-msg-meta">
+              <span className="chat-msg-time">{time}</span>
+            </div>
+          )}
+          <div
+            className={
+              "chat-bubble " +
+              (isTrainee ? "chat-bubble-trainee" : "chat-bubble-expert")
+            }
+          >
+            {msg.lines.map((line, idx) => (
+              <p key={idx} className="chat-bubble-text">
+                {line}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  });
+
   return (
     <div className="chat-conversation">
       <div className="chat-conversation-inner">
-        {messages.map((msg) => {
-          const isTrainee = msg.author === "trainee";
-          const name = msg.name || (isTrainee ? "You" : "Expert");
-          const time = msg.time || "";
-
-          return (
-            <div
-              key={msg.id}
-              className={
-                "chat-bubble-row " +
-                (isTrainee ? "chat-bubble-row-right" : "chat-bubble-row-left")
-              }
-            >
-              {!isTrainee && (
-                <img
-                  src={KateAvatar}
-                  alt={name}
-                  className="chat-msg-avatar"
-                />
-              )}
-
-              <div className="chat-bubble-block">
-                <div className="chat-msg-meta">
-                  <span className="chat-msg-name">{name}</span>
-                  {time && <span className="chat-msg-time">{time}</span>}
-                </div>
-                <div
-                  className={
-                    "chat-bubble " +
-                    (isTrainee
-                      ? "chat-bubble-trainee"
-                      : "chat-bubble-expert")
-                  }
-                >
-                  {msg.lines.map((line, idx) => (
-                    <p key={idx} className="chat-bubble-text">
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              </div>
-
-              {isTrainee && (
-                <img
-                  src={KateAvatar}
-                  alt={name}
-                  className="chat-msg-avatar"
-                />
-              )}
-            </div>
-          );
-        })}
+        {renderedMessages}
         <div ref={endRef} />
       </div>
     </div>
