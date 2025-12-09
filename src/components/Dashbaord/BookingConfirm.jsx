@@ -8,7 +8,7 @@ import CalendarIconImg from '../../assets/images/7294ad6b4133f244b20bf10ecc93834
 import EmployeeIconImg from '../../assets/images/e0663d042494bdd8f08913fc46b97ee79d191d53.svg';
 import CheckIconImg from '../../assets/images/orangeVerified.png';
 import ActivityIcon1 from '../../assets/images/f5521a80c629d845a167912a51e39629680d5d71.svg';
-import { getPackageAndBookingDetailsForSessionSchedule, getPackageSessions } from '../../services/trainee/trainee';
+import { getPackageAndBookingDetailsForSessionSchedule, getPackageSessions, schedulePackageSession, cancelScheduledSession, reschedulePackageSession } from '../../services/trainee/trainee';
 import { generateLocalSessions } from '../../utils/helper';
 
 // Background SVG components
@@ -206,73 +206,87 @@ const BookingConfirm = () => {
   const bookingId = searchParams.get('bookingId');
   const [bookingDetails, setBookingDetails] = useState(null);
   const [sessions,setSessions] = useState([]);
+  const [rescheduleSession, setRescheduleSession] = useState(null);
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [selectedNewSessionId, setSelectedNewSessionId] = useState('');
+  const [isSlotDropdownOpen, setIsSlotDropdownOpen] = useState(false);
+
   useEffect(() => {
     if (!bookingId) return;
 
-    
     fetchDetails();
   }, [bookingId]);
 
   const fetchDetails = async () => {
-      try {
-        const res = await getPackageAndBookingDetailsForSessionSchedule(bookingId);
-        setBookingDetails(res?.data.bookingDetails);
-        const generated = generateLocalSessions(res?.data.bookingDetails);
-        let sessionsWithParticipants = generated;
+    try {
+      const res = await getPackageAndBookingDetailsForSessionSchedule(bookingId);
+      console.log("res",res);
+      
+      setBookingDetails(res?.data.bookingDetails);
 
-        const traineeId = res?.data?.bookingDetails?.trainee;
+      const generated = generateLocalSessions(res?.data.bookingDetails);
+      let sessionsWithParticipants = generated;
 
-        const packageId = res?.data?.bookingDetails?.packageDetails?._id;
-        if (packageId) {
-          const packageSessionsRes = await getPackageSessions(
-            packageId,
-            res?.data?.bookingDetails?.startDate,
-            res?.data?.bookingDetails?.endDate
-          );
+      const traineeId = res?.data?.bookingDetails?.trainee;
+      const packageId = res?.data?.bookingDetails?.packageDetails?._id;
+      if (packageId) {
+        const packageSessionsRes = await getPackageSessions(
+          packageId,
+          res?.data?.bookingDetails?.startDate,
+          res?.data?.bookingDetails?.endDate
+        );
 
-          const apiSessions = packageSessionsRes?.data?.sessions || [];
+        const apiSessions = packageSessionsRes?.data?.sessions || [];
+        console.log("apiSessions",apiSessions);
+        
+        sessionsWithParticipants = generated.map((session) => {
+          const matchingSessions = apiSessions.filter((apiSession) => {
+            const apiStart =
+              apiSession.startLocalUTC ||
+              apiSession.startDate ||
+              apiSession.startDateUtc;
+            const apiEnd =
+              apiSession.endLocalUTC ||
+              apiSession.endDate ||
+              apiSession.endDateUtc;
 
-          sessionsWithParticipants = generated.map((session) => {
-            const matchingSessions = apiSessions.filter((apiSession) => {
-              const apiStart =
-                apiSession.startLocalUTC ||
-                apiSession.startDate ||
-                apiSession.startDateUtc;
-              const apiEnd =
-                apiSession.endLocalUTC ||
-                apiSession.endDate ||
-                apiSession.endDateUtc;
-
-              return (
-                apiStart === session.startLocalUTC &&
-                apiEnd === session.endLocalUTC
-              );
-            });
-
-            const participantsCount = matchingSessions.length;
-
-            const hasScheduledForTrainee =
-              !!traineeId &&
-              matchingSessions.some((apiSession) => {
-                const apiTraineeId = apiSession.trainee;
-                return apiTraineeId  === traineeId;
-              });
-
-            return {
-              ...session,
-              participants: participantsCount,
-              hasScheduled: session.hasScheduled || hasScheduledForTrainee,
-            };
+            return (
+              apiStart === session.startLocalUTC &&
+              apiEnd === session.endLocalUTC
+            );
           });
-        }
 
-        setSessions(sessionsWithParticipants);
-      } catch (error) {
-        console.error('Failed to load package and booking details for session schedule', error);
+          const participantsCount = matchingSessions.length;
+          console.log("matching", matchingSessions);
+
+          // If there's a matching API session for this trainee, use its _id
+          const traineeSession =
+            traineeId
+              ? matchingSessions.find(
+                  (apiSession) => apiSession.trainee === traineeId
+                )
+              : null;
+
+          const hasScheduledForTrainee = !!traineeSession;
+          const effectiveId = traineeSession?._id || session.id;
+          
+          return {
+            ...session,
+            id: effectiveId,
+            participants: participantsCount,
+            hasScheduled: session.hasScheduled || hasScheduledForTrainee,
+          };
+        });
       }
-    };
 
-
+      setSessions(sessionsWithParticipants);
+    } catch (error) {
+      console.error(
+        'Failed to load package and booking details for session schedule',
+        error
+      );
+    }
+  };
 
   const openConfirm = (action, sessionId) => {
     setActiveAction(action);
@@ -284,22 +298,113 @@ const BookingConfirm = () => {
     setActiveSession(null);
   };
 
-  const handleConfirm = () => {
+  const handleRescheduleStart = () => {
+    const session = sessions.find((s) => s.id === activeSession);
+    setRescheduleSession(session || null);
+    setSelectedNewSessionId('');
+    setShowRescheduleModal(true);
+    setIsSlotDropdownOpen(false);
+    closeConfirm();
+  };
+
+  const handleRescheduleConfirm = async () => {
+    if (!rescheduleSession || !selectedNewSessionId) return;
+
+    const newSession = sessions.find(
+      (s) => String(s.id) === String(selectedNewSessionId)
+    );
+
+    if (!newSession) return;
+
+    try {
+      await reschedulePackageSession({
+        sessionId: rescheduleSession.id,
+        startNewDate: newSession.startLocalUTC,
+        endNewDate: newSession.endLocalUTC,
+      });
+
+      await fetchDetails();
+    } catch (error) {
+      console.error('Failed to reschedule session', error);
+    } finally {
+      setShowRescheduleModal(false);
+      setSelectedNewSessionId('');
+      setRescheduleSession(null);
+    }
+  };
+
+  const handleConfirm = async () => {
     if (!activeAction || !activeSession) {
       closeConfirm();
       return;
     }
 
-    if (activeAction === 'schedule') {
-      console.log('Scheduled session:', activeSession);
-    } else if (activeAction === 'reschedule') {
-      console.log('Rescheduled session:', activeSession);
-    } else if (activeAction === 'cancel') {
-      console.log('Cancelled session:', activeSession);
-    }
+    try {
+      if (activeAction === 'schedule') {
+        const session = sessions.find((s) => s.id === activeSession);
+        const packageId = bookingDetails?.packageDetails?._id;
+        if (session && bookingId && packageId) {
+          await schedulePackageSession({
+            packageId,
+            bookingId,
+            startLocalUTC: session.startLocalUTC,
+            endLocalUTC: session.endLocalUTC,
+          });
 
-    closeConfirm();
+          setSessions((prev) =>
+            prev.map((s) =>
+              s.id === session.id
+                ? { ...s, hasScheduled: true, participants: (s.participants || 0) + 1 }
+                : s
+            )
+          );
+        }
+      } else if (activeAction === 'cancel') {
+        await cancelScheduledSession({
+          id: activeSession,
+          reason: 'cancelled',
+        });
+
+        await fetchDetails();
+      }
+    } catch (error) {
+      console.error('Failed to perform action', error);
+    } finally {
+      closeConfirm();
+    }
   };
+
+  const availableSlots = rescheduleSession
+    ? sessions.filter((s) => {
+        if (s.isInactive) return false;
+        if (s.id === rescheduleSession.id) return false;
+
+        if (typeof s.slotCount === 'number') {
+          const participants = s.participants || 0;
+          if (participants >= s.slotCount) return false;
+        }
+
+        return true;
+      })
+    : [];
+
+  const selectedSlot = selectedNewSessionId
+    ? availableSlots.find(
+        (s) => String(s.id) === String(selectedNewSessionId)
+      ) || null
+    : null;
+
+  const selectedLabel = selectedSlot
+    ? `${selectedSlot.date} at ${selectedSlot.time}`
+    : 'Available Time Slots';
+
+  const selectedParticipants =
+    (selectedSlot && selectedSlot.participants) || 0;
+
+  const selectedSlotCount =
+    selectedSlot && typeof selectedSlot.slotCount === 'number'
+      ? selectedSlot.slotCount
+      : null;
 
   return (
     <div className="bc-main">
@@ -462,9 +567,100 @@ const BookingConfirm = () => {
                       ? 'bc-modal-btn-primary-reschedule'
                       : 'bc-modal-btn-primary-schedule')
                   }
-                  onClick={handleConfirm}
+                  onClick={
+                    activeAction === 'reschedule'
+                      ? handleRescheduleStart
+                      : handleConfirm
+                  }
                 >
                   Yes, continue
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {showRescheduleModal && (
+          <div
+            className="bc-modal-overlay"
+            onClick={() => setShowRescheduleModal(false)}
+          >
+            <div
+              className="bc-modal bc-modal-reschedule"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <h3 className="bc-modal-title">Reschedule session</h3>
+              <p className="bc-modal-text">
+                {rescheduleSession && (
+                  <>
+                    Do you want to reschedule the session
+                    <br />
+                    current date: {rescheduleSession.date} at {rescheduleSession.time}
+                    <br />
+                  </>
+                )}
+              </p>
+              <div className="bc-modal-field">
+                <label className="bc-modal-label">Select New Time slot</label>
+                <div className="bc-dropdown">
+                  <button
+                    type="button"
+                    className="bc-dropdown-toggle"
+                    onClick={() => setIsSlotDropdownOpen((prev) => !prev)}
+                  >
+                    <span className="bc-dropdown-text">
+                      {selectedLabel}
+                    </span>
+                    {selectedSlotCount !== null && (
+                      <span className="bc-dropdown-badge">
+                        {selectedParticipants}/{selectedSlotCount}
+                      </span>
+                    )}
+                    <span className="bc-dropdown-arrow">▾</span>
+                  </button>
+                  {isSlotDropdownOpen && (
+                    <ul className="bc-dropdown-list">
+                      {availableSlots.map((slot) => {
+                        const participants = slot.participants || 0;
+                        const total = slot.slotCount;
+                        return (
+                          <li
+                            key={slot.id}
+                            className="bc-dropdown-item"
+                            onClick={() => {
+                              setSelectedNewSessionId(String(slot.id));
+                              setIsSlotDropdownOpen(false);
+                            }}
+                          >
+                            <span className="bc-dropdown-item-text">
+                              {slot.date} at {slot.time}
+                            </span>
+                            {typeof total === 'number' && (
+                              <span className="bc-dropdown-badge">
+                                {participants}/{total}
+                              </span>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              </div>
+              <div className="bc-modal-actions">
+                <button
+                  type="button"
+                  className="bc-modal-btn bc-modal-btn-secondary"
+                  onClick={() => setShowRescheduleModal(false)}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="bc-modal-btn bc-modal-btn-primary bc-modal-btn-primary-reschedule"
+                  onClick={handleRescheduleConfirm}
+                  disabled={!selectedNewSessionId}
+                >
+                  Reschedule
                 </button>
               </div>
             </div>

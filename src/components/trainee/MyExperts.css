@@ -5,15 +5,11 @@
   padding: 20px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   width: 100%;
-  min-height: 381px;
-  height: auto;
+  height: 381px; /* design height */
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  justify-content: space-evenly;
 }
-  .my-experts-header {
+
+.my-experts-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -40,6 +36,33 @@ text-transform: capitalize;
 
 .more-btn:hover {
   background: #f3f4f6;
+}
+
+.my-experts-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.my-experts-nav-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.my-experts-nav-btn:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* When prev (left) arrow is clickable, make the arrow icon fully colored like Packages */
+.my-experts-nav > .my-experts-nav-btn:first-child:not(:disabled) svg g {
+  opacity: 1;
+}
+
+.my-experts-nav > .my-experts-nav-btn:first-child:not(:disabled) svg path {
+  stroke: #775DA6;
 }
 
 .my-experts-grid {
@@ -96,6 +119,4 @@ line-height: normal;
     grid-template-columns: repeat(2, 1fr);
   }
 }
-}
-
 

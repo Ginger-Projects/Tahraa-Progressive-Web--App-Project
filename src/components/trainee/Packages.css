@@ -51,16 +51,26 @@ text-transform: capitalize;
   margin-bottom: 12px;
 }
 
-.packages-nav-btn {
-  background: none;
+.packages-nav-btn { 
   border: none;
   padding: 0;
   cursor: pointer;
+  background: transparent;
+  transition: background 0.2s;
 }
 
 .packages-nav-btn:disabled {
   cursor: default;
   opacity: 0.5;
+}
+
+/* When prev (left) arrow is clickable, make the arrow icon fully colored */
+.packages-nav > .packages-nav-btn:first-child:not(:disabled) svg g {
+  opacity: 1;
+}
+
+.packages-nav > .packages-nav-btn:first-child:not(:disabled) svg path {
+  stroke: #775DA6;
 }
 
 .expert-item {
@@ -73,6 +83,15 @@ height: 74.346px;
   background: #4f46e5; /* primary */
  border-radius: 74.346px;
   margin: 0 auto 8px auto;
+  overflow: hidden; /* keep image inside the circle */
+}
+
+.expert-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 
 .expert-name {

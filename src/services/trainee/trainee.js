@@ -1,12 +1,29 @@
 import api from "../../api/axios";
 
-export const getTraineeSavedExperts = async () => {
+export const getTraineeSavedExperts = async (page = 1, limit = 3) => {
   try {
     const response = await api.get(
-      "/api/trainee/saved-experts?page=1&limit=10"
+      `/api/trainee/saved-experts?page=${page}&limit=${limit}`
     );
     console.log("saved-experts", response.data);
 
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const getTraineeUpcomingSchedules = async ({ fromDate, toDate, page = 1, limit = 10 }) => {
+  try {
+    const response = await api.get("/api/trainee/upcoming-schedules", {
+      params: {
+        page,
+        limit,
+        fromDate,
+        toDate,
+      },
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -27,9 +44,6 @@ export const getPackageAndBookingDetailsForSessionSchedule = async (bookingId) =
 
 export const getPackageSessions = async (packageId, startDate, endDate) => {
   try {
-    const packageId = '692eb8ded93c9c77f8633b3a'
-    const startDate = '2025-12-08T11:30:00.000Z'
-    const endDate = '2025-12-31T12:30:00.000Z'
     const response = await api.get("/api/trainee/get-package-sessions", {
       params: {
         packageId,
@@ -44,10 +58,10 @@ export const getPackageSessions = async (packageId, startDate, endDate) => {
 };
 
 
-export const getTraineeMyExperts = async () => {
+export const getTraineeMyExperts = async (page = 1, limit = 3) => {
   try {
     const response = await api.get(
-      "/api/trainee/my-experts?page=1&limit=10"
+      `/api/trainee/my-experts?page=${page}&limit=${limit}`
     );
     console.log("my-experts", response.data);
 
@@ -60,8 +74,6 @@ export const getTraineeMyExperts = async () => {
 export const getTraineeProgressSummary = async () => {
   try {
     const response = await api.get("/api/trainee/progress-summary-of-packages");
-    console.log("progress-summary", response.data);
-
     return response.data;
   } catch (error) {
     throw error;
@@ -83,7 +95,7 @@ export const getTraineeMyPackages = async (page = 1, limit = 3) => {
 
 export const getPackageById = async(id) =>{
   try {
-    const packageId = id || '69328c9496d78780dadaefcf'
+    const packageId = id 
     const response = await api.get(`/api/trainee/marketplace/package?packageId=${packageId}`);
     return response.data;
   } catch (error) {
@@ -98,6 +110,51 @@ export const bookPackage = async ({ packageId, startDateUtc, endDateUtc }) => {
       startDate:startDateUtc,
       endDate:endDateUtc,
     });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const schedulePackageSession = async ({ packageId,bookingId, startLocalUTC, endLocalUTC }) => {
+  try {
+    const response = await api.post("/api/trainee/marketplace/schedule-session", {
+      packageId,
+      bookingId,
+      startDate:startLocalUTC,
+      endDate:endLocalUTC,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const reschedulePackageSession = async ({ sessionId, startNewDate, endNewDate }) => {
+  try {
+    console.log("sesion",sessionId,startNewDate,endNewDate);
+    
+    const response = await api.post("/api/trainee/marketplace/request-session-reschedule", {
+      sessionId,
+      newStartDate:startNewDate,
+      newEndDate:endNewDate,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const cancelScheduledSession = async ({ id, reason }) => {
+  try {
+    const response = await api.post(
+      "/api/trainee/marketplace/cancel-scheduled-session",
+      {
+        sessionId:id,
+        reason,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error;

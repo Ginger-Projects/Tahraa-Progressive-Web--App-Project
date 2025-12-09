@@ -281,7 +281,7 @@ line-height: normal;
   background: transparent;
   font-family: "Inter", sans-serif;
   font-size: 14px;
-  color: rgba(37, 37, 37, 0.502);
+  color: rgba(37, 37, 37, 0.502); 
   padding: 12px 0;
 }
 
@@ -468,6 +468,13 @@ justify-content: center;
   color: rgba(37, 37, 37, 0.15);
 }
 
+.registration-flag-dial {
+  margin-right: 8px;
+  color: rgba(37, 37, 37, 0.5);
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+
 .registration-flag-input input {
   border: none;
   outline: none;
@@ -541,6 +548,32 @@ justify-content: center;
 .registration-recaptcha span {
   color: #775da6;
   text-decoration: underline;
+}
+
+/* --- Phone input (react-phone-input-2) to match other input borders --- */
+.react-tel-input {
+  width: 100%;
+}
+
+.react-tel-input .flag-dropdown {
+  border: 1px solid #eae9fe !important;
+  border-radius: 8px 0 0 8px !important;
+  background: #ffffff !important;
+}
+
+.react-tel-input .selected-flag {
+  padding: 0 8px !important;
+}
+
+.react-tel-input .form-control {
+  border: 1px solid #eae9fe !important;
+  border-left: none !important;
+  border-radius: 0 8px 8px 0 !important;
+  height: 48px !important;
+  padding: 12px 16px 12px 52px !important; /* leave space for flag */
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  box-shadow: none !important;
 }
 
 @media (max-width: 992px) {

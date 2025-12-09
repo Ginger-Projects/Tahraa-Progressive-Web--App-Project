@@ -7,7 +7,7 @@ import courseImg1 from "../../../.figma-assets/b1e25334add46d15c806cbbc2178bd036
 import courseImg2 from "../../../.figma-assets/2e27c8ec9b2e62d7e02b7a898460b9c85b07a4af.png";
 import courseImg3 from "../../../.figma-assets/8b3b31282497da4d053b4ebe389aa6f116046f55.png";
 import courseImg4 from "../../../.figma-assets/e7d3ea202e9dc8fead3d08e953408484251ce14c.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getPackageById, bookPackage } from "../../services/trainee/trainee";
 import { DELIVERY } from "../../utils/package.core";
 import { convertTimeTo12H } from "../../utils/helper";
@@ -24,7 +24,10 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
   const [selectedDate, setSelectedDate] = useState(today);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const {id} = useParams();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("packageId");
+  console.log("us",id);
+  
   useEffect(()=>{
    fetchPackageById()
   },[])

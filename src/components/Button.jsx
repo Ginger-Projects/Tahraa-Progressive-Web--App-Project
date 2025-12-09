@@ -2,9 +2,9 @@ import React from "react";
 import "./Button.css";   
 import LineSrc from '../assets/images/bigline.png';
 
-const Button = ({ label, bg   }) => {
+const Button = ({ label, bg, onClick }) => {
   return (
-    <button className="BTNmain" style={{ "--btn-bg": bg }}>
+    <button className="BTNmain" style={{ "--btn-bg": bg }} onClick={onClick}>
       <div className="rectangle-2" />
 
       <img className="vector-2" src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' alt="" />

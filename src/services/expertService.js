@@ -1,9 +1,9 @@
 import api from "../api/axios";
 
-export const getExpertService = async (page = 1, limit = 10) => {
+export const getExpertService = async (page = 1, limit = 10, searchName = "") => {
   try {
     const response = await api.get(
-      `/api/trainee/public/experts?page=${page}&limit=${limit}`
+      `/api/trainee/public/experts-by-filters?page=${page}&limit=${limit}&searchName=${searchName || ""}`
     );
     console.log("experts response", response.data);
     return response.data;
@@ -12,10 +12,10 @@ export const getExpertService = async (page = 1, limit = 10) => {
   }
 };
 
-export const getPackages = async (page = 1, limit = 10) => {
+export const getPackages = async (page = 1, limit = 10, searchName = "") => {
   try {
     const response = await api.get(
-      `/api/trainee/public/packages?page=${page}&limit=${limit}`
+      `/api/trainee/public/packages-by-filters?page=${page}&limit=${limit}&searchName=${searchName || ""}`
     );
     console.log("packages response", response.data);
     return response.data;

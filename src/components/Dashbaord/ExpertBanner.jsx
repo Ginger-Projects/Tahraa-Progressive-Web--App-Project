@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./ExpertsBanner.css";
 import Button from "../../components/Button";
 
-const ExpertsBanner = ({ activeTab, setActiveTab }) => {
+const ExpertsBanner = ({ activeTab, setActiveTab, onSearch, isSearching }) => {
+  const [searchText, setSearchText] = useState("");
   const [selectedFee, setSelectedFee] = useState("All");
   const [selectedExperience, setSelectedExperience] = useState("All");
   const [selectedTrainee, setSelectedTrainee] = useState("All");
@@ -54,9 +55,22 @@ const ExpertsBanner = ({ activeTab, setActiveTab }) => {
                 </g>
               </svg>
             </span>
-            <input type='text' placeholder='Search name or keyword' />
+            <input
+              type='text'
+              placeholder='Search name or keyword'
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
           </div>
-          <Button label='Search' bg='#02B346' />
+          <Button
+            label={isSearching ? 'Searching...' : 'Search'}
+            bg='#02B346'
+            onClick={() => {
+              if (onSearch) {
+                onSearch(searchText);
+              }
+            }}
+          />
         </div>
 
         {/* Filter Row (4 fields, as in Figma) */}

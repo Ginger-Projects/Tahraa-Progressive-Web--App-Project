@@ -9,20 +9,21 @@ export default function Packages() {
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [pageSize, setPageSize] = useState(3);
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadPage(1)
+    const width = typeof window !== "undefined" ? window.innerWidth : 0;
+    const initialLimit = width <= 768 ? 2 : 3;
+    setPageSize(initialLimit);
+    loadPage(1, initialLimit);
   }, []);
-
-
-
-
-  const loadPage = async (page) => {
+  const loadPage = async (page, limitOverride) => {
+    const limit = limitOverride ?? pageSize;
     try {
 
       setLoading(true);
-      const data = await getTraineeMyPackages(page, 3);
+      const data = await getTraineeMyPackages(page, limit);
       console.log("data",data.data.packages);
       
       const list =
@@ -38,7 +39,7 @@ export default function Packages() {
       setPackages(list);
       setCurrentPage(page);
       setHasPrev(page > 1);
-      setHasNext(list.length === 3);
+      setHasNext(list.length === limit);
     } catch (error) {
       console.log(error);
     } finally {
@@ -69,9 +70,7 @@ export default function Packages() {
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
               <circle cx="18" cy="18" r="18" transform="matrix(1 0 0 -1 0.5 36.5)" fill="white" stroke="#F5F5F5"/>
-              <g opacity="0.5">
-                <path d="M20.75 22.75L16.25 18.25L20.75 13.75" stroke="#775DA6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-              </g>
+              <path d="M20.75 22.75L16.25 18.25L20.75 13.75" stroke="#775DA6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
           <button
@@ -107,15 +106,15 @@ export default function Packages() {
                   ) : null;
                 })()}
               </div>
-              <p className="expert-name">{pkg.packageDetails.name || pkg.name}</p>
+              <p className="expert-name">{pkg.packageDetails?.name || pkg.name}</p>
               {pkg.status === "confirmed" && (
                 <button
                   type="button"
                   className="package-schedule-btn"
                   onClick={() => {
-                    const packageId = pkg.packageDetails?._id || pkg._id;
-                    if (!packageId) return;
-                    navigate(`/confirm-booking?packageId=${packageId}`);
+                    const bookingId =  pkg._id;
+                    if (!bookingId) return;
+                    navigate(`/confirm-booking?bookingId=${bookingId}`);
                   }}
                 >
                   Schedule

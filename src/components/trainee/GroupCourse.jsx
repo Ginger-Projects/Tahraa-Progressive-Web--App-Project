@@ -50,18 +50,19 @@ export default function ViolinClassCard() {
       ? Math.round((completedSessions / totalSessions) * 100)
       : 0;
 
+  const analyticsCount = analytics.length;
+  const hasMultipleAnalytics = analyticsCount > 1;
+  const canGoPrev = hasMultipleAnalytics && currentIndex > 0;
+  const canGoNext = hasMultipleAnalytics && currentIndex < analyticsCount - 1;
+
   const handlePrev = () => {
-    if (!hasAnalytics) return;
-    setCurrentIndex((prev) =>
-      prev === 0 ? analytics.length - 1 : prev - 1
-    );
+    if (!canGoPrev) return;
+    setCurrentIndex((prev) => prev - 1);
   };
 
   const handleNext = () => {
-    if (!hasAnalytics) return;
-    setCurrentIndex((prev) =>
-      prev === analytics.length - 1 ? 0 : prev + 1
-    );
+    if (!canGoNext) return;
+    setCurrentIndex((prev) => prev + 1);
   };
 
   return (
@@ -83,19 +84,65 @@ export default function ViolinClassCard() {
               </div>
 
               <div className="nav-buttons">
-                <button className="nav-btn" type="button" onClick={handlePrev}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
-  <circle cx="18" cy="18" r="18" transform="matrix(1 0 0 -1 0.5 36.5)" fill="white" stroke="#F5F5F5"/>
-  <g opacity="0.5">
-    <path d="M20.75 22.75L16.25 18.25L20.75 13.75" stroke="#775DA6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
-</svg>
-            </button>
-                <button className="nav-btn" type="button" onClick={handleNext}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="37" height="37" viewBox="0 0 37 37" fill="none">
-  <circle cx="18" cy="18" r="18" transform="matrix(-1 0 0 1 36.5 0.5)" fill="white" stroke="#F5F5F5"/>
-  <path d="M16.25 14.25L20.75 18.75L16.25 23.25" stroke="#775DA6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+                <button
+                  className="nav-btn"
+                  type="button"
+                  onClick={handlePrev}
+                  disabled={!canGoPrev}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="37"
+                    height="37"
+                    viewBox="0 0 37 37"
+                    fill="none"
+                  >
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="18"
+                      transform="matrix(1 0 0 -1 0.5 36.5)"
+                      fill="white"
+                      stroke="#F5F5F5"
+                    />
+                    <path
+                      d="M20.75 22.75L16.25 18.25L20.75 13.75"
+                      stroke="#775DA6"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+                <button
+                  className="nav-btn"
+                  type="button"
+                  onClick={handleNext}
+                  disabled={!canGoNext}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="37"
+                    height="37"
+                    viewBox="0 0 37 37"
+                    fill="none"
+                  >
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="18"
+                      transform="matrix(-1 0 0 1 36.5 0.5)"
+                      fill="white"
+                      stroke="#F5F5F5"
+                    />
+                    <path
+                      d="M16.25 14.25L20.75 18.75L16.25 23.25"
+                      stroke="#775DA6"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>

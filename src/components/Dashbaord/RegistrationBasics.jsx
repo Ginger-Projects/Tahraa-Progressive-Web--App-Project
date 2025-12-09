@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setBasics } from "../../features/slice/registrationSlice";
 import "react-image-crop/dist/ReactCrop.css";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import "./RegistrationBasics.css";
 import leftImage from "../../assets/images/registration-left.png"; // TODO: replace with actual asset if different
 import logoImage from "../../assets/images/logo.png";
@@ -14,6 +16,7 @@ const RegistrationBasics = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneValue, setPhoneValue] = useState("");
+  const [phoneCountryCode, setPhoneCountryCode] = useState("");
   const [qidPassport, setQidPassport] = useState("");
   const [dobValue, setDobValue] = useState(""); // display as DD-MM-YYYY
   const [dobRaw, setDobRaw] = useState(""); // raw YYYY-MM-DD for backend
@@ -62,7 +65,7 @@ const RegistrationBasics = () => {
     if (v.startsWith("+974") || v.startsWith("974")) return "🇶🇦";
     if (v.startsWith("+971") || v.startsWith("971")) return "🇦🇪";
     if (v.startsWith("+966") || v.startsWith("966")) return "🇸🇦";
-    return "🇶🇦"; // default
+    return ""; // no flag when value is empty or unknown
   };
 
   const getDialCodeFromCountry = (value) => {
@@ -226,8 +229,11 @@ const RegistrationBasics = () => {
       return;
     }
 
-    const detected = detectCountryFromPhone(phoneValue);
-    const countryCode = detected && detected.code ? detected.code : "";
+    let countryCode = phoneCountryCode;
+    if (!countryCode) {
+      const detected = detectCountryFromPhone(phoneValue);
+      countryCode = detected && detected.code ? detected.code : "";
+    }
     if (!countryCode) {
       toast.error("Country code is required");
       return;
@@ -421,20 +427,25 @@ const RegistrationBasics = () => {
             {/* Row 2: Phone number (with flag), QID/Passport */}
             <div className="registration-row">
               <div className="registration-field">
-                <div className="registration-flag-input">
-                  <span className="registration-flag-icon">{getFlagFromPhone(phoneValue)}</span>
-                  <span className="registration-flag-divider">|</span>
-                  <input
-                    type="tel"
-                    placeholder="Phone number*"
-                    value={phoneValue}
-                    onChange={(e) => {
-                      const raw = e.target.value;
-                      const onlyDigits = raw.replace(/[^0-9]/g, "");
-                      setPhoneValue(onlyDigits);
-                    }}
-                  />
-                </div>
+                <PhoneInput
+                  country="qa"
+                  onlyCountries={["qa", "in", "ae", "sa"]}
+                  value={phoneValue}
+                  onChange={(value, country) => {
+                    setPhoneValue(value || "");
+                    if (country && country.dialCode) {
+                      setPhoneCountryCode(`+${country.dialCode}`);
+                    } else {
+                      setPhoneCountryCode("");
+                    }
+                  }}
+                  inputProps={{
+                    name: "phone",
+                    required: true,
+                  }}
+                  containerStyle={{ width: "100%" }}
+                  inputStyle={{ width: "100%" }}
+                />
               </div>
               <div className="registration-field">
                 <input

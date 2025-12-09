@@ -1,0 +1,157 @@
+/* Base ExpertCard container and image, matching SliderTwo .expert-card and .expert-img */
+.exp-card {
+  background: #ffffff;
+  border: 2px solid #7e60b8;
+  border-right: 8px solid #7e60b8;
+  border-bottom: 8px solid #7e60b8;
+  border-radius: 22px;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
+
+  max-width: 320px;
+  width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.exp-card-img-wrap {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.exp-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- CARD CONTAINER ---------- */
+.slider2-expert-card {
+  background: #ffffff;
+  border: 2px solid #7e60b8;
+  border-right: 8px solid #7e60b8;
+  border-bottom: 8px solid #7e60b8;
+  border-radius: 22px;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
+
+  max-width: 320px;
+  width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+/* ---------- IMAGE ---------- */
+.slider2-expert-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+/* ---------- CONTENT ---------- */
+.slider2-expert-content {
+  padding: 15px;
+}
+
+.slider2-expert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Name */
+.slider2-expert-name {
+  font-size: 13px;
+  font-family: "Hahmlet";
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Verified */
+.slider2-verified-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Role */
+.slider2-expert-role {
+  font-size: 11px;
+  font-family: "Poppins";
+  font-weight: bold;
+  color: #775da6;
+  margin: 6px 0 10px 0;
+}
+
+.slider2-expert-role .dot {
+  margin: 0 4px;
+}
+
+/* Speaks */
+.slider2-expert-speaks {
+  font-size: 11px;
+  color: #252525;
+  margin-bottom: 8px;
+}
+
+.slider2-expert-speaks span {
+  color: #888888;
+}
+
+/* Fee */
+.slider2-expert-fee {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: bold;
+  color: #252525;
+}
+
+.slider2-expert-fee span span {
+  color: #888;
+}
+
+.slider2-students {
+  color: #775da6;
+  font-size: 9px;
+}
+
+/* ---------- FOOTER BUTTONS ---------- */
+.slider2-expert-footer {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Button Base Style (Slider-2 Style) */
+.slider2-btn {
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 10px;
+  border: none;
+  font-family: "Poppins";
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #fff;
+  box-shadow: inset -3px -3px 5px #0000004c;
+}
+
+.slider2-btn.purple {
+  background-color: #775da6;
+}
+
+.slider2-btn.green {
+  background-color: #02b346;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 576px) {
+  .exp-card,
+  .slider2-expert-card {
+    max-width: 280px;
+  }
+  .exp-card-img-wrap,
+  .slider2-expert-img {
+    height: 180px;
+  }
+}

@@ -5,9 +5,47 @@ import PackageCard from "./PackageCard";
 import gridIcon from "../../assets/images/grid.svg";
 import listIcon from "../../assets/images/list.svg";
 
-const ExpertsListing = ({ activeTab, experts, packages }) => {
+const ExpertsListing = ({
+  activeTab,
+  experts,
+  packages,
+  expertsPage = 1,
+  expertsTotalPages = 1,
+  packagesPage = 1,
+  packagesTotalPages = 1,
+  onChangeExpertsPage,
+  onChangePackagesPage,
+}) => {
   const [viewType, setViewType] = useState("grid"); // "grid" | "list"
   const list = activeTab === "experts" ? experts : packages;
+
+  const currentPage =
+    activeTab === "experts" ? expertsPage : packagesPage;
+  const totalPages =
+    activeTab === "experts" ? expertsTotalPages : packagesTotalPages;
+
+  const hasPrev = currentPage > 1;
+  const hasNext = currentPage < totalPages;
+
+  const handlePrev = () => {
+    if (currentPage <= 1) return;
+
+    if (activeTab === "experts") {
+      onChangeExpertsPage && onChangeExpertsPage(currentPage - 1);
+    } else {
+      onChangePackagesPage && onChangePackagesPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage >= totalPages) return;
+
+    if (activeTab === "experts") {
+      onChangeExpertsPage && onChangeExpertsPage(currentPage + 1);
+    } else {
+      onChangePackagesPage && onChangePackagesPage(currentPage + 1);
+    }
+  };
 
   return (
     <section className="exp-listing-section">
@@ -58,16 +96,22 @@ const ExpertsListing = ({ activeTab, experts, packages }) => {
 
       {/* PAGINATION */}
       <div className="exp-pagination">
-        <button className="BTNsliderMain">
-          <div className="rectangle-2" />
-          <div className="label">‹</div>
+        <button className="BTNsliderMain" onClick={handlePrev}>
+          <div className={`rectangle-2 ${hasPrev ? "active" : ""}`} />
+          <div className="label">
+            ‹
+          </div>
         </button>
 
-        <span className="page-text">1 / 20</span>
+        <span className="page-text">
+          {currentPage} / {totalPages}
+        </span>
 
-        <button className="BTNsliderMain">
-          <div className="rectangle-2 active" />
-          <div className="label">›</div>
+        <button className="BTNsliderMain" onClick={handleNext}>
+          <div className={`rectangle-2 ${hasNext ? "active" : ""}`} />
+          <div className="label">
+            ›
+          </div>
         </button>
       </div>
     </section>

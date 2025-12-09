@@ -76,6 +76,11 @@ line-height: normal;
   background: #e5e7eb;
 }
 
+.nav-btn:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
 .icon {
   width: 16px;
   height: 16px;
