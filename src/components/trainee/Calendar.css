@@ -229,6 +229,72 @@ line-height: normal;  /* slight space from left inside button */
 .event-title{ font-weight:600; font-size:13px; margin-bottom:4px; }
 .event-meta{ font-size:12px; color:#475569; }
 
+/* event header row (title + status pill) */
+.event-title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+
+/* status pill */
+.event-status{
+  font-size:11px;
+  font-weight:600;
+  padding:2px 8px;
+  border-radius:999px;
+  text-transform:capitalize;
+}
+
+/* status-based background colors for events */
+.calendar-event.status-scheduled{
+  background-color:#FFC8FF;
+}
+
+.calendar-event.status-completed{
+  background-color:#C2FFC2;
+  color: black;
+}
+
+.calendar-event.status-canceled,
+.calendar-event.status-cancelled{
+  background-color:red;
+  color:#ffffff;
+}
+
+.calendar-event.status-rescheduled{
+  background-color:#C3FFFF;
+}
+
+/* monthly view: use same colors on month-event badges */
+.month-event.status-scheduled{
+  background-color:#FFC8FF;
+}
+
+.month-event.status-completed{
+  background-color:#C2FFC2;
+  color:black;
+}
+
+.month-event.status-canceled,
+.month-event.status-cancelled{
+  background-color:red;
+  color:#ffffff;
+}
+
+.month-event.status-rescheduled{
+  background-color:#C3FFFF;
+}
+
+.month-event-time-status{
+  font-size:11px;
+  margin-top:2px;
+}
+
+.month-event-status-text{
+  font-weight:600;
+}
+
 /* loading */
 .loading{ padding:8px 10px; font-size:13px; color:#475569; }
 
@@ -298,6 +364,25 @@ line-height: normal;
 .month-cell.today {
   background-color:var(--primary) ; /* yellow highlight */
   border-radius: 4px;
+}
+
+/* month cell background by status */
+.month-cell.status-scheduled{
+  background-color:#FFC8FF;
+}
+
+.month-cell.status-completed{
+  background-color:#C2FFC2;
+}
+
+.month-cell.status-canceled,
+.month-cell.status-cancelled{
+  background-color:red;
+  color:#ffffff;
+}
+
+.month-cell.status-rescheduled{
+  background-color:#C3FFFF;
 }
 
 

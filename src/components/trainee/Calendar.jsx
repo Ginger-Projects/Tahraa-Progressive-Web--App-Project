@@ -2,87 +2,57 @@
 import "./Calendar.css";
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import api from "../../api/axios";
 
 
 const HOURS = [];
 const HOUR_VALUES = [];
-for (let h = 7; h <= 20; h++) {
+for (let h = 7; h <= 22; h++) {
   const suffix = h >= 12 ? "PM" : "AM";
   const displayHour = h % 12 === 0 ? 12 : h % 12;
   HOURS.push(`${displayHour} ${suffix}`);
   HOUR_VALUES.push(h);
 }
 
-
-function fetchEvents(mode, date) {
-  const dateKey = date.toISOString().slice(0, 10); // YYYY-MM-DD
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (mode === "daily") {
-        resolve([
-          { id: `d-${dateKey}-1`, date: dateKey, title: "Daily Yoga", start: 7, end: 8, color: "pink" },
-          { id: `d-${dateKey}-2`, date: dateKey, title: "Standup Meeting", start: 9, end: 10, color: "yellow" },
-        ]);
-      }
-
-      if (mode === "weekly") {
-        const monday = new Date(date);
-        const day = monday.getDay();
-        monday.setDate(monday.getDate() - (day === 0 ? 6 : day - 1)); // move to Monday
-        const mondayKey = monday.toISOString().slice(0, 10);
-
-        resolve([
-          { id: `w-${mondayKey}-1`, date: mondayKey, title: "Weekly Violin", start: 10, end: 11, color: "yellow" },
-          {
-            id: `w-${mondayKey}-2`,
-            date: (() => { const d = new Date(monday); d.setDate(d.getDate() + 2); return d.toISOString().slice(0, 10); })(),
-            title: "Group Dance",
-            start: 8,
-            end: 9,
-            color: "pink",
-          },
-        ]);
-      }
-
-      if (mode === "monthly") {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  
-  // Example: events with time for particular dates
-  const sampleDates = [
-    { day: 3, title: "Yoga", start: 10, end: 11, color: "pink" },
-    { day: 10, title: "Standup Meeting", start: 9, end: 10, color: "yellow" },
-    { day: 23, title: "Workshop", start: 11, end: 12, color: "pink" },
-  ];
-
-  resolve(sampleDates.map((ev, i) => {
-    const d = new Date(year, month, ev.day);
-    return {
-      id: `m-${d.toISOString().slice(0, 10)}-${i}`,
-      date: d.toISOString().slice(0, 10),
-      title: `${ev.title} ${ev.start}:${ev.start < 10 ? "0" : ""}00 - ${ev.end}:${ev.end < 10 ? "0" : ""}00`,
-      start: ev.start,
-      end: ev.end,
-      color: ev.color,
-    };
-  }));
-}
-
-
-      resolve([]);
-    }, 300);
-  });
-}
-
 /* -------------------------
    Helpers
    ------------------------- */
 const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
-const isoDate = (d) => d.toISOString().slice(0, 10);
+// Local-date key in YYYY-MM-DD (avoids timezone offset issues from toISOString)
+const isoDate = (d) => {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
-/* -------------------------
-   Component
-   ------------------------- */
+const mapSessionsToEvents = (sessions, fallbackDate) =>
+  (sessions || []).map((s, idx) => {
+    // API fields: start, end, title, status
+    const rawStart = s.start || s.startTime || s.startDate || s.date || null;
+    const startDateObj = rawStart ? new Date(rawStart) : new Date(fallbackDate);
+    const startHour = startDateObj.getHours();
+
+    const rawEnd = s.end || s.endTime || s.endDate || null;
+    const endDateObj = rawEnd
+      ? new Date(rawEnd)
+      : new Date(startDateObj.getTime() + 60 * 60 * 1000);
+    const endHour = endDateObj.getHours();
+
+    return {
+      id: s._id || s.id || `session-${idx}`,
+      date: isoDate(startDateObj),
+      title: s.title || "Session",
+      status: s.status || "",
+      start: startHour,
+      end: Math.max(startHour + 1, endHour),
+      startIso: startDateObj.toISOString(),
+      endIso: endDateObj.toISOString(),
+      color: "pink",
+    };
+  });
+
+
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState("daily");
@@ -91,11 +61,89 @@ export default function Calendar() {
 
   // Fetch events
   useEffect(() => {
-    setLoading(true);
-    fetchEvents(viewMode, currentDate)
-      .then((data) => setEvents(data || []))
-      .catch(() => setEvents([]))
-      .finally(() => setLoading(false));
+    const load = async () => {
+      setLoading(true);
+      try {
+        if (viewMode === "daily") {
+          const date = new Date(currentDate);
+          const year = date.getFullYear();
+          const month = date.getMonth();
+          const day = date.getDate();
+
+          // [selected day 00:00:00Z, next day 00:00:00Z)
+          const startUtc = new Date(Date.UTC(year, month, day, 0, 0, 0));
+          const endUtc = new Date(startUtc);
+          endUtc.setUTCDate(endUtc.getUTCDate() + 1);
+
+          const startIso = startUtc.toISOString();
+          const endIso = endUtc.toISOString();
+
+          const res = await api.get(
+            `/api/trainee/calendar/sessions?startDate=${encodeURIComponent(
+              startIso
+            )}&endDate=${encodeURIComponent(endIso)}`
+          );
+          const sessions = res?.data?.data?.sessions || [];
+          const mapped = mapSessionsToEvents(sessions, currentDate);
+          setEvents(mapped);
+        } else if (viewMode === "weekly") {
+          const date = new Date(currentDate);
+          const day = date.getDay();
+          const mondayLocal = new Date(date);
+          mondayLocal.setDate(date.getDate() - (day === 0 ? 6 : day - 1));
+
+          const year = mondayLocal.getFullYear();
+          const month = mondayLocal.getMonth();
+          const dayOfMonth = mondayLocal.getDate();
+
+          // [Monday 00:00:00Z, next Monday 00:00:00Z)
+          const weekStartUtc = new Date(
+            Date.UTC(year, month, dayOfMonth, 0, 0, 0)
+          );
+          const weekEndUtc = new Date(weekStartUtc);
+          weekEndUtc.setUTCDate(weekEndUtc.getUTCDate() + 7);
+
+          const startIso = weekStartUtc.toISOString();
+          const endIso = weekEndUtc.toISOString();
+
+          const res = await api.get(
+            `/api/trainee/calendar/sessions?startDate=${encodeURIComponent(
+              startIso
+            )}&endDate=${encodeURIComponent(endIso)}`
+          );
+          const sessions = res?.data?.data?.sessions || [];
+          const mapped = mapSessionsToEvents(sessions, currentDate);
+          setEvents(mapped);
+        } else if (viewMode === "monthly") {
+          const date = new Date(currentDate);
+          const year = date.getFullYear();
+          const month = date.getMonth();
+
+          // [first of month 00:00:00Z, first of next month 00:00:00Z)
+          const monthStartUtc = new Date(Date.UTC(year, month, 1, 0, 0, 0));
+          const monthEndUtc = new Date(Date.UTC(year, month + 1, 1, 0, 0, 0));
+
+          const startIso = monthStartUtc.toISOString();
+          const endIso = monthEndUtc.toISOString();
+
+          const res = await api.get(
+            `/api/trainee/calendar/sessions?startDate=${encodeURIComponent(
+              startIso
+            )}&endDate=${encodeURIComponent(endIso)}`
+          );
+          const sessions = res?.data?.data?.sessions || [];
+          const mapped = mapSessionsToEvents(sessions, currentDate);
+          setEvents(mapped);
+        }
+      } catch (error) {
+        console.error("Failed to load calendar sessions", error);
+        setEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
   }, [viewMode, currentDate]);
 
   /* ---------- Month label ---------- */
@@ -138,10 +186,10 @@ export default function Calendar() {
     monday.setDate(date.getDate() - (day === 0 ? 6 : day - 1));
 
     const dates = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
       const d = new Date(monday);
       d.setDate(monday.getDate() + i);
-      if (d.getMonth() === currentDate.getMonth()) dates.push(d);
+      dates.push(d);
     }
     return dates;
   };
@@ -279,6 +327,11 @@ export default function Calendar() {
         const dateObj = new Date(year, month, d);
         const dayEvents = eventsForDate(dateObj);
 
+        let cellStatusClass = "";
+        if (dayEvents.length > 0 && dayEvents[0].status) {
+          cellStatusClass = `status-${dayEvents[0].status.toLowerCase()}`;
+        }
+
         // Check if this date is today
         const isToday =
           dateObj.getFullYear() === today.getFullYear() &&
@@ -290,16 +343,57 @@ export default function Calendar() {
     key={isoDate(dateObj)}
     className={`month-cell ${isToday ? "today" : ""} ${
       dayEvents.length > 0 ? "has-event" : ""
-    }`}
+    } ${cellStatusClass}`}
     onClick={() => setCurrentDate(dateObj)}
   >
     <div className="month-date">{d}</div>
 
-    {dayEvents.map((ev) => (
-  <div key={ev.title} className="month-event">
-    {ev.title}
-  </div>
-))}
+    {dayEvents.map((ev) => {
+      const statusClass = ev.status
+        ? `status-${ev.status.toLowerCase()}`
+        : "";
+
+      const startLabel = ev.startIso
+        ? new Date(ev.startIso).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : ev.start != null
+        ? `${ev.start}:00`
+        : "";
+
+      const endLabel = ev.endIso
+        ? new Date(ev.endIso).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : ev.end != null
+        ? `${ev.end}:00`
+        : "";
+
+      const statusText = ev.status || "";
+
+      return (
+        <div
+          key={ev.id || ev.title}
+          className={`month-event ${statusClass}`}
+        >
+          <div>{ev.title}</div>
+          {(startLabel || endLabel || statusText) && (
+            <div className="month-event-time-status">
+              {startLabel && endLabel && (
+                <span>{`${startLabel} — ${endLabel}`}</span>
+              )}
+              {statusText && (
+                <span className="month-event-status-text">
+                  {startLabel && endLabel ? ` · ${statusText}` : statusText}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    })}
   </div>
 );
 
@@ -322,12 +416,45 @@ export default function Calendar() {
               return (
                 <div key={hour} className="schedule-row">
                   <div className="schedule-cell">
-                    {hourEvents.map(ev => (
-                      <div key={ev.id} className={`calendar-event event-1h color-${ev.color}`}>
-                        <div className="event-title">{ev.title}</div>
-                        <div className="event-meta">{ev.start}:00 — {ev.end}:00</div>
-                      </div>
-                    ))}
+                    {hourEvents.map(ev => {
+                      const statusClass = ev.status
+                        ? `status-${ev.status.toLowerCase()}`
+                        : "";
+                      const startLabel = ev.startIso
+                        ? new Date(ev.startIso).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : `${ev.start}:00`;
+
+                      const endLabel = ev.endIso
+                        ? new Date(ev.endIso).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : `${ev.end}:00`;
+
+                      return (
+                        <div
+                          key={ev.id}
+                          className={`calendar-event event-1h color-${ev.color} ${statusClass}`}
+                        >
+                          <div className="event-title-row">
+                            <span className="event-title">{ev.title}</span>
+                            {ev.status && (
+                              <span
+                                className={`event-status status-${ev.status.toLowerCase()}`}
+                              >
+                                {ev.status}
+                              </span>
+                            )}
+                          </div>
+                          <div className="event-meta">
+                            {startLabel} — {endLabel}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );
