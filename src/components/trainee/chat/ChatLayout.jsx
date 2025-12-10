@@ -219,16 +219,20 @@ export default function ChatLayout() {
                 {"< Back"}
               </button>
             )}
-            <ChatHeader
-              activeChat={selectedChat}
-              onOpenReport={() => setIsReportOpen(true)}
-            />
-            <ChatConversation messages={activeMessages} />
-            <ChatInput onSend={handleSend} />
-            <ReportIssueModal
-              open={isReportOpen}
-              onClose={() => setIsReportOpen(false)}
-            />
+            {selectedChatId && (
+              <>
+                <ChatHeader
+                  activeChat={selectedChat}
+                  onOpenReport={() => setIsReportOpen(true)}
+                />
+                <ChatConversation messages={activeMessages} />
+                <ChatInput onSend={handleSend} />
+                <ReportIssueModal
+                  open={isReportOpen}
+                  onClose={() => setIsReportOpen(false)}
+                />
+              </>
+            )}
           </div>
         )}
       </div>

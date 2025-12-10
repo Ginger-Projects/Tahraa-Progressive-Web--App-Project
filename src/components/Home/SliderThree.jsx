@@ -24,6 +24,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 export const SliderThree = () => {
   const { packages } = useSelector((state) => state.packages);
+  console.log("pack",packages);
+  
   const dispatch = useDispatch();
   const swiperRef = useRef(null);
   const [page, setPage] = useState(1);
@@ -173,9 +175,7 @@ export const SliderThree = () => {
                   {/* PACKAGE IMAGE */}
                   <img
                     src={
-                      pkg.images && pkg.images.length > 0
-                        ? pkg.images[0]   // API image
-                        : Package1        // fallback
+                      pkg.listingPageImage|| Package1        // fallback
                     }
                     className='expert-img'
                     alt={pkg.name}
