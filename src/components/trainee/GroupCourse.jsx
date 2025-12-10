@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import "./GroupCourse.css";
 import { getTraineeProgressSummary } from "../../services/trainee/trainee";
 
-export default function ViolinClassCard() {
+export default function ViolinClassCard({ onLoadingChange = () => {} }) {
   const navigate = useNavigate();
   const [analytics, setAnalytics] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -12,12 +12,15 @@ export default function ViolinClassCard() {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
+        onLoadingChange(true);
         const data = await getTraineeProgressSummary();
         const list = data?.data?.analytics || [];
         setAnalytics(list);
         setCurrentIndex(0);
       } catch (error) {
         console.error("Failed to load progress summary", error);
+      } finally {
+        onLoadingChange(false);
       }
     };
 

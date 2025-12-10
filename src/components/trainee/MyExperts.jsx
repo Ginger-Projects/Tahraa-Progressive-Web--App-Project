@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./MyExperts.css";
 import { getTraineeMyExperts, getTraineeSavedExperts } from "../../services/trainee/trainee";
 
-export default function MyExperts() {
+export default function MyExperts({ onLoadingChange = () => {} }) {
   const [myExperts, setMyExperts] = useState([]);
   const [savedExperts, setSavedExperts] = useState([]);
 
@@ -23,6 +23,7 @@ export default function MyExperts() {
     const limit = limitOverride ?? pageSize;
     try {
       setLoadingMy(true);
+      onLoadingChange(true);
       const res = await getTraineeMyExperts(page, limit);
       const list = res?.data?.myExperts || [];
 
@@ -39,6 +40,7 @@ export default function MyExperts() {
       console.error("Failed to load my experts", error);
     } finally {
       setLoadingMy(false);
+      onLoadingChange(false);
     }
   };
 
@@ -46,6 +48,7 @@ export default function MyExperts() {
     const limit = limitOverride ?? pageSize;
     try {
       setLoadingSaved(true);
+      onLoadingChange(true);
       const res = await getTraineeSavedExperts(page, limit);
       const list = res?.data?.savedExperts || [];
 
@@ -62,6 +65,7 @@ export default function MyExperts() {
       console.error("Failed to load saved experts", error);
     } finally {
       setLoadingSaved(false);
+      onLoadingChange(false);
     }
   };
 

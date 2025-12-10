@@ -204,6 +204,8 @@ const BookingConfirm = () => {
   const [activeSession, setActiveSession] = useState(null);
   const [searchParams] = useSearchParams();
   const bookingId = searchParams.get('bookingId');
+  const invite = searchParams.get('invite');
+
   const [bookingDetails, setBookingDetails] = useState(null);
   const [sessions,setSessions] = useState([]);
   const [rescheduleSession, setRescheduleSession] = useState(null);

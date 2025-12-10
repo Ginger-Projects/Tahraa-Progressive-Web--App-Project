@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./ScheduleSection.css";
 import { getTraineeUpcomingSchedules } from "../../services/trainee/trainee";
 
-export default function ScheduleSection() {
+export default function ScheduleSection({ onLoadingChange = () => {} }) {
   const [sessions, setSessions] = useState([]);
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const [loading, setLoading] = useState(false);
@@ -25,6 +25,7 @@ export default function ScheduleSection() {
     const fetchSchedules = async () => {
       try {
         setLoading(true);
+        onLoadingChange(true);
 
         const fromDate = selectedDate.toISOString();
         const toDate = new Date(
@@ -60,6 +61,7 @@ export default function ScheduleSection() {
         setSessions([]);
       } finally {
         setLoading(false);
+        onLoadingChange(false);
       }
     };
 

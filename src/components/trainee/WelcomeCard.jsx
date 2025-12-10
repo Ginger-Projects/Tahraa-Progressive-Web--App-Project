@@ -70,7 +70,7 @@ export default function WelcomeCard() {
           {hasValidImage ? (
             <img src={rawImage} alt={displayName} />
           ) : (
-            <div className="welcome-image-placeholder">Add image</div>
+            <div className="welcome-image-placeholder">Image</div>
           )}
         </div>
 

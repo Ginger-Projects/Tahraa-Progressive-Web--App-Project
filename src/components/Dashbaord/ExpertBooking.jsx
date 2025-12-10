@@ -7,7 +7,7 @@ import courseImg1 from "../../../.figma-assets/b1e25334add46d15c806cbbc2178bd036
 import courseImg2 from "../../../.figma-assets/2e27c8ec9b2e62d7e02b7a898460b9c85b07a4af.png";
 import courseImg3 from "../../../.figma-assets/8b3b31282497da4d053b4ebe389aa6f116046f55.png";
 import courseImg4 from "../../../.figma-assets/e7d3ea202e9dc8fead3d08e953408484251ce14c.png";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { getPackageById, bookPackage } from "../../services/trainee/trainee";
 import { getExpertPackages } from "../../services/expertService";
 import { DELIVERY } from "../../utils/package.core";
@@ -22,6 +22,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
   const [isMobile, setIsMobile] = useState(false);
   const today = new Date();
   const navigate = useNavigate()
+  const location = useLocation();
   const [currentMonthDate, setCurrentMonthDate] = useState(
     new Date(today.getFullYear(), today.getMonth(), 1)
   );
@@ -30,6 +31,20 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [searchParams] = useSearchParams();
   const id = searchParams.get("packageId");
+  const invite = searchParams.get("invite");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const token = localStorage.getItem("traineeToken")|| sessionStorage.getItem('traineeToken');
+
+    if (!token) {
+      navigate("/login", {
+        replace: true,
+        state: { from: location },
+      });
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -1145,6 +1160,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
               packageId: packageData._id,
               startDateUtc,
               endDateUtc,
+              invite,
             });
             setIsBookingModalOpen(false);
             setIsSuccessModalOpen(true);

@@ -4,7 +4,7 @@ import Person from '../assets/images/person.png'
 import Tick from '../assets/images/verified.png'
 import Logo from '../assets/images/logo.png'
 import BigLine from '../assets/images/bigline.png'
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Calendar } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchExperts } from "../features/slice/expertSlice";
@@ -65,7 +65,13 @@ const TahraaSignup = () => {
   const genderSelectRef = useRef(null);
   const { experts } = useSelector((state) => state.experts);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  const searchParams = new URLSearchParams(location.search || "");
+  const invite = searchParams.get("invite");
+  const packageId = searchParams.get("packageId");
+  
   const today = new Date();
   const maxDobDate = new Date(
     today.getFullYear() - 5,
@@ -73,6 +79,17 @@ const TahraaSignup = () => {
     today.getDate()
   );
   const maxDob = maxDobDate.toISOString().split("T")[0];
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const token =
+      localStorage.getItem("traineeToken") ||
+      sessionStorage.getItem("traineeToken");
+    if (token) {
+      navigate("/trainee");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     if (experts.length === 0) {
@@ -152,8 +169,23 @@ const TahraaSignup = () => {
       };
       console.log("pauload", payload);
 
+      if (invite) {
+        payload.invite = invite;
+      }
+      console.log("payload",payload);
+      
       await signupTrainee(payload);
       toast.success("Signup Successfully");
+
+      if (invite) {
+        const qp = new URLSearchParams();
+        if (packageId) {
+          qp.set("packageId", packageId);
+        }
+        qp.set("invite", invite);
+        
+        navigate(`/expert-booking?${qp.toString()}`);
+      }
     } catch (error) {
       console.error("Signup failed", error);
     } finally {

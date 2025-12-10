@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./LoginPage.css";
 import Person from "../assets/images/personTwo.png";
 import BigLine from "../assets/images/bigline.png";
@@ -7,7 +7,7 @@ import Logo from "../assets/images/logo.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginTrainee } from "../services/authService";
 import { useDispatch } from "react-redux";
@@ -41,10 +41,31 @@ const LoginPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate()
+  const location = useLocation()
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const token =
+      localStorage.getItem("traineeToken") ||
+      sessionStorage.getItem("traineeToken");
+    if (token) {
+      navigate("/trainee");
+    }
+  }, [navigate]);
+
+  const from = location.state?.from;
+  console.log("location",from);
+  
+  const searchParams = new URLSearchParams(from?.search || "");
+  const invite = searchParams.get("invite");
+  const packageId = searchParams.get("packageId");
+  console.log("invite",invite,packageId);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -68,8 +89,22 @@ const LoginPage = () => {
   <div className="projected-toast-text">{response.message}</div>,
   { className: "projected-toast" }  // optional if you're using the 3D box
 );
-navigate('/trainee');
-dispatch(setTrainee(response.data));
+
+        let redirectTo = "/trainee";
+
+        if (invite) {
+          const qp = new URLSearchParams();
+          if (packageId) {
+            qp.set("packageId", packageId);
+          }
+          qp.set("invite", invite);
+          redirectTo = `/expert-booking?${qp.toString()}`;
+        }
+        console.log("redirect",redirectTo);
+        console.log("response.date",response.data);
+        
+        dispatch(setTrainee({ ...response.data, rememberMe }));
+        navigate(redirectTo);
 
 
       } else {
@@ -139,7 +174,11 @@ dispatch(setTrainee(response.data));
             {/* Remember / Forgot */}
             <div className='lp-remember-row'>
               <label className='lp-remember'>
-                <input type='checkbox' />
+                <input
+                  type='checkbox'
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
                 <span>Remember me</span>
               </label>
               <Link type='button' to='/forgot-password' className='lp-link lp-link-small'>
@@ -150,7 +189,22 @@ dispatch(setTrainee(response.data));
             {/* Sign up text */}
             <p className='lp-signup-text'>
               Don&apos;t have an account?{" "}
-              <button type='button' className='lp-link'>
+              <button
+                onClick={() => {
+                  if (invite) {
+                    const qp = new URLSearchParams();
+                    if (packageId) {
+                      qp.set("packageId", packageId);
+                    }
+                    qp.set("invite", invite);
+                    navigate(`/signup?${qp.toString()}`);
+                  } else {
+                    navigate("/signup");
+                  }
+                }}
+                type='button'
+                className='lp-link'
+              >
                 Sign Up
               </button>
             </p>

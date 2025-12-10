@@ -103,13 +103,18 @@ export const getPackageById = async(id) =>{
   }
 }
 
-export const bookPackage = async ({ packageId, startDateUtc, endDateUtc }) => {
+export const bookPackage = async ({ packageId, startDateUtc, endDateUtc, invite }) => {
   try {
-    const response = await api.post("/api/trainee/marketplace/request-a-package", {
+    const payload = {
       packageId,
-      startDate:startDateUtc,
-      endDate:endDateUtc,
-    });
+      startDate: startDateUtc,
+      endDate: endDateUtc,
+    };
+
+    if (invite) {
+      payload.invite = invite;
+    }
+    const response = await api.post("/api/trainee/marketplace/request-a-package", payload);
     return response.data;
   } catch (error) {
     throw error;

@@ -72,9 +72,9 @@ function App() {
         <Route
   path="/login"
   element={
-    <PublicRoute>
+    
       <LoginPage />
-    </PublicRoute>
+   
   }
 />
 
@@ -87,10 +87,18 @@ function App() {
   }
 />
 
-        <Route path="/our-experts" element={<ExpertsPage />} />
+        <Route path="/our-experts" element={
+          <ProtectedRoute>
+          <ExpertsPage />
+          </ProtectedRoute>
+          } />
+        
         <Route path="/our-packages" element={<PackagesPage />} />
         <Route path="/expert-profile" element={<ExpertsProfileMain />} />
-        <Route path="/expert-booking" element={<ExpertsBookingMain />} />
+
+        <Route path="/expert-booking" element=
+        {<ExpertsBookingMain />}
+         />
         <Route path="/confirm-booking" element={<BookingConfirmMain />} />
         <Route path="/how-it-works-learners" element={<HowItWorksLearnersMain />} />
         <Route path="/how-it-works-experts" element={<HowItWorksExpertsMain />} />

@@ -3,7 +3,7 @@ import "./Packages.css";
 import { useNavigate } from "react-router-dom";
 import { getTraineeMyPackages } from "../../services/trainee/trainee";
 
-export default function Packages() {
+export default function Packages({ onLoadingChange = () => {} }) {
   const [packages, setPackages] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNext, setHasNext] = useState(false);
@@ -21,8 +21,8 @@ export default function Packages() {
   const loadPage = async (page, limitOverride) => {
     const limit = limitOverride ?? pageSize;
     try {
-
       setLoading(true);
+      onLoadingChange(true);
       const data = await getTraineeMyPackages(page, limit);
       console.log("data",data.data.packages);
       
@@ -44,6 +44,7 @@ export default function Packages() {
       console.log(error);
     } finally {
       setLoading(false);
+      onLoadingChange(false);
     }
   };
 
@@ -112,9 +113,18 @@ export default function Packages() {
                   type="button"
                   className="package-schedule-btn"
                   onClick={() => {
-                    const bookingId =  pkg._id;
+                    const bookingId = pkg._id;
                     if (!bookingId) return;
-                    navigate(`/confirm-booking?bookingId=${bookingId}`);
+
+                    const qp = new URLSearchParams();
+                    qp.set("bookingId", bookingId);
+
+                    // If this package/booking has an invite field, include it
+                    if (pkg.invite) {
+                      qp.set("invite", pkg.invite);
+                    }
+
+                    navigate(`/confirm-booking?${qp.toString()}`);
                   }}
                 >
                   Schedule

@@ -4,5 +4,9 @@ import { Navigate } from "react-router-dom";
 export default function ProtectedRoute({ children }) {
   const token = useSelector((state) => state.trainee.token);
 
-  return token ? children : <Navigate to="/login" replace />;
+  if (token) {
+    return children;
+  }
+
+  return <Navigate to="/login" replace />;
 }
