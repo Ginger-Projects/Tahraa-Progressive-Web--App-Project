@@ -92,7 +92,7 @@
   .exp-card-img-wrap {
     height: 220px;
     overflow: hidden;
-    width: 100%;
+    width: auto;
   }
 
   .exp-card-img-wrap img {
@@ -394,10 +394,11 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      min-height: 205px;
     }
 
     /* List view: content should NOT be absolutely positioned */
-    
+
 
     .expert-cardss.list-view .expert-img {
       width: 180px;
@@ -411,7 +412,8 @@
     }
 
     .package-btn-bar {
-      margin-top: 6px;
+      margin-top: auto;
+      padding-top: 6px;
     }
 
     .package-btn {
@@ -471,6 +473,15 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
+
+  .package-btn-bar{
+    margin-top: 0;
+  }
+
+  .exp-card-img-wrap{
+    width: auto;
+    height: auto;
+  }
 
   @media(max-width : 900px){
     justify-content: center;

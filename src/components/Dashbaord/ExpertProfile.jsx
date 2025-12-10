@@ -247,6 +247,16 @@ const ExpertProfile = () => {
     }, 2500);
   };
 
+  if (loading) {
+    return (
+      <main className='ep-main'>
+        <div className='ep-container'>
+          <div className='ep-loading-message'>Loading expert profile...</div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className='ep-main'>
       <div className='ep-container'>
