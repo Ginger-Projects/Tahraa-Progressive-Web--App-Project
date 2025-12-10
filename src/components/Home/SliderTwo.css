@@ -116,6 +116,7 @@
 
   .BTNslider2 {
     all: unset;
+    cursor: pointer;
     height: 43px;
     position: relative;
     right: 0;
@@ -216,6 +217,7 @@
 
   .BTN-2slider {
     all: unset;
+    cursor: pointer;
     height: 43px;
     position: relative;
     right: 0;

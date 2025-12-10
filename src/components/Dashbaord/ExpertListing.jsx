@@ -15,6 +15,9 @@ const ExpertsListing = ({
   packagesTotalPages = 1,
   onChangeExpertsPage,
   onChangePackagesPage,
+  expertsTotalCount,
+  packagesTotalCount,
+  isSearching,
 }) => {
   const [viewType, setViewType] = useState("grid"); // "grid" | "list"
   const list = activeTab === "experts" ? experts : packages;
@@ -47,6 +50,26 @@ const ExpertsListing = ({
     }
   };
 
+  const totalExpertsLabel =
+    typeof expertsTotalCount === "number"
+      ? expertsTotalCount
+      : Array.isArray(experts)
+      ? experts.length
+      : 0;
+
+  const totalPackagesLabel =
+    typeof packagesTotalCount === "number"
+      ? packagesTotalCount
+      : Array.isArray(packages)
+      ? packages.length
+      : 0;
+
+  const resultsText = isSearching
+    ? "Loading..."
+    : activeTab === "experts"
+    ? `${totalExpertsLabel} Vocal Experts available`
+    : `${totalPackagesLabel} Packages available`;
+
   return (
     <section className="exp-listing-section">
 
@@ -54,11 +77,7 @@ const ExpertsListing = ({
       <div className="exp-listing-header">
         <div className="exp-results">
           <span className="exp-results-label">Search results:</span>
-          <span className="exp-results-count">
-            {activeTab === "experts"
-              ? "72 Vocal Experts available"
-              : "12 Packages available"}
-          </span>
+          <span className="exp-results-count">{resultsText}</span>
         </div>
 
         {/* VIEW TOGGLE BUTTONS */}

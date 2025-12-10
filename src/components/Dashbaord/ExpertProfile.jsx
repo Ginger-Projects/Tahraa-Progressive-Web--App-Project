@@ -1,121 +1,195 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ExpertProfile.css";
 import LineSrc from "../../assets/images/bigline.png";
 
 // dummy imports – replace with your real images
 import heroImage from "../../assets/images/heroimage.png";
-import videoThumb from "../../assets/images/thumb2.png";
 import pkg1 from "../../assets/images/package4.png";
-import pkg2 from "../../assets/images/package4.png";
-import pkg3 from "../../assets/images/package4.png";
-import pkg4 from "../../assets/images/package4.png";
-import prev5 from "../../assets/images/package5.png";
-import reviewerAvatar from "../../assets/images/avatar.png";
 import Button from "../../components/Button";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { getExpertDetails, getExpertPackages } from "../../services/expertService";
 
 const ExpertProfile = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [showSavedToast, setShowSavedToast] = useState(false);
+  const [expert, setExpert] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [expertPackages, setExpertPackages] = useState([]);
+  const [totalPackagesCount, setTotalPackagesCount] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [searchParams] = useSearchParams();
   const packageSliderRef = useRef(null);
   const prevWorksSliderRef = useRef(null);
   const suggestSliderRef = useRef(null);
-  const packages = [
-    {
-      id: 1,
-      title: "Introduction to Basic Vocal Training",
-      mentor: "Natasha Romanoff",
-      category: "Vocal Training",
-      sessions: 12,
-      duration: 50,
-      image: pkg1,
-    },
-    {
-      id: 2,
-      title: "Intermediate Vocal Control Course",
-      mentor: "Natasha Romanoff",
-      category: "Vocal Training",
-      sessions: 12,
-      duration: 50,
-      image: pkg2,
-    },
-    {
-      id: 3,
-      title: "Stage Performance Vocal Coaching",
-      mentor: "Natasha Romanoff",
-      category: "Vocal Training",
-      sessions: 12,
-      duration: 50,
-      image: pkg3,
-    },
-    {
-      id: 4,
-      title: "Introduction to Basic Vocal Training",
-      mentor: "Natasha Romanoff",
-      category: "Vocal Training",
-      sessions: 12,
-      duration: 50,
-      image: pkg4,
-    },
-    {
-      id: 5,
-      title: "Introduction to Basic Vocal Training",
-      mentor: "Natasha Romanoff",
-      category: "Vocal Training",
-      sessions: 12,
-      duration: 50,
-      image: pkg1,
-    },
-  ];
 
-  const previousWorks = [
-    { id: 1, title: "From Beginner to Pro: Step-by-Step", cat: "Music & Performing Arts", image: prev5 },
-    { id: 2, title: "Learn Your Favorite Songs easily", cat: "Music & Performing Arts", image: prev5 },
-    { id: 3, title: "Learn from Scratch — Easy Lessons", cat: "Music & Performing Arts", image: prev5 },
-    { id: 4, title: "From Beginner to Pro: Step-by-Step", cat: "Music & Performing Arts", image: prev5 },
-    { id: 5, title: "From Beginner to Pro: Step-by-Step", cat: "Music & Performing Arts", image: prev5 },
-  ];
+  // no static/dummy reviews; wire to real data later if needed
+  const reviews = [];
 
-  const reviews = [
-    {
-      id: 1,
-      name: "Esther Howard",
-      date: "18-09-2023",
-      time: "11:45",
-      rating: 5,
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam...",
-    },
-    {
-      id: 2,
-      name: "Esther Howard",
-      date: "18-09-2023",
-      time: "11:45",
-      rating: 5,
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-    },
-    {
-      id: 3,
-      name: "Esther Howard",
-      date: "18-09-2023",
-      time: "11:45",
-      rating: 5,
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-    },
-  ];
+  const languages = Array.isArray(expert?.languages) ? expert.languages : [];
 
-  const skills = [
-    "Breath Control",
-    "Pitch and Intonation",
-    "Warm-ups",
-    "Posture",
-    "Tone Quality",
-    "Diction",
-    "Vocal Range",
-    "Dynamic control",
-    "Emotional expression",
-  ];
+  const expQual = expert?.experienceAndQualifications;
+  const yearsOfExperience = expQual?.yearsOfExperience;
+  const categoryName = expQual?.teachingCategory?.name;
+  const delivery = expQual?.delivery;
+  const feeRange = expQual?.feeRange;
+  const certificates = Array.isArray(expQual?.certificates)
+    ? expQual.certificates
+    : [];
+
+  const expertId = searchParams.get("expertId");
+
+  // track screen size for package limit (desktop: 4, mobile: 1)
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 768);
+      }
+    };
+
+    handleResize();
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", handleResize);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!expertId) return;
+
+    const fetchExpert = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await getExpertDetails(expertId);
+        const expertData = res?.data?.expert || null;
+        
+        setExpert(expertData);
+      } catch (err) {
+        console.error("Failed to load expert details", err);
+        setError("Failed to load expert details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExpert();
+  }, [expertId]);
+
+  // Fetch packages for this expert, with limit based on screen size
+  useEffect(() => {
+    if (!expertId) return;
+
+    const fetchPackages = async () => {
+      try {
+        const limit = isMobile ? 1 : 4;
+        const res = await getExpertPackages(expertId, 1, limit);
+        console.log("exper", expertId);
+        console.log("res", res);
+
+        const payload = res?.data;
+        const pkgs = Array.isArray(payload?.packages) ? payload.packages : [];
+
+        const totalCount =
+          typeof payload?.totalPackagesCount === "number"
+            ? payload.totalPackagesCount
+            : pkgs.length;
+
+        setExpertPackages(pkgs);
+        setTotalPackagesCount(totalCount);
+      } catch (err) {
+        console.error("Failed to load expert packages", err);
+      }
+    };
+
+    fetchPackages();
+  }, [expertId, isMobile]);
+
+  const previousWorksUrls =
+    expert?.experienceAndQualifications?.previousWorks || [];
+
+  const isYouTubeUrl = (url = "") =>
+    url.includes("youtube.com") || url.includes("youtu.be");
+
+  const youtubeVideos = previousWorksUrls.filter(isYouTubeUrl);
+  const mp4Videos = previousWorksUrls.filter((url) =>
+    url.toLowerCase().includes(".mp4")
+  );
+  const imageUrls = previousWorksUrls.filter(
+    (url) => !isYouTubeUrl(url) && !url.toLowerCase().includes(".mp4")
+  );
+
+  const buildYouTubeEmbedUrl = (id = "") => {
+    if (!id) return "";
+    return `https://www.youtube.com/embed/${id}?controls=1&rel=0&modestbranding=1`;
+  };
+
+  const getYouTubeEmbedUrl = (url = "") => {
+    try {
+      if (!url) return "";
+      if (url.includes("youtube.com/shorts/")) {
+        const id = url.split("youtube.com/shorts/")[1]?.split(/[?&]/)[0];
+        return id ? buildYouTubeEmbedUrl(id) : url;
+      }
+      if (url.includes("youtu.be/")) {
+        const id = url.split("youtu.be/")[1]?.split(/[?&]/)[0];
+        return id ? buildYouTubeEmbedUrl(id) : url;
+      }
+      if (url.includes("watch?v=")) {
+        const id = url.split("watch?v=")[1]?.split("&")[0];
+        return id ? buildYouTubeEmbedUrl(id) : url;
+      }
+      return url;
+    } catch (e) {
+      return url;
+    }
+  };
+
+  const primaryVideoSource =
+    youtubeVideos[0] || mp4Videos[0] || imageUrls[0] || null;
+
+  const sliderPreviousWorks = previousWorksUrls.filter(
+    (url) => url !== primaryVideoSource
+  );
+
+  // Normalize API packages into a unified view model for the UI
+  const apiMappedPackages = expertPackages.map((pkg) => {
+    const imageSrc =
+      pkg.listingPageImage ||
+      pkg.detailPageImage ||
+      (Array.isArray(pkg.images) && pkg.images.length > 0
+        ? pkg.images[0]
+        : pkg1);
+
+    return {
+      id: pkg._id || pkg.name,
+      title: pkg.name,
+      mentor: pkg.expert?.name || expert?.name,
+      category: pkg.category?.name,
+      sessions: pkg.noOfSessions,
+      priceLabel:
+        typeof pkg.packageTotalPrice === "number"
+          ? `Total : ${pkg.packageTotalPrice} QAR / session`
+          : "",
+      image: imageSrc,
+    };
+  });
+
+  const finalPackages = apiMappedPackages;
+
+  // how many packages can be shown at once based on screen size
+  const visiblePackageSlots = isMobile ? 1 : 4;
+  const effectiveTotalPackages =
+    totalPackagesCount > 0 ? totalPackagesCount : finalPackages.length;
+  const canSlidePackages = effectiveTotalPackages > visiblePackageSlots;
 
   const handlePackageSlideLeft = () => {
+    if (!canSlidePackages) return;
     if (packageSliderRef.current) {
       const scrollAmount = 300;
       packageSliderRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
@@ -123,6 +197,7 @@ const ExpertProfile = () => {
   };
 
   const handlePackageSlideRight = () => {
+    if (!canSlidePackages) return;
     if (packageSliderRef.current) {
       const scrollAmount = 300;
       packageSliderRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
@@ -172,28 +247,6 @@ const ExpertProfile = () => {
     }, 2500);
   };
 
-  const certColumns = [
-    [
-      "Certified Vocal Trainer – Level III",
-      "Associated Board of the Royal Schools of Music (ABRSM)",
-      "Issued 2018 | Certificate ID: V-COACH-18236",
-      "Contemporary Vocal Coaching Certificate",
-      "Vocal Institute International, New York",
-      "Issued 2019 | Certificate ID: V-COACH-01927",
-      "Voice Pedagogy & Performance Excellence Program",
-      "Music Educators Council, Qatar",
-      "Issued 2022 | Certificate ID: IQ-2022-57",
-    ],
-    [
-      "Certified Vocal Trainer – Level III",
-      "Associated Board of the Royal Schools of Music (ABRSM)",
-      "Issued 2018 | Certificate ID: V-COACH-18236",
-      "Contemporary Vocal Coaching Certificate",
-      "Vocal Institute International, New York",
-      "Issued 2019 | Certificate ID: V-COACH-01927",
-    ],
-  ];
-
   return (
     <main className='ep-main'>
       <div className='ep-container'>
@@ -202,7 +255,11 @@ const ExpertProfile = () => {
           {/* Left big image */}
           <div className='col-lg-7'>
             <div className='ep-card ep-hero-image-card'>
-              <img src={heroImage} alt='Natasha Romanoff' className='ep-hero-img' />
+              <img
+                src={expert?.profileImage }
+                alt={expert?.name || "Expert"}
+                className='ep-hero-img'
+              />
             </div>
           </div>
 
@@ -212,7 +269,7 @@ const ExpertProfile = () => {
               <div className='ep-hero-header'>
                 <div>
                   <h2 className='ep-name'>
-                    Natasha Romanoff{" "}
+                    {expert?.name}{" "}
                     <svg xmlns='http://www.w3.org/2000/svg' width='31' height='31' viewBox='0 0 31 31' fill='none'>
                       <path
                         d='M14.0111 1.56487C14.5907 0.944725 15.5742 0.944724 16.1538 1.56487L18.8362 4.43499C19.1253 4.74429 19.534 4.91356 19.9571 4.89926L23.8833 4.76657C24.7317 4.7379 25.4271 5.43331 25.3984 6.28166L25.2658 10.2079C25.2515 10.6311 25.4207 11.0397 25.73 11.3288L28.6001 14.0113C29.2203 14.5909 29.2203 15.5743 28.6001 16.1539L25.73 18.8364C25.4207 19.1255 25.2515 19.5341 25.2658 19.9572L25.3984 23.8835C25.4271 24.7319 24.7317 25.4273 23.8833 25.3986L19.9571 25.2659C19.534 25.2516 19.1253 25.4209 18.8362 25.7302L16.1538 28.6003C15.5742 29.2204 14.5907 29.2204 14.0111 28.6003L11.3286 25.7302C11.0396 25.4209 10.6309 25.2516 10.2078 25.2659L6.28151 25.3986C5.43316 25.4273 4.73775 24.7319 4.76642 23.8835L4.89911 19.9572C4.91341 19.5341 4.74414 19.1255 4.43483 18.8364L1.56472 16.1539C0.944572 15.5743 0.944572 14.5909 1.56472 14.0113L4.43483 11.3288C4.74414 11.0397 4.91341 10.6311 4.89911 10.2079L4.76642 6.28166C4.73775 5.43331 5.43316 4.7379 6.28151 4.76657L10.2078 4.89926C10.6309 4.91356 11.0396 4.74429 11.3286 4.43499L14.0111 1.56487Z'
@@ -257,7 +314,13 @@ const ExpertProfile = () => {
                     </svg>
                   </h2>
                   <p className='ep-title'>
-                    Certified Vocal Instructor | <span>10 Years experience</span>
+                    {categoryName}
+                    {yearsOfExperience && (
+                      <>
+                        {" "}
+                        | <span>{yearsOfExperience} Years experience</span>
+                      </>
+                    )}
                   </p>
                   <p className='ep-location'>
                     <svg xmlns='http://www.w3.org/2000/svg' width='19' height='23' viewBox='0 0 19 23' fill='none'>
@@ -369,7 +432,7 @@ const ExpertProfile = () => {
                         </linearGradient>
                       </defs>
                     </svg>
-                    Doha, Qatar
+                    {expert?.nationality || "Qatar"}
                   </p>
                 </div>
                 <svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none'>
@@ -392,17 +455,21 @@ const ExpertProfile = () => {
               </div>
 
               <div className='ep-badges-row'>
-                <span className='ep-badge'>All Ages</span>
-                <span className='ep-badge ep-badge-green'>Qatar</span>
-                <span className='ep-badge ep-badge-outline'>Online & Offline</span>
+                {/* <span className='ep-badge'>All Ages</span> */}
+                <span className='ep-badge ep-badge-green'>{expert?.gender}</span>
+                {delivery && (
+                  <span className='ep-badge ep-badge-outline'>{delivery}</span>
+                )}
               </div>
 
-              <div className='ep-fee-row'>
-                <div>
-                  <p className='ep-fee-label'>Fee Range</p>
-                  <p className='ep-fee-value'>QAR 250/hour</p>
+              {feeRange && (
+                <div className='ep-fee-row'>
+                  <div>
+                    <p className='ep-fee-label'>Fee Range</p>
+                    <p className='ep-fee-value'>QAR {feeRange} / session</p>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className='ep-hero-btn-row'>
                 <Link to='/expert-booking'><Button to='/expert-book' label='Book Now' bg='#775DA6' /></Link>
@@ -479,20 +546,17 @@ const ExpertProfile = () => {
             <div className='ep-card ep-bio-card'>
               <h3 className='ep-section-title'>Bio</h3>
               <p className='ep-bio-text'>
-                Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry’s
-                standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
-                type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
-                remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing
-                Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions.
+                {expert?.about ||
+                  "Lorem ipsum is simply dummy text of the printing and typesetting industry."}
               </p>
             </div>
 
             <div className='ep-card ep-skills-card'>
-              <h3 className='ep-section-title'>Skills</h3>
+              <h3 className='ep-section-title'>Languages</h3>
               <div className='ep-skills-list'>
-                {skills.map((skill) => (
-                  <span key={skill} className='ep-skill-pill'>
-                    {skill}
+                {languages.map((lang) => (
+                  <span key={lang} className='ep-skill-pill'>
+                    {lang}
                   </span>
                 ))}
               </div>
@@ -503,15 +567,35 @@ const ExpertProfile = () => {
           <div className='col-lg-5'>
             <div className='ep-card ep-video-card'>
               <div className='ep-video-thumb-wrap'>
-                <img src={videoThumb} alt='intro video' className='ep-video-thumb' />
-                <button className='ep-play-btn'>▶</button>
-                <div className='ep-video-time-row'>
-                  <span>17:49</span>
-                  <span>34:00</span>
-                </div>
-                <div className='ep-video-progress'>
-                  <div className='ep-video-progress-fill' />
-                </div>
+                {primaryVideoSource && isYouTubeUrl(primaryVideoSource) && (
+                  <iframe
+                    className='ep-video-thumb'
+                    src={getYouTubeEmbedUrl(primaryVideoSource)}
+                    title='Previous work video'
+                    frameBorder='0'
+                    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                    allowFullScreen
+                  />
+                )}
+
+                {primaryVideoSource &&
+                  !isYouTubeUrl(primaryVideoSource) &&
+                  primaryVideoSource.toLowerCase().includes(".mp4") && (
+                    <video className='ep-video-thumb' controls>
+                      <source src={primaryVideoSource} type='video/mp4' />
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+
+                {primaryVideoSource &&
+                  !isYouTubeUrl(primaryVideoSource) &&
+                  !primaryVideoSource.toLowerCase().includes(".mp4") && (
+                    <img
+                      src={primaryVideoSource}
+                      alt='Previous work'
+                      className='ep-video-thumb'
+                    />
+                  )}
               </div>
             </div>
           </div>
@@ -519,10 +603,16 @@ const ExpertProfile = () => {
 
         {/* PACKAGES SECTION */}
         <section className='ep-packages-section mt-5'>
-          <div className='ep-section-heading-row'>
-            <h3 className='ep-section-title mb-0'>Packages</h3>
+          <div className='d-flex align-items-center justify-content-between mb-3 ep-section-heading-row'>
+            <h3 className='ep-section-title'>Packages</h3>
             <div className='ep-slider-controls'>
-              <button className='ep-slider-btn ep-slider-btn-prev' onClick={handlePackageSlideLeft} title='Previous'>
+              <button
+                className={`ep-slider-btn ep-slider-btn-prev ${
+                  !canSlidePackages ? "ep-slider-btn-disabled" : ""
+                }`}
+                onClick={handlePackageSlideLeft}
+                title='Previous'
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='24'
@@ -535,7 +625,13 @@ const ExpertProfile = () => {
                   <polyline points='15 18 9 12 15 6' />
                 </svg>
               </button>
-              <button className='ep-slider-btn ep-slider-btn-next' onClick={handlePackageSlideRight} title='Next'>
+              <button
+                className={`ep-slider-btn ep-slider-btn-next ${
+                  !canSlidePackages ? "ep-slider-btn-disabled" : ""
+                }`}
+                onClick={handlePackageSlideRight}
+                title='Next'
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='24'
@@ -553,7 +649,7 @@ const ExpertProfile = () => {
 
           <div className='ep-packages-slider-wrapper'>
             <div className='ep-packages-slider' ref={packageSliderRef}>
-              {packages.map((pkg) => (
+              {finalPackages.map((pkg) => (
                 <div key={pkg.id} className='ep-package-slide-item'>
                   <div className='ep-package-card-wrapper'>
                     <div className='ep-package-image-container'>
@@ -577,13 +673,8 @@ const ExpertProfile = () => {
                           <span className='ep-detail-text'>{pkg.sessions} Session</span>
                         </div>
                         <div className='ep-package-detail-item'>
-                          <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'>
-                            <path
-                              d='M6.6543 0C10.3293 0 13.3085 2.97935 13.3086 6.6543C13.3086 10.3293 10.3293 13.3086 6.6543 13.3086C2.97964 13.3081 3.29868e-05 10.3291 0 6.6543C0.000128006 2.97962 2.9797 0.000450548 6.6543 0ZM6.65625 1.21094C3.64958 1.21117 1.21191 3.64855 1.21191 6.65527C1.21215 9.6618 3.64972 12.0994 6.65625 12.0996C9.66282 12.0994 12.1003 9.66183 12.1006 6.65527C12.1006 3.64852 9.66297 1.21111 6.65625 1.21094ZM6.6543 2.41992C6.98822 2.42012 7.25879 2.69142 7.25879 3.02539V6.35938L9.74707 8.29492C10.0108 8.50004 10.0586 8.87984 9.85352 9.14355C9.64846 9.40704 9.26854 9.45479 9.00488 9.25L6.28223 7.13184C6.13511 7.01722 6.04883 6.84081 6.04883 6.6543V3.02539C6.04883 2.69129 6.3202 2.41992 6.6543 2.41992Z'
-                              fill='#775DA6'
-                            />
-                          </svg>
-                          <span className='ep-detail-text'>{pkg.duration} Min / Session</span>
+                          
+                          <span className='ep-detail-text'>{pkg.priceLabel}</span>
                         </div>
                       </div>
 
@@ -667,22 +758,25 @@ const ExpertProfile = () => {
         <section className='ep-cert-section mt-5'>
           <h3 className='ep-section-title mb-4'>Professional Certifications</h3>
           <div className='ep-certifications-container'>
-            {certColumns.map((col, idx) => (
-              <div key={idx} className='ep-cert-column'>
+            {certificates.length > 0 && (
+              <div className='ep-cert-column'>
                 <ul className='ep-cert-list'>
-                  {col.map((cert, i) => {
-                    const isTitle = i % 3 === 0;
-                    return isTitle ? (
-                      <li key={i} className='ep-cert-list-item'>
-                        <strong>{cert}</strong>
-                        {col[i + 1] && <p className='ep-cert-org'>{col[i + 1]}</p>}
-                        {col[i + 2] && <p className='ep-cert-details'>{col[i + 2]}</p>}
-                      </li>
-                    ) : null;
-                  })}
+                  {certificates.map((cert) => (
+                    <li
+                      key={cert._id || cert.nameOfCertificate}
+                      className='ep-cert-list-item'
+                    >
+                      <strong>{cert.nameOfCertificate}</strong>
+                      {cert.expiryDate && (
+                        <p className='ep-cert-details'>
+                          Expiry: {new Date(cert.expiryDate).toLocaleDateString()}
+                        </p>
+                      )}
+                    </li>
+                  ))}
                 </ul>
               </div>
-            ))}
+            )}
           </div>
         </section>
 
@@ -690,75 +784,60 @@ const ExpertProfile = () => {
         <section className='ep-prev-section mt-5'>
           <div className='ep-section-heading-row'>
             <h3 className='ep-section-title mb-0'>Previous Works</h3>
-            <div className='ep-slider-controls'>
-              <button className='ep-slider-btn ep-slider-btn-prev' onClick={handlePrevWorksSlideLeft} title='Previous'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                >
-                  <polyline points='15 18 9 12 15 6' />
-                </svg>
-              </button>
-              <button className='ep-slider-btn ep-slider-btn-next' onClick={handlePrevWorksSlideRight} title='Next'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                >
-                  <polyline points='9 18 15 12 9 6' />
-                </svg>
-              </button>
-            </div>
           </div>
 
           <div className='ep-prev-works-slider-wrapper'>
             <div className='ep-prev-works-slider' ref={prevWorksSliderRef}>
-              {previousWorks.map((item, index) => (
-                <div key={item.id} className='ep-prev-work-slide-item'>
-                  <div className='ep-prev-card'>
-                    <div className='ep-prev-thumb-wrap'>
-                      <img src={item.image} alt={item.title} className='ep-prev-thumb' />
+              {sliderPreviousWorks.map((url, index) => {
+                const isYoutube = isYouTubeUrl(url);
+                const isMp4 = url.toLowerCase().includes(".mp4");
+                const isImage = !isYoutube && !isMp4;
+                return (
+                  <div
+                    key={`${url}-${index}`}
+                    className='ep-prev-work-slide-item'
+                  >
+                    <div className='ep-prev-card'>
+                      <div className='ep-prev-thumb-wrap'>
+                        {isYoutube && (
+                          <iframe
+                            className='ep-prev-thumb'
+                            src={getYouTubeEmbedUrl(url)}
+                            title={`Previous work ${index + 1}`}
+                            frameBorder='0'
+                            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                            allowFullScreen
+                          />
+                        )}
+                        {isMp4 && (
+                          <video className='ep-prev-thumb' controls>
+                            <source src={url} type='video/mp4' />
+                            Your browser does not support the video tag.
+                          </video>
+                        )}
+                        {isImage && (
+                          <img
+                            src={url}
+                            alt={`Previous work ${index + 1}`}
+                            className='ep-prev-thumb'
+                          />
+                        )}
 
-                      {/* PART Badge */}
-                      <div className='ep-prev-part-badge'>
-                        <span>PART {index + 1}</span>
+                        {/* PART Badge */}
+                        {/* <div className='ep-prev-part-badge'>
+                          <span>PART {index + 1}</span>
+                        </div> */}
                       </div>
-
-                      {/* Play Button Overlay */}
-                      <button className='ep-prev-play'>
-                        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'>
-                          <path d='M8 5v14l11-7z' />
-                        </svg>
-                      </button>
-
-                      {/* Progress Bar */}
-                      <div className='ep-prev-progress-wrap'>
-                        <div className='ep-prev-progress-bar'>
-                          <div className='ep-prev-progress-fill' />
-                          <div className='ep-prev-progress-dot' />
-                        </div>
-                        <div className='ep-prev-time-row'>
-                          <span className='ep-prev-time-start'>17:49</span>
-                          <span className='ep-prev-time-end'>34:00</span>
-                        </div>
+                      <div className='ep-prev-body'>
+                        <p className='ep-prev-title'>{`Previous work ${index + 1}`}</p>
+                        <span className='ep-prev-cat'>
+                          {isYoutube ? "YouTube" : isMp4 ? "Video" : "Image"}
+                        </span>
                       </div>
-                    </div>
-                    <div className='ep-prev-body'>
-                      <p className='ep-prev-title'>{item.title}</p>
-                      <span className='ep-prev-cat'>{item.cat}</span>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>

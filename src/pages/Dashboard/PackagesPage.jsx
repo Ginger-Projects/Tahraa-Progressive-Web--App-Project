@@ -16,6 +16,9 @@ const PackagesPage = () => {
   const [experts, setExperts] = useState([]);
   const [packages, setPackages] = useState([]);
 
+  const [expertsTotalCount, setExpertsTotalCount] = useState(0);
+  const [packagesTotalCount, setPackagesTotalCount] = useState(0);
+
   const [expertsPage, setExpertsPage] = useState(1);
   const [expertsTotalPages, setExpertsTotalPages] = useState(1);
 
@@ -23,7 +26,7 @@ const PackagesPage = () => {
   const [packagesTotalPages, setPackagesTotalPages] = useState(1);
 
   const [searchName, setSearchName] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
+  const [isSearching, setIsSearching] = useState(true);
 
   useEffect(() => {
     const fetchExpertsData = async () => {
@@ -34,6 +37,7 @@ const PackagesPage = () => {
         const totalCount = payload.totalExpertsCount || list.length || 0;
 
         setExperts(list);
+        setExpertsTotalCount(totalCount);
         setExpertsTotalPages(Math.max(1, Math.ceil(totalCount / PAGE_LIMIT)));
       } catch (error) {
         console.error("Failed to load experts", error);
@@ -54,6 +58,7 @@ const PackagesPage = () => {
         const totalCount = payload.totalPackagesCount || list.length || 0;
 
         setPackages(list);
+        setPackagesTotalCount(totalCount);
         setPackagesTotalPages(Math.max(1, Math.ceil(totalCount / PAGE_LIMIT)));
       } catch (error) {
         console.error("Failed to load packages", error);
@@ -91,6 +96,9 @@ const PackagesPage = () => {
         expertsTotalPages={expertsTotalPages}
         packagesPage={packagesPage}
         packagesTotalPages={packagesTotalPages}
+        expertsTotalCount={expertsTotalCount}
+        packagesTotalCount={packagesTotalCount}
+        isSearching={isSearching}
         onChangeExpertsPage={setExpertsPage}
         onChangePackagesPage={setPackagesPage}
       />

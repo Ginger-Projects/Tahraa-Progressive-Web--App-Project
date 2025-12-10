@@ -63,7 +63,7 @@ const ExpertCard = ({ data, view }) => {
           <Link to={`/expert-booking/${data._id}`} className="w-100">
             <Button label="View Packages" bg="#775DA6" />
           </Link>
-          <Link to={`/expert-profile/${data._id}`} className="w-100">
+          <Link to={`/expert-profile?expertId=${data._id}`} className="w-100">
             <Button label="Enquire" bg="#02B346" />
           </Link>
         </div>

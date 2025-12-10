@@ -1,10 +1,10 @@
 import {createSlice,createAsyncThunk} from "@reduxjs/toolkit";
-import { getExpertService } from "../../services/expertService";
+import { getExpertService, getPublicExperts } from "../../services/expertService";
 
 export const fetchExperts = createAsyncThunk(
     "experts/fetchExperts",
     async ({ page = 1, limit = 10 } = {}) =>{
-        const data = await getExpertService(page, limit);
+        const data = await getPublicExperts(page, limit);
         console.log("experts thunk payload", data);
         return data;
     }

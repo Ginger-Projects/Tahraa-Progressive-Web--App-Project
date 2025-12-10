@@ -1,18 +1,24 @@
 import React from "react";
 import Package1 from "../../assets/images/package1.png";
+import { Package } from "lucide-react";
 const PackageCard = ({ data, view }) => {
   console.log("data",data);
     
   return (
     
     <article className={`expert-cardss ${view === "list" ? "list-view" : ""}`}>
-      <img src={data.listingPageImage} className="expert-img" alt={data.name} />
+      <img
+        src={data.listingPageImage || Package1}
+        className="expert-img"
+        alt={data.name}
+        style={{ borderRadius: "22px" }}
+      />
 
       <div className="expert-content">
         <h4 className="expert-name">{data.name}</h4>
 
         <p className="expert-role">
-          {data.expert.name} • <span>{data.category}</span>
+          {data.expert.name} • <span>{data?.category.name}</span>
         </p>
 
         <div className="d-flex align-items-center justify-content-between expert-price">

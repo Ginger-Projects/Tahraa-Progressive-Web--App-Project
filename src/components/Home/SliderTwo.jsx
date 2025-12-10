@@ -15,18 +15,21 @@ import Prev from "../../assets/images/prev.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchExperts } from "../../features/slice/expertSlice";
 
 export const SliderTwo = () => {
   const dispatch = useDispatch()
   const {experts} = useSelector((state) => state.experts);
+  console.log("experts",experts);
+  
   const swiperRef = useRef(null);
   const [page, setPage] = useState(1);
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(true);
   const [hasMore, setHasMore] = useState(true);
+  const navigate = useNavigate();
   const [limit] = useState(() => {
     if (typeof window === "undefined") return 3;
     const width = window.innerWidth;
@@ -171,27 +174,43 @@ export const SliderTwo = () => {
               return(
             <SwiperSlide>
               <div className='expert-card'>
-                <img src={expert.profileImage} className='expert-img' alt='expert' />
+                <img src={expert.profileImage||Expert2} className='expert-img' alt='expert' />
                 <div className='expert-content'>
                   <h4 className='expert-name'>
-                    Tony Stark <img src={Verified} className='img-fluid' alt='' />
+                    {expert?.name} <img src={Verified} className='img-fluid' alt='' />
                   </h4>
                   <p className='expert-role'>
-                    Vocal Trainer | <span>10 Years of experience</span>
+                    {expert?.experienceAndQualifications?.teachingCategory?.name} | {expert?.experienceAndQualifications?.yearsOfExperience ?(<span>{expert?.experienceAndQualifications?.yearsOfExperience} Years of experience</span>):(<span>Not specified</span>)}
                   </p>
-                  <p className='speak'>
+                  {languages ?(<p className='speak'>
+                    
                     <img src={Speak} alt='' />
-                    <span>Speaks :</span>English , Arabic +2
+                    <span>Speaks :</span>{languages}
+                  </p>):(
+                    <><p className='speak'>
+                    
+                    <img src={Speak} alt='' />
+                    <span>Speaks :</span>Not specified
                   </p>
-                  <div className='d-flex align-items-center justify-content-between expert-price'>
+                    </>)}
+                  
+                  {feeRange ?(<div className='d-flex align-items-center justify-content-between expert-price'>
                     <p>
-                      <span>Free range: </span>QAR 250/hr
+                      <span>Free range: </span>QAR {feeRange}/session
                     </p>
-                    <span>140 Active Students</span>
+                    <span>{expert?.traineeCount || 0} Active Students</span>
+                  </div>):(
+                    <div className='d-flex align-items-center justify-content-between expert-price'>
+                    <p>
+                      <span>Free range: </span>QAR {feeRange}/session
+                    </p>
+                    <span>{expert?.traineeCount || 0 } Active Student</span>
                   </div>
+                  )}
+                  
                   <div className='btn-box d-flex gap-3 mt-3'>
                     {/* Primary Button */}
-                    <button className='BTNslider2'>
+                    <button onClick={()=>navigate(`/expert-profile?expertId=${expert?._id}`)} className='BTNslider2'>
                       <div className='rectangle-2' />
 
                       <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />

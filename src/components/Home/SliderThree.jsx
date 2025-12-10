@@ -198,10 +198,12 @@ export const SliderThree = () => {
                         <img className="img-fluid" src={File} alt="" />{" "}
                         {pkg.noOfSessions} Sessions
                       </p>
-
-                      <span>
-                        Total: QAR {pkg.packageTotalPrice}
+                      {pkg.price &&(
+<span>
+                        Total: QAR {pkg.price}/session
                       </span>
+                      )}
+                      
                     </div>
 
                     {/* BUTTON */}

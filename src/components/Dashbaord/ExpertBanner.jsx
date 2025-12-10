@@ -74,7 +74,7 @@ const ExpertsBanner = ({ activeTab, setActiveTab, onSearch, isSearching }) => {
         </div>
 
         {/* Filter Row (4 fields, as in Figma) */}
-        <div className='exp-filter-row'>
+        {/* <div className='exp-filter-row'>
           <FilterSelect
             label='Fee Range'
             value={selectedFee}
@@ -99,7 +99,7 @@ const ExpertsBanner = ({ activeTab, setActiveTab, onSearch, isSearching }) => {
             options={["Languages spoken", "Price Low–High", "Most Rated"]}
             onSelect={setSelectedSort}
           />
-        </div>
+        </div> */}
       </div>
     </section>
   );

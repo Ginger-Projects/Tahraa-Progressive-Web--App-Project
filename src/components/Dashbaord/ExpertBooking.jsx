@@ -9,6 +9,7 @@ import courseImg3 from "../../../.figma-assets/8b3b31282497da4d053b4ebe389aa6f11
 import courseImg4 from "../../../.figma-assets/e7d3ea202e9dc8fead3d08e953408484251ce14c.png";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getPackageById, bookPackage } from "../../services/trainee/trainee";
+import { getExpertPackages } from "../../services/expertService";
 import { DELIVERY } from "../../utils/package.core";
 import { convertTimeTo12H } from "../../utils/helper";
 import { DateTime } from "luxon";
@@ -16,6 +17,9 @@ import { toast } from "react-toastify";
 
 const ExpertBooking = ({ setLoading = () => {} }) => {
   const [packageData, setPackageData] = useState(null);
+  const [expertPackages, setExpertPackages] = useState([]);
+  const [totalPackagesCount, setTotalPackagesCount] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const today = new Date();
   const navigate = useNavigate()
   const [currentMonthDate, setCurrentMonthDate] = useState(
@@ -26,27 +30,43 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [searchParams] = useSearchParams();
   const id = searchParams.get("packageId");
-  console.log("us",id);
-  
-  useEffect(()=>{
-   fetchPackageById()
-  },[])
 
-  const fetchPackageById = async() =>{
-   try {
-    setLoading(true);
-    const response = await getPackageById(id)
-    console.log("response",response.data.package);
-    setPackageData(response.data.package)
-    setTimeout(() => {
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 768);
+      }
+    };
+
+    handleResize();
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", handleResize);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchPackageById();
+  }, []);
+
+  const fetchPackageById = async () => {
+    try {
+      setLoading(true);
+      const response = await getPackageById(id);
+      console.log("response", response.data.package);
+      setPackageData(response.data.package);
+    } catch (error) {
+      console.error("Failed to load package", error);
+    } finally {
       setLoading(false);
-    }, 5000);
-   } catch (error) {
-    console.error("Failed to load package", error);
-   } finally {
-    setLoading(false);
-   }
-  }
+    }
+  };
+
   // Calendar header should start from Sunday
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -124,6 +144,36 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
     return normalizeDate(dateObj) < todayOnlyDate;
   };
 
+  // Expert id from the loaded package
+  const expertId = packageData?.expert?._id;
+
+  // Fetch packages for this expert for the "Explore More Packages" slider
+  useEffect(() => {
+    if (!expertId) return;
+
+    const fetchExpertPackagesForBooking = async () => {
+      try {
+        const limit = isMobile ? 1 : 4;
+        const res = await getExpertPackages(expertId, 1, limit);
+
+        const payload = res?.data || res;
+        const pkgs = Array.isArray(payload?.packages) ? payload.packages : [];
+
+        const totalCount =
+          typeof payload?.totalPackagesCount === "number"
+            ? payload.totalPackagesCount
+            : pkgs.length;
+
+        setExpertPackages(pkgs);
+        setTotalPackagesCount(totalCount);
+      } catch (err) {
+        console.error("Failed to load expert packages for booking", err);
+      }
+    };
+
+    fetchExpertPackagesForBooking();
+  }, [expertId, isMobile]);
+
   const handlePrevMonth = () => {
     setCurrentMonthDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
   };
@@ -134,13 +184,53 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
 
   const packagesSliderRef = useRef(null);
 
+  // Map API packages into the view model used by the Explore More slider
+  const mappedPackages = expertPackages.map((pkg) => {
+    const imageSrc =
+      pkg.listingPageImage ||
+      pkg.detailPageImage ||
+      (Array.isArray(pkg.images) && pkg.images.length > 0
+        ? pkg.images[0]
+        : courseImg1);
+
+    const sessions = typeof pkg.noOfSessions === "number" ? pkg.noOfSessions : null;
+    const modulesLabel =
+      sessions != null
+        ? `${sessions} Session${sessions > 1 ? "s" : ""}`
+        : "";
+
+    const priceLabel =
+      typeof pkg.packageTotalPrice === "number"
+        ? `Total : ${pkg.packageTotalPrice} QAR / session`
+        : "";
+
+    return {
+      id: pkg._id || pkg.name,
+      title: pkg.name,
+      instructor: pkg.expert?.name || packageData?.expert?.name,
+      category: pkg.category?.name,
+      modules: modulesLabel,
+      duration: priceLabel,
+      image: imageSrc,
+    };
+  });
+
+  const morePackages = mappedPackages;
+
+  const visiblePackageSlots = isMobile ? 1 : 4;
+  const effectiveTotalPackages =
+    totalPackagesCount > 0 ? totalPackagesCount : morePackages.length;
+  const canSlidePackages = effectiveTotalPackages > visiblePackageSlots;
+
   const handlePackagesSlideLeft = () => {
+    if (!canSlidePackages) return;
     if (packagesSliderRef.current) {
       packagesSliderRef.current.scrollBy({ left: -300, behavior: "smooth" });
     }
   };
 
   const handlePackagesSlideRight = () => {
+    if (!canSlidePackages) return;
     if (packagesSliderRef.current) {
       packagesSliderRef.current.scrollBy({ left: 300, behavior: "smooth" });
     }
@@ -163,44 +253,8 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
     },
   ];
 
-  const packages = [
-    {
-      id: 1,
-      title: "Introduction to Basic Vocal Training",
-      image: courseImg1,
-      modules: "12 Session",
-      duration: "50 Min / Session",
-      instructor: "Natasha Romanoff",
-      category: "Vocal Training",
-    },
-    {
-      id: 2,
-      title: "Introduction to Basic Vocal Training",
-      image: courseImg2,
-      modules: "12 Session",
-      duration: "50 Min / Session",
-      instructor: "Natasha Romanoff",
-      category: "Vocal Training",
-    },
-    {
-      id: 3,
-      title: "Introduction to Basic Vocal Training",
-      image: courseImg3,
-      modules: "12 Session",
-      duration: "50 Min / Session",
-      instructor: "Natasha Romanoff",
-      category: "Vocal Training",
-    },
-    {
-      id: 4,
-      title: "Introduction to Basic Vocal Training",
-      image: courseImg4,
-      modules: "12 Session",
-      duration: "50 Min / Session",
-      instructor: "Natasha Romanoff",
-      category: "Vocal Training",
-    },
-  ];
+  // Expert name for the Explore More header
+  const expertName = packageData?.expert?.name;
 
   const handleBookNow = () => {
     if (!packageData || !bookingEndDate || !packageData.end) {
@@ -908,9 +962,16 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
             {/* Explore More Packages */}
             <div className='eb-more-packages'>
               <div className='eb-packages-header'>
-                <h3>Explore More Packages by Natasha Romanoff</h3>
+                <h3>
+                  Explore More Packages{expertName ? ` by ${expertName}` : ""}
+                </h3>
                 <div className='eb-packages-nav'>
-                  <button className='eb-nav-btn' onClick={handlePackagesSlideLeft} title='Previous'>
+                  <button
+                    className='eb-nav-btn'
+                    onClick={handlePackagesSlideLeft}
+                    title='Previous'
+                    disabled={!canSlidePackages}
+                  >
                     <svg width='16' height='16' viewBox='0 0 16 16' fill='none'>
                       <path
                         d='M10 12L6 8L10 4'
@@ -921,7 +982,12 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                       />
                     </svg>
                   </button>
-                  <button className='eb-nav-btn' onClick={handlePackagesSlideRight} title='Next'>
+                  <button
+                    className='eb-nav-btn'
+                    onClick={handlePackagesSlideRight}
+                    title='Next'
+                    disabled={!canSlidePackages}
+                  >
                     <svg width='16' height='16' viewBox='0 0 16 16' fill='none'>
                       <path
                         d='M6 4L10 8L6 12'
@@ -937,7 +1003,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
 
               <div className='eb-packages-slider-wrapper'>
                 <div className='eb-packages-slider' ref={packagesSliderRef}>
-                  {packages.map((pkg) => (
+                  {morePackages.map((pkg) => (
                     <div key={pkg.id} className='eb-package-card'>
                       <div className='eb-package-image'>
                         <img src={pkg.image} alt={pkg.title} />

@@ -12,6 +12,20 @@ export const getExpertService = async (page = 1, limit = 10, searchName = "") =>
   }
 };
 
+export const getPublicExperts = async (page = 1, limit = 10, searchName = "") => {
+  try {
+    const response = await api.get(
+      `/api/trainee/public/experts?page=${page}&limit=${limit}`
+    );
+    console.log("experts response", response.data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
 export const getPackages = async (page = 1, limit = 10, searchName = "") => {
   try {
     const response = await api.get(
@@ -24,10 +38,44 @@ export const getPackages = async (page = 1, limit = 10, searchName = "") => {
   }
 };
 
+export const getPublicPackages = async (page = 1, limit = 10, searchName = "") => {
+  try {
+    const response = await api.get(
+      `/api/trainee/public/packages?${page}&limit=${limit}&searchName=${searchName || ""}`
+    );
+    console.log("packages response", response.data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getCategories = async () => {
   try {
     const response = await api.get("/api/common/get-all-categories");
 
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getExpertDetails = async (expertId) => {
+  try {
+    const response = await api.get("/api/trainee/public/expert-in-detail", {
+      params: { expertId },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getExpertPackages = async (expertId, page = 1, limit = 10) => {
+  try {
+    const response = await api.get("/api/trainee/public/packages", {
+      params: { page, limit, expertId },
+    });
     return response.data;
   } catch (error) {
     throw error;
