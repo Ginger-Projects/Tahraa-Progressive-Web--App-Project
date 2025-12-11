@@ -52,7 +52,7 @@ export const Slider = () => {
                 spaceBetween: 24,
               },
               1200: {
-                slidesPerView: 4,
+                slidesPerView: 3,
                 spaceBetween: 40,
               },
             }}
@@ -72,6 +72,7 @@ export const Slider = () => {
                 <p className='category-label mt-3'>Art</p>
               </div>
             </SwiperSlide>
+            
 
             <SwiperSlide>
               <div className='category-item'>
@@ -79,26 +80,27 @@ export const Slider = () => {
                 <p className='category-label mt-3'>Gym</p>
               </div>
             </SwiperSlide>
-
+            
             <SwiperSlide>
               <div className='category-item'>
                 <img className='category-img' src={Yoga} alt='Yoga' />
                 <p className='category-label mt-3'>Yoga</p>
               </div>
             </SwiperSlide>
+            
 
-                        <SwiperSlide>
-              <div className='category-item'>
-                <img className='category-img' src={Music} alt='Music' />
-                <p className='category-label mt-3'>Music</p>
-              </div>
-            </SwiperSlide>
+            
+
+                        
 
           </Swiper>
 
           {/* Navigation Arrows — YOUR original styles */}
           <button className='arrow-btn right-arrow'><img src={Next} alt="" /></button>
-          <button className='arrow-btn left-arrow'><img src={Prev} alt="" /></button>
+          <button className='arrow-btn left-arrow'><svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" fill="none">
+  <circle cx="36" cy="36" r="36" fill="white"/>
+  <path d="M40.5 27.5L31.5 36.5L40.5 45.5" stroke="#775DA6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></button>
         </div>
       </div>
     </section>

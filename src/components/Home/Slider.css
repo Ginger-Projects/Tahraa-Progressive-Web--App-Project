@@ -50,8 +50,8 @@
 
 /* Arrows */
 .arrow-btn {
-  width: 55px;
-  height: 55px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   border: none;
   background: #fff;
@@ -66,15 +66,15 @@
 
 .left-arrow {
   position: absolute;
-  left: 1%;
-  top: 50%;
+  left: 2%;
+  top: 46%;
   transform: translateY(-50%);
 }
 
 .right-arrow {
   position: absolute;
-  right: 1%;
-  top: 48%;
+  right: 2%;
+  top: 46%;
   transform: translateY(-50%);
 }
 .wrap-div {

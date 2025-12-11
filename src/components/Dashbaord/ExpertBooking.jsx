@@ -3,7 +3,7 @@ import "./ExpertBooking.css";
 import BookingConfirmationModal from "../BookingConfirmationModal";
 import ebCheckoutIcon from "../../assets/images/checkoutIcon.png";
 import natsha from "../../assets/images/natsha.png";
-import courseImg1 from "../../../.figma-assets/b1e25334add46d15c806cbbc2178bd036ef384cb.png";
+import courseImg1 from "../../assets/images/forPackages.jpg";
 import courseImg2 from "../../../.figma-assets/2e27c8ec9b2e62d7e02b7a898460b9c85b07a4af.png";
 import courseImg3 from "../../../.figma-assets/8b3b31282497da4d053b4ebe389aa6f116046f55.png";
 import courseImg4 from "../../../.figma-assets/e7d3ea202e9dc8fead3d08e953408484251ce14c.png";

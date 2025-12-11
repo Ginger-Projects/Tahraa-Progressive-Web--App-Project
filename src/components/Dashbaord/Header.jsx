@@ -4,10 +4,21 @@ import "../trainee/header.css";
 import kate from '../../assets/images/kate.png'
 import Logo from '../../assets/images/logo.png'
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import ProfilePopup from "../trainee/ProfilePopup";
 const Header = () => {
   const location = useLocation();
   const { pathname } = location;
+
+  const { user } = useSelector((state) => state.trainee);
+
+  const displayName =
+    user?.name || user?.fullName || user?.username || user?.email || "User";
+
+  const displayEmail = user?.email || user?.username || "";
+
+  const profileImage =
+    user?.profileImage || user?.imageUrl || user?.photo || kate;
 
   const navLinkClass = (path) => {
     const isHowItWorks = path === "/how-it-works-learners";
@@ -49,14 +60,14 @@ const Header = () => {
       <div className={`exp-header-right ${mobileMenuOpen ? 'active' : ''}`}>
         <div className="exp-user-info">
           <div className="exp-user-text">
-            <span className="exp-user-name">Kate Bishop</span>
-            <span className="exp-user-email">katebishop@gmail.com</span>
+            <span className="exp-user-name">{displayName}</span>
+            <span className="exp-user-email">{displayEmail}</span>
           </div>
           <div
             className="exp-avatar"
             onClick={() => setIsProfileOpen(true)}
           >
-            <img src={kate} alt="Kate Bishop" />
+            <img src={profileImage} alt={displayName} />
           </div>
         </div>
       </div>

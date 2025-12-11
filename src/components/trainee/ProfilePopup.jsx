@@ -2,13 +2,22 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import ProfileEllipse from '../../assets/images/Ellipse 3077.png'
 import "./header.css"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { logoutTrainee } from "../../features/slice/trainer/traineeSlice"
 
 export default function ProfilePopup({ open, onClose }) {
   const [confirmLogout, setConfirmLogout] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { user } = useSelector((state) => state.trainee)
+
+  const displayName =
+    user?.name || user?.fullName || user?.username || user?.email || "User"
+
+  const displayEmail = user?.email || user?.username || ""
+
+  const profileImage =
+    user?.profileImage || user?.imageUrl || user?.photo || ProfileEllipse
   if (!open) return null
 
   const handleOverlayClick = (e) => {
@@ -35,10 +44,10 @@ export default function ProfilePopup({ open, onClose }) {
         
 
         <div className="profile-popup-header" onClick={handleProfileClick}>
-          <img src={ProfileEllipse} alt="Profile" className="profile-popup-avatar" />
+          <img src={profileImage} alt={displayName} className="profile-popup-avatar" />
           <div className="profile-popup-text">
-            <h3>Kate Bishop</h3>
-            <p>katebishop@gmail.com</p>
+            <h3>{displayName}</h3>
+            <p>{displayEmail}</p>
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 import "./header.css";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { HiOutlineChat, HiOutlineBell } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
@@ -13,6 +14,21 @@ export default function TraineeHeader({ title = "Dashboard" }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const navigate = useNavigate()
+  const { user } = useSelector((state) => state.trainee);
+
+  const displayName =
+    user?.name || user?.fullName || user?.username || user?.email || "User";
+
+  const initials = displayName
+    .trim()
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const profileImage =
+    user?.profileImage || user?.imageUrl || user?.photo || Profile;
   return (
     <header className="header">
       <div className="header-container">
@@ -70,7 +86,7 @@ export default function TraineeHeader({ title = "Dashboard" }) {
   </defs>
 </svg>
     {/* <HiOutlineChat className="icon" /> */}
-    <span className="notification-badge">6</span>
+    {/* <span className="notification-badge">6</span> */}
     </span>
   </button>
 
@@ -179,23 +195,24 @@ export default function TraineeHeader({ title = "Dashboard" }) {
   </defs>
 </svg>
     {/* <HiOutlineBell className="icon" /> */}
-    <span className="notification-badge">6</span>
+    {/* <span className="notification-badge">6</span> */}
     </span>
   </button>
 
   <div className="separator"></div>
 
-  <button
-    className="circle-btn profile-btn"
-    style={{ background: "none" }}
+  <div
+    className="user-chip"
     onClick={() => setIsProfileOpen(true)}
   >
     <img
-      src={Profile}
-      alt="Profile"
-      className="profile-icon"
+      src={profileImage}
+      alt={displayName}
+      className="user-chip-avatar"
     />
-  </button>
+  </div>
+
+
 </div>
 
 <ProfilePopup open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
