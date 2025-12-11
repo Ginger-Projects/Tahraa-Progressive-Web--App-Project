@@ -18,6 +18,8 @@ import "swiper/css/navigation";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchExperts } from "../../features/slice/expertSlice";
+import { createExpertConversation } from "../../services/expertService";
+import { toast } from "react-toastify";
 
 export const SliderTwo = () => {
   const dispatch = useDispatch()
@@ -29,6 +31,7 @@ export const SliderTwo = () => {
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(true);
   const [hasMore, setHasMore] = useState(true);
+  const [enquiringExpertId, setEnquiringExpertId] = useState(null);
   const navigate = useNavigate();
   const [limit] = useState(() => {
     if (typeof window === "undefined") return 3;
@@ -109,6 +112,25 @@ export const SliderTwo = () => {
       swiper.slideNext();
     }
     updateNavState(swiper, moreFlag);
+  };
+
+  const handleEnquire = async (expertId) => {
+    if (!expertId) return;
+    try {
+      setEnquiringExpertId(expertId);
+      const res = await createExpertConversation(expertId);
+      navigate(`/chat/${res?.data?.conversation?._id}`);
+      toast.success(res?.message || "Enquiry sent successfully");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        (error?.message === "Network Error"
+          ? "Network error while sending enquiry"
+          : "Failed to send enquiry");
+      toast.error(message);
+    } finally {
+      setEnquiringExpertId(null);
+    }
   };
   return (
     <section className='experts-section container-fluid py-5'>
@@ -222,14 +244,20 @@ export const SliderTwo = () => {
                     
 
                     {/* Green Button */}
-                    <button className='BTN-2slider'>
+                    <button
+                      className='BTN-2slider'
+                      onClick={() => handleEnquire(expert?._id)}
+                      disabled={enquiringExpertId === expert?._id}
+                    >
                       <div className='rectangle-2' />
 
                       <img className='vector-2' alt='Vector' src='https://c.animaapp.com/RRnEyncc/img/vector-1-1.svg' />
 
                       <img className='line' alt='Line' src='https://c.animaapp.com/RRnEyncc/img/line-1.svg' />
 
-                      <div className='label'>Enquire</div>
+                      <div className='label'>
+                        {enquiringExpertId === expert?._id ? "Enquiring..." : "Enquire"}
+                      </div>
                     </button>
                   </div>
                 </div>

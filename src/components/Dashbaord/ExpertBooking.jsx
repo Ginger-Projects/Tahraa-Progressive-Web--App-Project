@@ -9,7 +9,7 @@ import courseImg3 from "../../../.figma-assets/8b3b31282497da4d053b4ebe389aa6f11
 import courseImg4 from "../../../.figma-assets/e7d3ea202e9dc8fead3d08e953408484251ce14c.png";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { getPackageById, bookPackage } from "../../services/trainee/trainee";
-import { getExpertPackages } from "../../services/expertService";
+import { getExpertPackages, createExpertConversation } from "../../services/expertService";
 import { DELIVERY } from "../../utils/package.core";
 import { convertTimeTo12H } from "../../utils/helper";
 import { DateTime } from "luxon";
@@ -29,6 +29,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
   const [selectedDate, setSelectedDate] = useState(today);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [enquiring, setEnquiring] = useState(false);
   const [searchParams] = useSearchParams();
   const id = searchParams.get("packageId");
   const invite = searchParams.get("invite");
@@ -161,6 +162,25 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
 
   // Expert id from the loaded package
   const expertId = packageData?.expert?._id;
+
+  const handleEnquireExpert = async () => {
+    if (!expertId) return;
+    try {
+      setEnquiring(true);
+      const res = await createExpertConversation(expertId);
+      navigate(`/chat/${res?.data.conversation._id}`)
+      toast.success(res?.message || "Enquiry sent successfully");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        (error?.message === "Network Error"
+          ? "Network error while sending enquiry"
+          : "Failed to send enquiry");
+      toast.error(message);
+    } finally {
+      setEnquiring(false);
+    }
+  };
 
   // Fetch packages for this expert for the "Explore More Packages" slider
   useEffect(() => {
@@ -565,7 +585,8 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
               <button
                 className='eb-card-enquire-btn'
                 type='button'
-                onClick={()=>navigate('/expert-profile')}
+                onClick={handleEnquireExpert}
+                disabled={enquiring}
               >
                 <span className='eb-card-btn-left'>
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
@@ -600,7 +621,9 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                     </defs>
                   </svg>
                 </span>
-                <span className='eb-card-btn-label'>Enquire</span>
+                <span className='eb-card-btn-label'>
+                  {enquiring ? "Enquiring..." : "Enquire"}
+                </span>
               </button>
             </div>
 
@@ -1019,6 +1042,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
               <div className='eb-packages-slider-wrapper'>
                 <div className='eb-packages-slider' ref={packagesSliderRef}>
                   {morePackages.map((pkg) => (
+                    
                     <div key={pkg.id} className='eb-package-card'>
                       <div className='eb-package-image'>
                         <img src={pkg.image} alt={pkg.title} />
@@ -1065,7 +1089,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                           </span>
                         </div>
                         <div className='eb-package-cta'>
-                          <button className='eb-package-cta-btn' type='button'>
+                          <button onClick={() => navigate(`/expert-booking?packageId=${pkg.id}`)} className='eb-package-cta-btn' type='button'>
                             <span className='eb-package-btn-left'>
                               <svg xmlns='http://www.w3.org/2000/svg' width='5' height='17' viewBox='0 0 5 17' fill='none'>
                                 <g filter='url(#filter0_f_183_5675)'>

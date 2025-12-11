@@ -144,6 +144,7 @@ function App() {
 
         {/* Chat */}
         <Route path="/chat" element={<Chat />} />
+        <Route path="/chat/:conversationId" element={<Chat />} />
         {/* Registration */}
         <Route path="/registration" element={<RegistrationBasicsMain />} />
         <Route path="/registraion-education" element={<RegistrationEducationMain />} />

@@ -6,6 +6,7 @@ import ChatHeader from "./ChatHeader";
 import ReportIssueModal from "./ReportIssueModal";
 import "./Chat.css";
 import api from "../../../api/axios";
+import { useParams } from "react-router-dom";
 
 // Seed messages per chat so each person has their own conversation
 const initialMessagesByChat = {};
@@ -19,6 +20,7 @@ export default function ChatLayout() {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [traineeInfo, setTraineeInfo] = useState(null);
+  const { conversationId: routeConversationId } = useParams();
 
   useEffect(() => {
     const handleResize = () => {
@@ -43,7 +45,8 @@ export default function ChatLayout() {
       try {
         const res = await api.get("/api/trainee/chat/get-conversations");
         const convs = res?.data?.data?.conversations || [];
-        
+        console.log("conv", convs);
+
         const mapped = convs.map((conv) => {
           const expert = conv?.participants?.expert || {};
 
@@ -81,6 +84,69 @@ export default function ChatLayout() {
 
     fetchConversations();
   }, []);
+
+  // When opened via /chat/:conversationId, auto-load that conversation's messages
+  useEffect(() => {
+    if (!routeConversationId) return;
+    if (!Array.isArray(conversations) || conversations.length === 0) return;
+
+    const conversationId = routeConversationId;
+    const chat =
+      conversations.find((c) => c.id === conversationId) || null;
+
+    const loadFromRoute = async () => {
+      try {
+        const msgsRes = await api.get(
+          `/api/trainee/chat/get-messages?conversationId=${conversationId}`
+        );
+        const rawMessages = msgsRes?.data?.data?.messages || [];
+
+        rawMessages.sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        );
+
+        const mappedMessages = rawMessages.map((m) => {
+          const isExpert = m?.sender?.userType === "expert";
+          const author = isExpert ? "expert" : "trainee";
+          const name = isExpert
+            ? chat?.name || "Expert"
+            : traineeInfo?.name || "You";
+          const time = m.createdAt
+            ? new Date(m.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "";
+
+          return {
+            id: m._id,
+            author,
+            name,
+            time,
+            createdAt: m.createdAt || null,
+            lines: [m.text || ""],
+          };
+        });
+
+        setMessagesByChat((prev) => ({
+          ...prev,
+          [conversationId]: mappedMessages,
+        }));
+
+        setSelectedChatId(conversationId);
+        if (isMobile) {
+          setShowListOnMobile(false);
+        }
+      } catch (error) {
+        console.error(
+          "Failed to load messages for conversation from route param",
+          error
+        );
+      }
+    };
+
+    loadFromRoute();
+  }, [routeConversationId, conversations, traineeInfo, isMobile]);
 
   const handleSend = async (text) => {
     const trimmed = text.trim();

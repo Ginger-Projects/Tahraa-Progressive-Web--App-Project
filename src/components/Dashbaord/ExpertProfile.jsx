@@ -5,9 +5,10 @@ import LineSrc from "../../assets/images/bigline.png";
 // dummy imports – replace with your real images
 import pkg1 from "../../assets/images/package4.png";
 import Button from "../../components/Button";
-import { Link, useSearchParams } from "react-router-dom";
-import { getExpertDetails, getExpertPackages, getExpertFeedbacks } from "../../services/expertService";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { getExpertDetails, getExpertPackages, getExpertFeedbacks, createExpertConversation } from "../../services/expertService";
 import { User } from "lucide-react";
+import { toast } from "react-toastify";
 
 const ExpertProfile = () => {
   const [isSaved, setIsSaved] = useState(false);
@@ -20,13 +21,13 @@ const ExpertProfile = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [ratingStats, setRatingStats] = useState(null);
   const [reviewPage, setReviewPage] = useState(1);
+  const [enquiring, setEnquiring] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [searchParams] = useSearchParams();
   const packageSliderRef = useRef(null);
   const prevWorksSliderRef = useRef(null);
   const suggestSliderRef = useRef(null);
-
- 
+  const navigate = useNavigate();
 
   const languages = Array.isArray(expert?.languages) ? expert.languages : [];
 
@@ -319,6 +320,26 @@ const ExpertProfile = () => {
     setReviewPage((prev) => (prev < totalReviewPages ? prev + 1 : prev));
   };
 
+  const handleEnquireExpert = async () => {
+    const id = expert?._id || expertId;
+    if (!id || enquiring) return;
+    try {
+      setEnquiring(true);
+      const res = await createExpertConversation(id);
+      navigate(`/chat/${res?.data?.conversation?._id}`);
+      toast.success(res?.message || "Enquiry sent successfully");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        (error?.message === "Network Error"
+          ? "Network error while sending enquiry"
+          : "Failed to send enquiry");
+      toast.error(message);
+    } finally {
+      setEnquiring(false);
+    }
+  };
+
   const handleSaveExpert = () => {
     const next = !isSaved;
     setIsSaved(next);
@@ -569,8 +590,12 @@ const ExpertProfile = () => {
               )}
 
               <div className='ep-hero-btn-row'>
-                <Link to='/expert-booking'><Button to='/expert-book' label='Book Now' bg='#775DA6' /></Link>
-                <Button label='Enquire' bg='#02B346' />
+                {/* <Link to='/expert-booking'><Button to='/expert-book' label='Book Now' bg='#775DA6' /></Link> */}
+                <Button
+                  label={enquiring ? "Enquiring..." : "Enquire"}
+                  bg='#02B346'
+                  onClick={handleEnquireExpert}
+                />
                 <button
                   type='button'
                   className={"BTNmains" + (isSaved ? " saved" : "")}

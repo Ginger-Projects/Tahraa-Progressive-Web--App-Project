@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../Button";
 import Veryfied from "../../assets/images/verified.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createExpertConversation } from "../../services/expertService";
+import { toast } from "react-toastify";
 
 const ExpertCard = ({ data, view }) => {
+  const [enquiring, setEnquiring] = useState(false);
+  const navigate = useNavigate();
+
   const category = data.experienceAndQualifications?.teachingCategory?.name || "Not specified";
   const experience = data.experienceAndQualifications?.yearsOfExperience
     ? `${data.experienceAndQualifications.yearsOfExperience} Years Experience`
@@ -15,8 +20,29 @@ const ExpertCard = ({ data, view }) => {
     data.languages?.length > 0 ? data.languages.join(", ") : "Not specified";
 
   const traineeCount = data.traineeCount || 0;
-  console.log("data",data);
-  
+  console.log("data", data);
+
+  const handleEnquire = async () => {
+    const expertId = data?._id;
+    if (!expertId || enquiring) return;
+
+    try {
+      setEnquiring(true);
+      const res = await createExpertConversation(expertId);
+      navigate(`/chat/${res?.data?.conversation?._id}`);
+      toast.success(res?.message || "Enquiry sent successfully");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        (error?.message === "Network Error"
+          ? "Network error while sending enquiry"
+          : "Failed to send enquiry");
+      toast.error(message);
+    } finally {
+      setEnquiring(false);
+    }
+  };
+
   return (
     <article className={`exp-card expert-card ${view === "list" ? "list-view" : ""}`}>
       <div className="exp-card-img-wrap">
@@ -60,12 +86,20 @@ const ExpertCard = ({ data, view }) => {
         </div>
 
         <div className="exp-card-footer">
-          <Link to={`/expert-booking/${data._id}`} className="w-100">
+          <Link to={`/expert-profile?expertId=${data._id}`} className="w-100">
             <Button label="View Packages" bg="#775DA6" />
           </Link>
-          <Link to={`/expert-profile?expertId=${data._id}`} className="w-100">
-            <Button label="Enquire" bg="#02B346" />
-          </Link>
+          <button
+            type="button"
+            className="w-100 border-0 bg-transparent p-0"
+            onClick={handleEnquire}
+            disabled={enquiring}
+          >
+            <Button
+              label={enquiring ? "Enquiring..." : "Enquire"}
+              bg="#02B346"
+            />
+          </button>
         </div>
       </div>
     </article>
