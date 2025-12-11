@@ -3,13 +3,14 @@ import "./SliderTwo.css";
 
 // Import your images here (replace placeholders)
 import Expert1 from "../../assets/images/expert1.png";
-import Expert2 from "../../assets/images/expert2.png";
+import Expert2 from "../../assets/images/whitebg.jpg";
 import Expert3 from "../../assets/images/expert3.png";
 import Expert4 from "../../assets/images/expert4.png";
 import Verified from "../../assets/images/verified.png";
 import Speak from "../../assets/images/speak.png";
 import Next from "../../assets/images/next.png";
 import Prev from "../../assets/images/prev.png";
+
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";

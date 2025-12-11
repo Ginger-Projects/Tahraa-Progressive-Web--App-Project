@@ -30,6 +30,20 @@ export const getTraineeUpcomingSchedules = async ({ fromDate, toDate, page = 1, 
   }
 };
 
+export const getTraineePackageSummary = async ({ startDate, endDate, page = 1, limit = 10 }) => {
+  try {
+    const response = await api.get("/api/trainee/package-summary", {
+      params: {
+        startDate,
+        endDate,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getPackageAndBookingDetailsForSessionSchedule = async (bookingId) => {
   try {
     
@@ -130,6 +144,8 @@ export const schedulePackageSession = async ({ packageId,bookingId, startLocalUT
       startDate:startLocalUTC,
       endDate:endLocalUTC,
     });
+    console.log("responseforschedule",response.data);
+    
     return response.data;
   } catch (error) {
     throw error;

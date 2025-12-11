@@ -250,14 +250,11 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
     };
   });
 
-  // Exclude the currently selected package from the "Explore More" list
-  const currentPackageId = id;
-  const morePackages = currentPackageId
-    ? mappedPackages.filter((pkg) => pkg.id !== currentPackageId)
-    : mappedPackages;
+  const morePackages = mappedPackages;
 
   const visiblePackageSlots = isMobile ? 1 : 4;
-  const effectiveTotalPackages = morePackages.length;
+  const effectiveTotalPackages =
+    totalPackagesCount > 0 ? totalPackagesCount : morePackages.length;
   const canSlidePackages = effectiveTotalPackages > visiblePackageSlots;
 
   const handlePackagesSlideLeft = () => {
@@ -998,9 +995,9 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
               </div>
             </div>
             )}
+          
 
             {/* Explore More Packages */}
-            {morePackages.length > 1 && (
             <div className='eb-more-packages'>
               <div className='eb-packages-header'>
                 <h3>
@@ -1165,7 +1162,6 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                 </div>
               </div>
             </div>
-            )}
           </main>
         </div>
       </div>

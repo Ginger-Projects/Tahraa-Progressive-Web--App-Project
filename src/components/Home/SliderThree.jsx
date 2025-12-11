@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "./SliderThree.css";
 
 // Import your images here (replace placeholders)
-import Package1 from "../../assets/images/package1.png";
+import Package1 from "../../assets/images/forPackages.jpg";
 import Package2 from "../../assets/images/package2.png";
 import Package3 from "../../assets/images/package3.png";
 import Package4 from "../../assets/images/package4.png";

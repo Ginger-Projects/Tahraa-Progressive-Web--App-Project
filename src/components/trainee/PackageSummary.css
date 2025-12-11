@@ -34,6 +34,15 @@ text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
   gap: 8px;
 }
 
+.package-summary-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #EAE9FE;
+  background: #ffffff;
+  font-size: 12px;
+  color: #202020;
+}
+
 .package-summary-button {
   display: flex;
   align-items: center;
@@ -72,6 +81,18 @@ text-transform: capitalize;    /* remove default h2 margin to reduce top gap */
   padding: 0 24px 16px 24px; /* horizontal gap + bottom padding */
   margin-top: 8px;           /* small vertical gap between header and table */
   box-sizing: border-box;
+  min-height: 220px;
+}
+
+.package-summary-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #6B7271;
+  font-family: Poppins, sans-serif;
+  font-size: 14px;
+  min-height: 200px;
 }
 
 /* Table */

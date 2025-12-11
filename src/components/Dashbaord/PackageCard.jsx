@@ -1,5 +1,5 @@
 import React from "react";
-import Package1 from "../../assets/images/package1.png";
+import Package1 from "../../assets/images/forPackages.jpg";
 import { Package } from "lucide-react";
 const PackageCard = ({ data, view }) => {
   console.log("data",data);

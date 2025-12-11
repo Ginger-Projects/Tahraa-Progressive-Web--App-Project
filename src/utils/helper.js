@@ -21,6 +21,8 @@ export function generateLocalSessions(bookingDetails) {
 
   const userZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+  const now = DateTime.local().setZone(userZone);
+
   const start = DateTime.fromISO(startDate).setZone(timeZone);
   const end = DateTime.fromISO(endDate).setZone(timeZone);
 
@@ -47,6 +49,8 @@ export function generateLocalSessions(bookingDetails) {
       const localStart = sessionStart.setZone(userZone);
       const localEnd = sessionEnd.setZone(userZone);
 
+      const isPast = localEnd.toMillis() < now.toMillis();
+
       sessions.push({
         id: localStart.toMillis(), // unique key
         date: localStart.toFormat("dd MMM"), // e.g., "30 Dec"
@@ -55,7 +59,7 @@ export function generateLocalSessions(bookingDetails) {
         dayOfWeek: localStart.toFormat("cccc"), // "Tuesday"
         slotCount: groupSettings.maxParticipants, // or calculate based on your logic
         hasScheduled: false, // update later if needed
-        isInactive: false,
+        isInactive: isPast,
         participants:0,
         startLocalISO: localStart.toISO(),
         endLocalISO: localEnd.toISO(),

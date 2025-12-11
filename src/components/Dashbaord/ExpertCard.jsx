@@ -4,6 +4,7 @@ import Veryfied from "../../assets/images/verified.png";
 import { Link, useNavigate } from "react-router-dom";
 import { createExpertConversation } from "../../services/expertService";
 import { toast } from "react-toastify";
+import Expert2 from "../../assets/images/whitebg.jpg";
 
 const ExpertCard = ({ data, view }) => {
   const [enquiring, setEnquiring] = useState(false);
@@ -46,7 +47,7 @@ const ExpertCard = ({ data, view }) => {
   return (
     <article className={`exp-card expert-card ${view === "list" ? "list-view" : ""}`}>
       <div className="exp-card-img-wrap">
-        <img src={data.profileImage} alt={data.name} />
+        <img src={data.profileImage||Expert2} alt={data.name} />
       </div>
 
       <div className="exp-card-content">

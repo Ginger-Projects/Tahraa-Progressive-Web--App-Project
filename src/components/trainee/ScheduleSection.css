@@ -64,6 +64,18 @@ text-transform: capitalize;
   gap: 12px;            /* reduced gap */
 }
 
+.no-schedules {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #6b7280;
+  font-family: Poppins, sans-serif;
+  font-size: 14px;
+  min-height: 200px;
+}
+
 @media (min-width: 768px) {
   .schedule-grid {
     grid-template-columns: repeat(3, 1fr);

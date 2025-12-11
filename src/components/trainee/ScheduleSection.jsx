@@ -168,8 +168,10 @@ export default function ScheduleSection({ onLoadingChange = () => {} }) {
       <div className="schedule-grid">
         {loading ? (
           <></>
+        ) : sessions.length === 0 ? (
+          <div className="no-schedules">No schedules</div>
         ) : (
-          sessions.map((s, i) => (
+          sessions.slice(0, 3).map((s, i) => (
             <div
               key={i}
               className={`session-card ${s.isPrimary ? "primary" : ""}`}

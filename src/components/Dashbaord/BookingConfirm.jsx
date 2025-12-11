@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { DateTime } from 'luxon';
+
 import './BookingConfirm.css';
 
 import Alert from '../../assets/images/exclamation.png';
@@ -228,9 +231,9 @@ const BookingConfirm = () => {
 
       const generated = generateLocalSessions(res?.data.bookingDetails);
       let sessionsWithParticipants = generated;
-
       const traineeId = res?.data?.bookingDetails?.trainee;
       const packageId = res?.data?.bookingDetails?.packageDetails?._id;
+      
       if (packageId) {
         const packageSessionsRes = await getPackageSessions(
           packageId,
@@ -242,19 +245,33 @@ const BookingConfirm = () => {
         console.log("apiSessions",apiSessions);
         
         sessionsWithParticipants = generated.map((session) => {
+          const sessionStartMillis = session.startLocalUTC
+            ? DateTime.fromISO(session.startLocalUTC).toMillis()
+            : null;
+          const sessionEndMillis = session.endLocalUTC
+            ? DateTime.fromISO(session.endLocalUTC).toMillis()
+            : null;
+
           const matchingSessions = apiSessions.filter((apiSession) => {
-            const apiStart =
+            const apiStartIso =
               apiSession.startLocalUTC ||
               apiSession.startDate ||
               apiSession.startDateUtc;
-            const apiEnd =
+            const apiEndIso =
               apiSession.endLocalUTC ||
               apiSession.endDate ||
               apiSession.endDateUtc;
 
+            if (!apiStartIso || !apiEndIso || !sessionStartMillis || !sessionEndMillis) {
+              return false;
+            }
+
+            const apiStartMillis = DateTime.fromISO(apiStartIso).toMillis();
+            const apiEndMillis = DateTime.fromISO(apiEndIso).toMillis();
+
             return (
-              apiStart === session.startLocalUTC &&
-              apiEnd === session.endLocalUTC
+              apiStartMillis === sessionStartMillis &&
+              apiEndMillis === sessionEndMillis
             );
           });
 
@@ -281,7 +298,8 @@ const BookingConfirm = () => {
         });
       }
 
-      setSessions(sessionsWithParticipants);
+      const futureSessions = sessionsWithParticipants.filter((s) => !s.isInactive);
+      setSessions(futureSessions);
     } catch (error) {
       console.error(
         'Failed to load package and booking details for session schedule',
@@ -319,6 +337,7 @@ const BookingConfirm = () => {
     if (!newSession) return;
 
     try {
+      console.log("sessionId")
       await reschedulePackageSession({
         sessionId: rescheduleSession.id,
         startNewDate: newSession.startLocalUTC,
@@ -328,6 +347,11 @@ const BookingConfirm = () => {
       await fetchDetails();
     } catch (error) {
       console.error('Failed to reschedule session', error);
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        'Failed to reschedule session. Please try again.';
+      toast.error(message);
     } finally {
       setShowRescheduleModal(false);
       setSelectedNewSessionId('');
@@ -353,13 +377,10 @@ const BookingConfirm = () => {
             endLocalUTC: session.endLocalUTC,
           });
 
-          setSessions((prev) =>
-            prev.map((s) =>
-              s.id === session.id
-                ? { ...s, hasScheduled: true, participants: (s.participants || 0) + 1 }
-                : s
-            )
-          );
+          // Refresh from backend so that the newly created session gets
+          // its real backend id stored in state. This ensures that later
+          // cancel/reschedule calls send the correct sessionId.
+          await fetchDetails();
         }
       } else if (activeAction === 'cancel') {
         await cancelScheduledSession({
@@ -371,6 +392,19 @@ const BookingConfirm = () => {
       }
     } catch (error) {
       console.error('Failed to perform action', error);
+      const defaultMessage =
+        activeAction === 'schedule'
+          ? 'Failed to schedule session. Please try again.'
+          : activeAction === 'cancel'
+          ? 'Failed to cancel session. Please try again.'
+          : 'Failed to perform action. Please try again.';
+
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        defaultMessage;
+
+      toast.error(message);
     } finally {
       closeConfirm();
     }
@@ -428,16 +462,16 @@ const BookingConfirm = () => {
         </div>
 
         {/* Info Banner */}
-        <div className="bc-info-banner" style={{ backgroundImage: `url(${bannerBg})` }}>
+        {/* <div className="bc-info-banner" style={{ backgroundImage: `url(${bannerBg})` }}>
          <img src={Alert} alt="" />
           <p className="bc-info-text">
             Sessions are generated based on the package time slots between Nov 01, 2025 to Dec 30, 2025. Found 5 existing session(s)
           </p>
-        </div>
+        </div> */}
 
         {/* Stats Cards (Completed / Remaining / Total Sessions per Figma) */}
-        <div className="bc-stats-container">
-          {/* Completed */}
+        {/* <div className="bc-stats-container">
+          
           <div className="bc-stat-card">
             <div className="bc-stat-bg">
               <GreenBgSVG />
@@ -449,7 +483,7 @@ const BookingConfirm = () => {
             </div>
           </div>
 
-          {/* Remaining */}
+          
           <div className="bc-stat-card">
             <div className="bc-stat-bg">
               <PurpleBgSVG />
@@ -461,7 +495,7 @@ const BookingConfirm = () => {
             </div>
           </div>
 
-          {/* Total Sessions */}
+          
           <div className="bc-stat-card">
             <div className="bc-stat-bg">
               <YellowBgSVG />
@@ -472,7 +506,7 @@ const BookingConfirm = () => {
               <p className="bc-stat-value">5</p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Available Sessions */}
         <h2 className="bc-sessions-title">Available Sessions</h2>
@@ -505,11 +539,7 @@ const BookingConfirm = () => {
                 <div className="bc-time-info">
                   <img src={ActivityIcon1} alt="Activity" className="bc-activity-icon-img" />
                   <p className="bc-time-text">{session.time}</p>
-                  
                 </div>
-                
-                <p className="bc-time-text">{session.startLocalUTC}</p>
-                <p className="bc-time-text">{session.endLocalUTC}</p>
                 <p className="bc-day-text">{session.dayOfWeek}</p>
               </div>
            
@@ -627,7 +657,11 @@ const BookingConfirm = () => {
                         return (
                           <li
                             key={slot.id}
-                            className="bc-dropdown-item"
+                            className={`bc-dropdown-item ${
+                              String(slot.id) === String(selectedNewSessionId)
+                                ? "bc-dropdown-item--selected"
+                                : ""
+                            }`}
                             onClick={() => {
                               setSelectedNewSessionId(String(slot.id));
                               setIsSlotDropdownOpen(false);

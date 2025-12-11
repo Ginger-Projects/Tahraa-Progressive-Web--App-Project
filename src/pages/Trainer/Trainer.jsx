@@ -6,18 +6,31 @@ import Packages from "../../components/trainee/Packages";
 import CourseCard from "../../components/trainee/GroupCourse";
 import PackageSummary from "../../components/trainee/PackageSummary";
 import { Footer } from "../../components/Home/Footer";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Loader from "../../components/Loader/Loader";
 import "./Trainer.css";
 
 const Trainer = () => {
   const [loadingCount, setLoadingCount] = useState(0);
-  const loading = loadingCount > 0;
+  const initialDoneRef = useRef(false);
+  const loading = !initialDoneRef.current && loadingCount > 0;
 
   const handleSectionLoadingChange = (isLoading) => {
+    // Only show the global loader during the initial page load.
+    if (initialDoneRef.current) {
+      return;
+    }
+
     setLoadingCount((prev) => {
       const next = isLoading ? prev + 1 : prev - 1;
-      return next < 0 ? 0 : next;
+      const clamped = next < 0 ? 0 : next;
+
+      // When all initial requests have finished once, disable global loading.
+      if (!isLoading && clamped === 0) {
+        initialDoneRef.current = true;
+      }
+
+      return clamped;
     });
   };
 
