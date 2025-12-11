@@ -14,7 +14,7 @@ export default function WelcomeCard() {
     user?.name || user?.fullName || user?.username || user?.email || "User";
 
   const rawImage =
-    user?.profilePicture || user?.imageUrl || user?.photo || user?.avatar;
+    user?.profileImage || user?.imageUrl || user?.photo || user?.avatar;
 
   const hasValidImage =
     typeof rawImage === "string" && rawImage.startsWith("http");

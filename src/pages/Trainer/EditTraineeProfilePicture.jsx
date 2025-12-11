@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import './EditTraineeProfilePicture.css';
 import TraineeHeader from '../../components/trainee/header';
@@ -10,6 +12,9 @@ import avatar2 from "../../assets/images/avatar2.png"
 import avatar3 from "../../assets/images/avatar3.png"
 import avatar4 from "../../assets/images/avatar4.png"
 import avatar5 from "../../assets/images/avatar5.png"
+import { updateTraineeProfileImage } from "../../services/trainee/trainee";
+import { setTrainee } from "../../features/slice/trainer/traineeSlice";
+
 const avatarOptions = [
   { id: 1, src: avatar1, alt: 'Avatar 1' },
   { id: 2, src: avatar2, alt: 'Avatar 2' },
@@ -19,8 +24,13 @@ const avatarOptions = [
 ];
 
 export default function EditTraineeProfilePicture() {
+  const dispatch = useDispatch();
+  const traineeState = useSelector((state) => state.trainee);
+
   const [selectedAvatar, setSelectedAvatar] = useState(null);
-  const [previewImage, setPreviewImage] = useState(ProfileKeta);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [saving, setSaving] = useState(false);
   const [headerTitle, setHeaderTitle] = useState('Edit Profile Picture');
 
   useEffect(() => {
@@ -37,6 +47,33 @@ export default function EditTraineeProfilePicture() {
     return () => window.removeEventListener('resize', updateTitle);
   }, []);
 
+  useEffect(() => {
+    let initialImage = null;
+
+    if (typeof window !== 'undefined') {
+      const localUserRaw = localStorage.getItem('traineeUser');
+      const sessionUserRaw = sessionStorage.getItem('traineeUser');
+      const storedUserRaw = localUserRaw || sessionUserRaw;
+
+      if (storedUserRaw) {
+        try {
+          const storedUser = JSON.parse(storedUserRaw);
+          if (storedUser && storedUser.profileImage) {
+            initialImage = storedUser.profileImage;
+          }
+        } catch (e) {
+          // ignore JSON parse errors
+        }
+      }
+    }
+
+    if (traineeState?.user?.profileImage) {
+      initialImage = traineeState.user.profileImage;
+    }
+
+    setPreviewImage(initialImage);
+  }, [traineeState?.user?.profileImage]);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -46,23 +83,78 @@ export default function EditTraineeProfilePicture() {
         setSelectedAvatar(null);
       };
       reader.readAsDataURL(file);
+      setSelectedFile(file);
     }
   };
 
   const handleAvatarSelect = (avatar) => {
     setSelectedAvatar(avatar.id);
     setPreviewImage(avatar.src);
+    setSelectedFile(null); // clear selectedFile when an avatar is chosen
   };
 
-  const handleSave = () => {
-    // Handle save logic here
-    console.log('Saving profile picture:', previewImage);
+  const handleSave = async () => {
+    if (!selectedFile && !selectedAvatar) {
+      toast.error('Please select a photo to upload');
+      return;
+    }
+
+    let fileToUpload = selectedFile;
+    let avatar = null;
+
+    if (!fileToUpload && selectedAvatar) {
+      avatar = avatarOptions.find((item) => item.id === selectedAvatar);
+      if (!avatar) {
+        toast.error('Please select a valid avatar');
+        return;
+      }
+    }
+
+    try {
+      setSaving(true);
+
+      if (!fileToUpload && avatar) {
+        const res = await fetch(avatar.src);
+        const blob = await res.blob();
+        fileToUpload = blob;
+      }
+
+      const response = await updateTraineeProfileImage(fileToUpload);
+      const message = response?.message || 'Profile image updated successfully';
+      toast.success(message);
+
+      const updatedImage =
+        response?.data?.Trainee?.profileImage ||
+        response?.data?.profileImage ||
+        response?.profileImage ||
+        response?.Trainee?.profileImage ||
+        previewImage;
+
+      if (traineeState?.user || traineeState?.token) {
+        dispatch(
+          setTrainee({
+            user: {
+              ...(traineeState.user || {}),
+              profileImage: updatedImage,
+            },
+            token: traineeState.token,
+            rememberMe: traineeState.rememberMe,
+          })
+        );
+      }
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        'Failed to update profile image. Please try again.';
+      toast.error(message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCancel = () => {
-    // Handle cancel logic here
-    console.log('Cancelled');
-    // Navigate back or close the modal
+    window.location.reload();
   };
 
   return (
@@ -78,9 +170,7 @@ export default function EditTraineeProfilePicture() {
                 className="profile-image"
               />
             ) : (
-              <div className="default-avatar">
-                <img src={ProfileKeta} alt="" />
-              </div>
+              <div className="default-avatar" />
             )}
           </div>
         </div>
@@ -321,96 +411,96 @@ export default function EditTraineeProfilePicture() {
               ))}
             </div>
           </div>
-<div className="action-buttons">
 
-  {/* CANCEL BUTTON */}
-  <button className="cancel-button" onClick={handleCancel}>
+          <div className="action-buttons">
 
-    {/* LEFT GLOW */}
-    <span className="button-left-glow">
-      <svg xmlns="http://www.w3.org/2000/svg" width="8" height="40" viewBox="0 0 8 40" fill="none">
-        <g filter="url(#filter0_f_204_419_cancel)">
-          <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="white" fillOpacity="0.3"/>
-          <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="url(#paint0_linear_204_419_cancel)"/>
-        </g>
-        <defs>
-          <filter id="filter0_f_204_419_cancel" x="1.43051e-05" y="1.43051e-05" width="7.59079" height="39.6726" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-            <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-            <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_419"/>
-          </filter>
-          <linearGradient id="paint0_linear_204_419_cancel" x1="2.44141" y1="3.36733" x2="4.36996" y2="4.03927" gradientUnits="userSpaceOnUse">
-            <stop stopColor="white"/>
-            <stop offset="1" stopColor="white" stopOpacity="0"/>
-          </linearGradient>
-        </defs>
-      </svg>
-    </span>
+            {/* CANCEL BUTTON */}
+            <button className="cancel-button" onClick={handleCancel}>
 
-    {/* TOP GLOW */}
-    <span className="button-top-glow">
-      <svg xmlns="http://www.w3.org/2000/svg" width="140" height="6" viewBox="0 0 144 6" fill="none">
-        <g filter="url(#filter0_f_204_420_cancel)">
-          <path d="M2.59375 2.59399H141.344" stroke="white" strokeWidth="0.305174" strokeLinecap="round"/>
-        </g>
-        <defs>
-          <filter id="filter0_f_204_420_cancel" x="1.43051e-05" y="1.43051e-05" width="143.937" height="5.18796" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-            <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-            <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_420"/>
-          </filter>
-        </defs>
-      </svg>
-    </span>
+              {/* LEFT GLOW */}
+              <span className="button-left-glow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="40" viewBox="0 0 8 40" fill="none">
+                  <g filter="url(#filter0_f_204_419_cancel)">
+                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="white" fillOpacity="0.3"/>
+                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="url(#paint0_linear_204_419_cancel)"/>
+                  </g>
+                  <defs>
+                    <filter id="filter0_f_204_419_cancel" x="1.43051e-05" y="1.43051e-05" width="7.59079" height="39.6726" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_419"/>
+                    </filter>
+                    <linearGradient id="paint0_linear_204_419_cancel" x1="2.44141" y1="3.36733" x2="4.36996" y2="4.03927" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="white"/>
+                      <stop offset="1" stopColor="white" stopOpacity="0"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
 
-    <span>Cancel</span>
-  </button>
+              {/* TOP GLOW */}
+              <span className="button-top-glow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="140" height="6" viewBox="0 0 144 6" fill="none">
+                  <g filter="url(#filter0_f_204_420_cancel)">
+                    <path d="M2.59375 2.59399H141.344" stroke="white" strokeWidth="0.305174" strokeLinecap="round"/>
+                  </g>
+                  <defs>
+                    <filter id="filter0_f_204_420_cancel" x="1.43051e-05" y="1.43051e-05" width="143.937" height="5.18796" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_420"/>
+                    </filter>
+                  </defs>
+                </svg>
+              </span>
 
+              <span>Cancel</span>
+            </button>
 
-  {/* SAVE BUTTON */}
-  <button className="save-button" onClick={handleSave}>
+            {/* SAVE BUTTON */}
+            <button className="save-button" onClick={handleSave} disabled={saving}>
 
-    {/* LEFT GLOW */}
-    <span className="button-left-glow">
-      <svg xmlns="http://www.w3.org/2000/svg" width="8" height="40" viewBox="0 0 8 40" fill="none">
-        <g filter="url(#filter0_f_204_419_save)">
-          <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="white" fillOpacity="0.3"/>
-          <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="url(#paint0_linear_204_419_save)"/>
-        </g>
-        <defs>
-          <filter id="filter0_f_204_419_save" x="1.43051e-05" y="1.43051e-05" width="7.59079" height="39.6726" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-            <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-            <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_419"/>
-          </filter>
-          <linearGradient id="paint0_linear_204_419_save" x1="2.44141" y1="3.36733" x2="4.36996" y2="4.03927" gradientUnits="userSpaceOnUse">
-            <stop stopColor="white"/>
-            <stop offset="1" stopColor="white" stopOpacity="0"/>
-          </linearGradient>
-        </defs>
-      </svg>
-    </span>
+              {/* LEFT GLOW */}
+              <span className="button-left-glow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="40" viewBox="0 0 8 40" fill="none">
+                  <g filter="url(#filter0_f_204_419_save)">
+                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="white" fillOpacity="0.3"/>
+                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="url(#paint0_linear_204_419_save)"/>
+                  </g>
+                  <defs>
+                    <filter id="filter0_f_204_419_save" x="1.43051e-05" y="1.43051e-05" width="7.59079" height="39.6726" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_419"/>
+                    </filter>
+                    <linearGradient id="paint0_linear_204_419_save" x1="2.44141" y1="3.36733" x2="4.36996" y2="4.03927" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="white"/>
+                      <stop offset="1" stopColor="white" stopOpacity="0"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
 
-    {/* TOP GLOW */}
-    <span className="button-top-glow">
-      <svg xmlns="http://www.w3.org/2000/svg" width="140" height="6" viewBox="0 0 144 6" fill="none">
-        <g filter="url(#filter0_f_204_420_save)">
-          <path d="M2.59375 2.59399H141.344" stroke="white" strokeWidth="0.305174" strokeLinecap="round"/>
-        </g>
-        <defs>
-          <filter id="filter0_f_204_420_save" x="1.43051e-05" y="1.43051e-05" width="143.937" height="5.18796" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-            <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-            <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_420"/>
-          </filter>
-        </defs>
-      </svg>
-    </span>
+              {/* TOP GLOW */}
+              <span className="button-top-glow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="140" height="6" viewBox="0 0 144 6" fill="none">
+                  <g filter="url(#filter0_f_204_420_save)">
+                    <path d="M2.59375 2.59399H141.344" stroke="white" strokeWidth="0.305174" strokeLinecap="round"/>
+                  </g>
+                  <defs>
+                    <filter id="filter0_f_204_420_save" x="1.43051e-05" y="1.43051e-05" width="143.937" height="5.18796" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_420"/>
+                    </filter>
+                  </defs>
+                </svg>
+              </span>
 
-    <span>Save</span>
-  </button>
+              <span>{saving ? 'Saving...' : 'Save'}</span>
+            </button>
 
-</div>
+          </div>
 
         </div>
       </div>

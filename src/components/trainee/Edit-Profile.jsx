@@ -1,26 +1,56 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Eye, EyeOff, Calendar } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { toast } from "react-toastify"
+import Loader from "../Loader/Loader"
 import './Edit-Profile.css'
+import { getTraineeProfile, updateTraineePersonalInfo } from "../../services/trainee/trainee"
+import { setTrainee } from "../../features/slice/trainer/traineeSlice"
 const LOCATIONS = ["Lusail, Qatar", "Doha, Qatar", "Al Wakrah, Qatar", "Al Khor, Qatar", "Umm Salal, Qatar"]
 const GENDERS = ["Female", "Male", "Other"]
 
 export default function EditProfileForm() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const traineeState = useSelector((state) => state.trainee)
   const [showPassword, setShowPassword] = useState(false)
+  const [profileHeader, setProfileHeader] = useState({
+    fullName: "",
+    email: "",
+    avatar: "",
+  })
+  const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState({
-    fullName: "Kate Bishop",
-    email: "katebishop@gmail.com",
-    phone: "+974 1234 5678",
-    dateOfBirth: "01/05/1997",
-    gender: "Female",
-    password: "••••••••••••••••••",
-    location: "Lusail, Qatar",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+    fullName: "",
+    email: "",
+    phone: "+974",
+    dateOfBirth: "",
+    gender: "",
+    password: "",
+    location: "",
+    avatar: "",
   })
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
+    if (name === "phone") {
+      const digitsOnly = value.replace(/[^0-9]/g, "")
+
+      let rest = digitsOnly
+      if (rest.startsWith("974")) {
+        rest = rest.slice(3)
+      }
+
+      const finalValue = `+974${rest}`
+
+      setFormData((prev) => ({
+        ...prev,
+        phone: finalValue,
+      }))
+      return
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
@@ -28,9 +58,160 @@ export default function EditProfileForm() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  const handleSave = async () => {
+    const missingFields = []
+
+    if (!formData.fullName.trim()) missingFields.push("Full name")
+    if (!formData.dateOfBirth) missingFields.push("Date of birth")
+    if (!formData.location) missingFields.push("Location")
+
+    if (missingFields.length > 0) {
+      toast.error(`${missingFields[0]} is required`)
+      return
+    }
+
+    const rawPhone = formData.phone.trim()
+    let countryCode
+    let phoneNumber
+
+    if (rawPhone) {
+      if (!rawPhone.startsWith("+974")) {
+        toast.error("Phone number must start with +974")
+        return
+      }
+
+      const digits = rawPhone.replace(/\s+/g, "")
+      const rest = digits.slice(4)
+
+      if (!rest || !/^\d+$/.test(rest)) {
+        toast.error("Please enter a valid mobile number after +974")
+        return
+      }
+
+      countryCode = "974"
+      phoneNumber = rest
+    }
+
+    try {
+      const response = await updateTraineePersonalInfo({
+        name: formData.fullName,
+        dateOfBirth: formData.dateOfBirth,
+        location: formData.location,
+        countryCode,
+        phoneNumber,
+      })
+      const message = response?.message || "Profile updated successfully"
+      toast.success(message)
+
+      const updatedName = formData.fullName
+      if (traineeState?.user || traineeState?.token) {
+        dispatch(
+          setTrainee({
+            user: {
+              ...(traineeState.user || {}),
+              name: updatedName,
+            },
+            token: traineeState.token,
+            rememberMe: traineeState.rememberMe,
+          })
+        )
+      }
+
+      setProfileHeader((prev) => ({
+        ...prev,
+        fullName: formData.fullName,
+      }))
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to update profile. Please try again."
+      toast.error(message)
+      console.error("Failed to update trainee personal info", error)
+    }
+  }
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true)
+        const response = await getTraineeProfile()
+        const trainee = response?.data?.Trainee
+        if (!trainee) {
+          setLoading(false)
+          return
+        }
+
+        setFormData((prev) => {
+          const next = { ...prev }
+
+          if (trainee.name) next.fullName = trainee.name
+          if (trainee.email) next.email = trainee.email
+          if (trainee.profileImage) next.avatar = trainee.profileImage
+
+          if (trainee.countryCode && trainee.phoneNumber) {
+            next.phone = `+${String(trainee.countryCode)}${String(trainee.phoneNumber)}`
+          } else if (trainee.phone) {
+            next.phone = trainee.phone
+          }
+
+          if (trainee.dateOfBirth) {
+            let dob = trainee.dateOfBirth
+            if (typeof dob === "string" && dob.includes("T")) {
+              dob = dob.split("T")[0]
+            }
+            next.dateOfBirth = dob
+          }
+
+          if (trainee.gender) next.gender = trainee.gender
+          if (trainee.location) next.location = trainee.location
+          console.log("next",next);
+          
+          return next
+        })
+
+        setProfileHeader((prev) => {
+          const next = { ...prev }
+
+          if (trainee.name) next.fullName = trainee.name
+          if (trainee.email) next.email = trainee.email
+          if (trainee.profileImage) next.avatar = trainee.profileImage
+
+          return next
+        })
+        setLoading(false)
+      } catch (error) {
+        const message =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to load profile. Please try again."
+        toast.error(message)
+        console.error("Failed to load trainee profile", error)
+        setLoading(false)
+      }
+    }
+
+    fetchProfile()
+  }, [])
+
   return (
     <div className="edit-profile-container">
-    <div className="edit-profile-wrapper">
+    <div className="edit-profile-wrapper" style={{ position: "relative" }}>
+      {loading && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            zIndex: 10,
+          }}
+        >
+          <Loader />
+        </div>
+      )}
       {/* Header */}
       <div className="edit-profile-header">
         <div className="profile-info">
@@ -39,18 +220,22 @@ export default function EditProfileForm() {
             className="avatar-wrapper"
             onClick={() => navigate('/edit-traineeProfilePicture')}
           >
-            <img src={formData.avatar} alt="Avatar" className="avatar-img" />
+            <img
+              src={profileHeader.avatar || formData.avatar}
+              alt="Avatar"
+              className="avatar-img"
+            />
           </button>
           <div>
-            <h2 className="profile-name">{formData.fullName}</h2>
-            <p className="profile-email">{formData.email}</p>
+            <h2 className="profile-name">{profileHeader.fullName}</h2>
+            <p className="profile-email">{profileHeader.email}</p>
           </div>
         </div>
 
         <div className="button-row">
   
   {/* CANCEL BUTTON */}
-  <button className="btn-secondary">
+  <button onClick={()=>{window.location.reload()}} className="btn-secondary">
     {/* LEFT GLOW */}
     <span className="button-left-glow">
       <svg xmlns="http://www.w3.org/2000/svg" width="8" height="40" viewBox="0 0 8 40" fill="none">
@@ -92,7 +277,7 @@ export default function EditProfileForm() {
   </button>
 
   {/* SAVE BUTTON */}
-  <button className="btn-primary">
+  <button className="btn-primary" onClick={handleSave}>
     {/* LEFT GLOW */}
     <span className="button-left-glow">
       <svg xmlns="http://www.w3.org/2000/svg" width="8" height="40" viewBox="0 0 8 40" fill="none">
@@ -149,7 +334,7 @@ export default function EditProfileForm() {
 
           <div className="form-group">
             <label>Email Address</label>
-            <input type="email" name="email" value={formData.email} onChange={handleInputChange} />
+            <input type="email" name="email" value={formData.email} onChange={handleInputChange} disabled />
           </div>
         </div>
 
@@ -157,7 +342,13 @@ export default function EditProfileForm() {
         <div className="form-grid">
           <div className="form-group">
             <label>Phone Number</label>
-            <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} />
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              placeholder="+974XXXXXXXX"
+            />
           </div>
 
   <div className="form-group date-group">
@@ -190,7 +381,7 @@ export default function EditProfileForm() {
         <div className="form-grid">
           <div className="form-group">
             <label>Gender</label>
-            <select value={formData.gender} onChange={(e) => handleSelectChange("gender", e.target.value)}>
+            <select value={formData.gender} onChange={(e) => handleSelectChange("gender", e.target.value)} disabled>
               {GENDERS.map((g) => (
                 <option key={g}>{g}</option>
               ))}
@@ -206,6 +397,7 @@ export default function EditProfileForm() {
       name="password"
       value={formData.password}
       onChange={handleInputChange}
+      disabled
     />
 
     <button
@@ -223,10 +415,21 @@ export default function EditProfileForm() {
         {/* Location */}
         <div className="form-group small-width">
           <label>Location</label>
-          <select value={formData.location} onChange={(e) => handleSelectChange("location", e.target.value)}>
+          <select
+            value={formData.location}
+            onChange={(e) => handleSelectChange("location", e.target.value)}
+          >
+            <option value="" disabled>
+              First select a location
+            </option>
             {LOCATIONS.map((l) => (
-              <option key={l}>{l}</option>
+              <option key={l} value={l}>
+                {l}
+              </option>
             ))}
+            {formData.location && !LOCATIONS.includes(formData.location) && (
+              <option value={formData.location}>{formData.location}</option>
+            )}
           </select>
         </div>
       </div>

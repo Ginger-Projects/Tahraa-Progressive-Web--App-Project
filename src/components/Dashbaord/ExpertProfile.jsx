@@ -3,11 +3,11 @@ import "./ExpertProfile.css";
 import LineSrc from "../../assets/images/bigline.png";
 
 // dummy imports – replace with your real images
-import heroImage from "../../assets/images/heroimage.png";
 import pkg1 from "../../assets/images/package4.png";
 import Button from "../../components/Button";
 import { Link, useSearchParams } from "react-router-dom";
-import { getExpertDetails, getExpertPackages } from "../../services/expertService";
+import { getExpertDetails, getExpertPackages, getExpertFeedbacks } from "../../services/expertService";
+import { User } from "lucide-react";
 
 const ExpertProfile = () => {
   const [isSaved, setIsSaved] = useState(false);
@@ -17,14 +17,16 @@ const ExpertProfile = () => {
   const [error, setError] = useState(null);
   const [expertPackages, setExpertPackages] = useState([]);
   const [totalPackagesCount, setTotalPackagesCount] = useState(0);
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [ratingStats, setRatingStats] = useState(null);
+  const [reviewPage, setReviewPage] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [searchParams] = useSearchParams();
   const packageSliderRef = useRef(null);
   const prevWorksSliderRef = useRef(null);
   const suggestSliderRef = useRef(null);
 
-  // no static/dummy reviews; wire to real data later if needed
-  const reviews = [];
+ 
 
   const languages = Array.isArray(expert?.languages) ? expert.languages : [];
 
@@ -39,6 +41,61 @@ const ExpertProfile = () => {
 
   const expertId = searchParams.get("expertId");
 
+  const reviews = feedbacks
+    .filter((fb) => (fb?.rating || 0) > 0)
+    .map((fb) => {
+      let date = "";
+      let time = "";
+
+      if (fb?.createdAt) {
+        const created = new Date(fb.createdAt);
+        if (!Number.isNaN(created.getTime())) {
+          // Format as DD-MM-YYYY and HH:MM
+          const d = created;
+          const day = String(d.getDate()).padStart(2, "0");
+          const month = String(d.getMonth() + 1).padStart(2, "0");
+          const year = d.getFullYear();
+          date = `${day}-${month}-${year}`;
+
+          const hours = String(d.getHours()).padStart(2, "0");
+          const minutes = String(d.getMinutes()).padStart(2, "0");
+          time = `${hours}:${minutes}`;
+        }
+      }
+
+      return {
+        id: fb._id,
+        name: fb.traineeName || "Anonymous",
+        rating: fb.rating || 0,
+        text: fb.comment || "",
+        date,
+        time,
+      };
+    });
+
+  const REVIEWS_PER_PAGE = 5;
+  const totalReviewPages =
+    reviews.length > 0 ? Math.ceil(reviews.length / REVIEWS_PER_PAGE) : 0;
+  const currentReviewPage =
+    totalReviewPages > 0 ? Math.min(reviewPage, totalReviewPages) : 1;
+
+  const paginatedReviews =
+    totalReviewPages > 0
+      ? reviews.slice(
+          (currentReviewPage - 1) * REVIEWS_PER_PAGE,
+          currentReviewPage * REVIEWS_PER_PAGE
+        )
+      : [];
+
+  const averageRating = ratingStats?.averageRating ?? 0;
+  const totalRatings = ratingStats?.totalRatings ?? 0;
+  const ratingPercentages = ratingStats?.ratingPercentages || {};
+  const ratingDistribution = ratingStats?.ratingDistribution || {};
+  const ratingBars = [5, 4, 3, 2, 1].map((star) => ({
+    star,
+    count: ratingDistribution[star] || 0,
+    width: `${ratingPercentages[star] || 0}%`,
+  }));
   // track screen size for package limit (desktop: 4, mobile: 1)
   useEffect(() => {
     const handleResize = () => {
@@ -110,6 +167,24 @@ const ExpertProfile = () => {
     fetchPackages();
   }, [expertId, isMobile]);
 
+  useEffect(() => {
+    if (!expertId) return;
+
+    const fetchFeedbacks = async () => {
+      try {
+        const res = await getExpertFeedbacks(expertId);
+        const payload = res?.data;
+        const fb = Array.isArray(payload?.feedbacks) ? payload.feedbacks : [];
+        setFeedbacks(fb);
+        setRatingStats(payload?.ratingStats || null);
+      } catch (err) {
+        console.error("Failed to load expert feedbacks", err);
+      }
+    };
+
+    fetchFeedbacks();
+  }, [expertId]);
+
   const previousWorksUrls =
     expert?.experienceAndQualifications?.previousWorks || [];
 
@@ -128,6 +203,8 @@ const ExpertProfile = () => {
     if (!id) return "";
     return `https://www.youtube.com/embed/${id}?controls=1&rel=0&modestbranding=1`;
   };
+
+
 
   const getYouTubeEmbedUrl = (url = "") => {
     try {
@@ -230,6 +307,16 @@ const ExpertProfile = () => {
       const scrollAmount = 300;
       suggestSliderRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
+  };
+
+  const handleReviewPrev = () => {
+    if (totalReviewPages === 0) return;
+    setReviewPage((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const handleReviewNext = () => {
+    if (totalReviewPages === 0) return;
+    setReviewPage((prev) => (prev < totalReviewPages ? prev + 1 : prev));
   };
 
   const handleSaveExpert = () => {
@@ -853,215 +940,23 @@ const ExpertProfile = () => {
         </section>
 
         {/* REVIEWS */}
+        {reviews.length > 0 && (
         <section className='ep-reviews-section mt-5'>
           <div className='row g-4 '>
             {/* left: add review form */}
-            <div className='col-lg-4'>
-              <div className='ep-review-form-card'>
-                <h3 className='ep-section-title'>Reviews</h3>
-
-                <div style={{ marginTop: "20px" }}>
-                  <p
-                    style={{
-                      fontFamily: '"Poppins", sans-serif',
-                      fontSize: "22.913px",
-                      fontWeight: 600,
-                      lineHeight: "28.2px",
-                      color: "#2e2e2e",
-                      textAlign: "left",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    Add A Review
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: '"Poppins", sans-serif',
-                      fontSize: "14px",
-                      lineHeight: "23.6px",
-                      color: "#727272",
-                      letterSpacing: "0.035px",
-                    }}
-                  >
-                    Your email address will not be published. Required fields are marked
-                  </p>
-                </div>
-
-                <form
-                  className='ep-review-form'
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}
-                >
-                  {/* Email Input */}
-                  <div style={{ marginBottom: "14.1px" }}>
-                    <div className='ep-form-input-wrapper'>
-                      <input
-                        type='email'
-                        placeholder='Email*'
-                        style={{
-                          fontFamily: '"Poppins", sans-serif',
-                          fontSize: "14.1px",
-                          color: "rgba(37, 37, 37, 0.5)",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Name Input */}
-                  <div style={{ marginBottom: "14.1px" }}>
-                    <div className='ep-form-input-wrapper'>
-                      <input
-                        type='text'
-                        placeholder='Name*'
-                        style={{
-                          fontFamily: '"Poppins", sans-serif',
-                          fontSize: "14.1px",
-                          color: "rgba(37, 37, 37, 0.5)",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Comment Input */}
-                  <div className='ep-form-textarea-wrapper'>
-                    <textarea
-                      placeholder='Your comment*'
-                      rows='5'
-                      style={{
-                        fontFamily: '"Poppins", sans-serif',
-                        fontSize: "14.1px",
-                        color: "rgba(37, 37, 37, 0.5)",
-                      }}
-                    />
-                    <span className='ep-form-char-count'>0/3000</span>
-                  </div>
-
-                  {/* Rating Select */}
-                  <div style={{ marginBottom: "20px" }}>
-                    <label className='ep-form-label'>Select your rating</label>
-                    <div className='ep-rating-input'>
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button key={star} className='star' type='button'>
-                          ★
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Upload Photos */}
-                  <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
-                    <label
-                      style={{
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "54px",
-                        height: "54px",
-                        borderRadius: "8px",
-                        background: "#1AB76E",
-                        border: "none",
-                        position: "relative",
-                      }}
-                    >
-                      <input type='file' multiple accept='image/*,video/*' style={{ display: "none" }} />
-                      {/* Left glossy curve */}
-                      <svg style={{ position: "absolute", left: "2px", top: "2px", width: "18px", height: "42px", opacity: 0.8, zIndex: 1 }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" fill="none">
-                        <g filter="url(#filter0_f_140_6818)">
-                          <path d="M3.53723 4.34872C4.04564 2.21528 11.4902 2.44857 14.6653 2.64727C15.0023 2.66836 15.0716 3.14545 14.7608 3.27744C13.1286 3.97064 10.4855 5.25987 9.81023 6.58215C6.8045 12.468 7.01673 21.9546 7.51138 27.7426C7.78464 30.9399 6.96061 34.1787 4.96456 36.6914L3.53722 38.4882C3.53722 38.4882 1.2562 13.9205 3.53723 4.34872Z" fill="white" fill-opacity="0.3"/>
-                          <path d="M3.53723 4.34872C4.04564 2.21528 11.4902 2.44857 14.6653 2.64727C15.0023 2.66836 15.0716 3.14545 14.7608 3.27744C13.1286 3.97064 10.4855 5.25987 9.81023 6.58215C6.8045 12.468 7.01673 21.9546 7.51138 27.7426C7.78464 30.9399 6.96061 34.1787 4.96456 36.6914L3.53722 38.4882C3.53722 38.4882 1.2562 13.9205 3.53723 4.34872Z" fill="url(#paint0_linear_140_6818)"/>
-                        </g>
-                        <defs>
-                          <filter id="filter0_f_140_6818" x="-0.00037241" y="0.000115871" width="17.4832" height="41.012" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                            <feGaussianBlur stdDeviation="1.2619" result="effect1_foregroundBlur_140_6818"/>
-                          </filter>
-                          <linearGradient id="paint0_linear_140_6818" x1="2.52344" y1="3.48111" x2="5.40052" y2="8.10923" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="white"/>
-                            <stop offset="1" stop-color="white" stop-opacity="0"/>
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                      {/* Top horizontal line */}
-                      <svg style={{ position: "absolute", left: "0px", top: "2px", width: "auto", height: "auto", opacity: 1, zIndex: 1 }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268 6" fill="none">
-                        <g filter="url(#filter0_f_140_6819)">
-                          <path d="M2.68164 2.68164H264.399" stroke="white" stroke-width="0.315476" stroke-linecap="round"/>
-                        </g>
-                        <defs>
-                          <filter id="filter0_f_140_6819" x="-0.00037241" y="0.000115871" width="267.081" height="5.36305" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                            <feGaussianBlur stdDeviation="1.2619" result="effect1_foregroundBlur_140_6819"/>
-                          </filter>
-                        </defs>
-                      </svg>
-                      <span
-                        style={{
-                          fontSize: "33px",
-                          color: "white",
-                          position: "relative",
-                          zIndex: 2,
-                          textShadow: "0.967px 1.282px 2.576px #01830a, -0.326px -0.326px 2.576px rgba(55,55,55,0.21)",
-                        }}
-                      >
-                        +
-                      </span>
-                    </label>
-                    <span style={{ fontSize: "12px", color: "#727272" }}>
-                      Up to 4 photos & 1 video (max 20MB) can be uploaded
-                    </span>
-                  </div>
-
-                  {/* Submit Button */}
-                  <button type='submit' className='ep-submit-btn'>
-                    {/* Left glossy curve */}
-                    <svg style={{ position: "absolute", left: "2px", top: "2px", width: "18px", height: "auto", opacity: 1, zIndex: 1 }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" fill="none">
-                      <g filter="url(#filter0_f_140_6818)">
-                        <path d="M3.53723 4.34872C4.04564 2.21528 11.4902 2.44857 14.6653 2.64727C15.0023 2.66836 15.0716 3.14545 14.7608 3.27744C13.1286 3.97064 10.4855 5.25987 9.81023 6.58215C6.8045 12.468 7.01673 21.9546 7.51138 27.7426C7.78464 30.9399 6.96061 34.1787 4.96456 36.6914L3.53722 38.4882C3.53722 38.4882 1.2562 13.9205 3.53723 4.34872Z" fill="white" fill-opacity="0.3"/>
-                        <path d="M3.53723 4.34872C4.04564 2.21528 11.4902 2.44857 14.6653 2.64727C15.0023 2.66836 15.0716 3.14545 14.7608 3.27744C13.1286 3.97064 10.4855 5.25987 9.81023 6.58215C6.8045 12.468 7.01673 21.9546 7.51138 27.7426C7.78464 30.9399 6.96061 34.1787 4.96456 36.6914L3.53722 38.4882C3.53722 38.4882 1.2562 13.9205 3.53723 4.34872Z" fill="url(#paint0_linear_140_6818)"/>
-                      </g>
-                      <defs>
-                        <filter id="filter0_f_140_6818" x="-0.00037241" y="0.000115871" width="17.4832" height="41.012" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                          <feGaussianBlur stdDeviation="1.2619" result="effect1_foregroundBlur_140_6818"/>
-                        </filter>
-                        <linearGradient id="paint0_linear_140_6818" x1="2.52344" y1="3.48111" x2="5.40052" y2="8.10923" gradientUnits="userSpaceOnUse">
-                          <stop stop-color="white"/>
-                          <stop offset="1" stop-color="white" stop-opacity="0"/>
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                    {/* Top horizontal line */}
-                    <svg style={{ position: "absolute", left: "0px", top: "2px", width: "auto", height: "auto", opacity: 1, zIndex: 1 }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268 6" fill="none">
-                      <g filter="url(#filter0_f_140_6819)">
-                        <path d="M2.68164 2.68164H264.399" stroke="white" stroke-width="0.315476" stroke-linecap="round"/>
-                      </g>
-                      <defs>
-                        <filter id="filter0_f_140_6819" x="-0.00037241" y="0.000115871" width="267.081" height="5.36305" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                          <feGaussianBlur stdDeviation="1.2619" result="effect1_foregroundBlur_140_6819"/>
-                        </filter>
-                      </defs>
-                    </svg>
-                    <span style={{ position: "relative", zIndex: 2, marginLeft: "20px" }}>Submit</span>
-                  </button>
-                </form>
-              </div>
-            </div>
+           
 
             {/* right: rating summary + list */}
-            <div className='col-lg-8'>
+            <div className='col-12'>
               <div className='ep-review-list-card'>
                 <div className='row g-4 d-flex flex-column'>
                   {/* Rating Summary */}
                   <div className='col-md-4 w-100'>
                     <div className='ep-rating-summary'>
                       <div className='ep-rating-display'>
-                        <div className='ep-rating-value'>4.8</div>
+                        <div className='ep-rating-value'>
+                          {averageRating ? averageRating.toFixed(1) : "0.0"}
+                        </div>
                         <div className='ep-rating-stars'>
                           {[1, 2, 3, 4, 5].map((star) => (
                             <span key={star} className='star'>
@@ -1070,17 +965,13 @@ const ExpertProfile = () => {
                           ))}
                         </div>
                       </div>
-                      <div className='ep-rating-label'>35K ratings</div>
+                      <div className='ep-rating-label'>
+                        {totalRatings} rating{totalRatings === 1 ? "" : "s"}
+                      </div>
 
                       {/* Rating Bars */}
                       <div className='ep-rating-bars'>
-                        {[
-                          { star: 5, count: "14K", width: "100%" },
-                          { star: 4, count: "6K", width: "85%" },
-                          { star: 3, count: "4K", width: "70%" },
-                          { star: 2, count: "800K", width: "60%" },
-                          { star: 1, count: "9K", width: "10%" },
-                        ].map((bar) => (
+                        {ratingBars.map((bar) => (
                           <div key={bar.star} className='ep-rating-bar-row'>
                             <span>{bar.star}</span>
                             <div className='ep-rating-bar-container'>
@@ -1098,27 +989,30 @@ const ExpertProfile = () => {
                   {/* Review List */}
                   <div className='col-md-8 w-100'>
                     <div className='ep-review-list'>
-                      {reviews.map((rev) => (
+                      {paginatedReviews.map((rev) => (
                         <div key={rev.id} className='ep-review-item'>
                           <div className='ep-review-left'>
-                            <div className='ep-review-avatar'>
-                              <img src={reviewerAvatar} alt={rev.name} />
+                            <div className='ep-review-avatar-icon'>
+                              <User size={20} color="#fff" />
                             </div>
                             <div className='ep-review-info'>
                               <div className='ep-review-name'>{rev.name}</div>
 
                               <div className='ep-review-stars'>
                                 {[1, 2, 3, 4, 5].map((star) => (
-                                  <span key={star} className='star'>
+                                  <span
+                                    key={star}
+                                    className={`star ${star <= rev.rating ? "filled" : ""}`}
+                                  >
                                     ★
                                   </span>
                                 ))}
                               </div>
-                              <div className='ep-review-meta'>
+                              {/* <div className='ep-review-meta'>
                                 <span>{rev.date} </span>
                                 <span>|</span>
                                 <span> {rev.time}</span>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                           <div className='ep-review-right'>
@@ -1130,7 +1024,11 @@ const ExpertProfile = () => {
 
                     {/* Pagination */}
                     <div className='ep-review-pagination'>
-                      <button className='ep-pagination-arrow prev'>
+                      <button
+                        className='ep-pagination-arrow prev'
+                        onClick={handleReviewPrev}
+                        disabled={currentReviewPage <= 1}
+                      >
                         {/* Left glossy curve */}
                         <svg style={{ position: "absolute", left: "0px", top: "0px", width: "18px", height: "32px", opacity: 0.3, zIndex: 1 }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" fill="none">
                           <g filter="url(#filter0_f_140_6818)">
@@ -1177,8 +1075,14 @@ const ExpertProfile = () => {
                           />
                         </svg>
                       </button>
-                      <button className='ep-pagination-dot'>1/20</button>
-                      <button className='ep-pagination-arrow next'>
+                      <button className='ep-pagination-dot'>
+                        {currentReviewPage}/{totalReviewPages || 1}
+                      </button>
+                      <button
+                        className='ep-pagination-arrow next'
+                        onClick={handleReviewNext}
+                        disabled={currentReviewPage >= totalReviewPages}
+                      >
                         {/* Left glossy curve */}
                         <svg style={{ position: "absolute", left: "0px", top: "0px", width: "18px", height: "32px", opacity: 0.3, zIndex: 1 }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" fill="none">
                           <g filter="url(#filter0_f_140_6818)">
@@ -1232,6 +1136,7 @@ const ExpertProfile = () => {
             </div>
           </div>
         </section>
+        )}
 
       </div>
     </main>

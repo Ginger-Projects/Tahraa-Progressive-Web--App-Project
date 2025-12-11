@@ -31,6 +31,8 @@ const traineeSlice = createSlice({
   reducers: {
     setTrainee(state, action) {
       const { user, token, rememberMe } = action.payload || {};
+      console.log("user",user);
+      
       state.user = user;
       state.token = token;
       state.rememberMe = !!rememberMe;

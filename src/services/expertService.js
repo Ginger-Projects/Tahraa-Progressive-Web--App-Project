@@ -82,6 +82,17 @@ export const getExpertPackages = async (expertId, page = 1, limit = 10) => {
   }
 };
 
+export const getExpertFeedbacks = async (expertId) => {
+  try {
+    const response = await api.get("/api/trainee/public/expert-feedbacks", {
+      params: { expertId },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Upload previous work files (images/videos) to S3 via backend
 // formData should contain previousWorkFiles[0], previousWorkFiles[1], ...
 export const uploadPreviousWork = async (formData) => {

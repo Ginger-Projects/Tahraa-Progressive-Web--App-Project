@@ -34,6 +34,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PublicRoute from './routes/PublicRoute'
 import ProtectedRoute from './routes/ProtectedRoute'
+import ChangePassword from './pages/ChangePassword'
 
 function App() {
   const location = useLocation()
@@ -86,6 +87,14 @@ function App() {
     </PublicRoute>
   }
 />
+<Route
+  path="/change-password"
+  element={
+    <ProtectedRoute>
+      <ChangePassword/>
+    </ProtectedRoute>
+  }
+/>
 
         <Route path="/our-experts" element={
           <ProtectedRoute>
@@ -117,8 +126,20 @@ function App() {
         }
       />
         <Route path="/traineeCalendar" element={<TrainerCalendar />} />
-        <Route path='/edit-traineeProfile' element={<EditProfile/>} />
-         <Route path='/edit-traineeProfilePicture' element={<EditTraineeProfilePicture />} />
+
+        <Route path='/edit-traineeProfile' 
+       
+        element={
+          <ProtectedRoute>
+        <EditProfile/>
+        </ProtectedRoute>
+        } />
+        
+         <Route path='/edit-traineeProfilePicture' element={
+          <ProtectedRoute>
+          <EditTraineeProfilePicture />
+          </ProtectedRoute>
+          } />
          <Route path='/package-summary' element={<PackageSummaryPage/>} />
 
         {/* Chat */}

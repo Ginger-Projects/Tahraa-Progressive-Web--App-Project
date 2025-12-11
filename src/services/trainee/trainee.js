@@ -165,3 +165,58 @@ export const cancelScheduledSession = async ({ id, reason }) => {
     throw error;
   }
 };
+
+
+export const getTraineeProfile = async () => {
+  try {
+    const response = await api.get("/api/trainee/profile/get-trainee-profile");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const updateTraineePersonalInfo = async ({
+  name,
+  dateOfBirth,
+  location,
+  countryCode,
+  phoneNumber,
+}) => {
+  try {
+    console.log("name",name,dateOfBirth,location,countryCode,phoneNumber);
+    
+    const response = await api.post("/api/trainee/profile/update-personal-info", {
+      name,
+      dateOfBirth,
+      location,
+      countryCode,
+      mobile:phoneNumber,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateTraineeProfileImage = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("profileImage", file);
+
+    const response = await api.post(
+      "/api/trainee/profile/update-profile-image",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
