@@ -8,7 +8,7 @@
 .header-container {
   width: 100%;
   margin: 0 auto;
-  padding:  40px 60px 40px 60px;
+  padding: 40px 60px 40px 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -44,7 +44,8 @@
 .logout-glow-left {
   position: absolute;
   top: 4px;
-  left: 2px;          /* start at the left edge of the button */
+  left: 2px;
+  /* start at the left edge of the button */
   display: flex;
   align-items: center;
   pointer-events: none;
@@ -58,8 +59,8 @@
   align-items: center;
   gap: 12px;
 
-  
-  @media(max-width : 600px){
+
+  @media(max-width : 600px) {
     gap: 4px;
   }
 }
@@ -67,8 +68,10 @@
 /* Left chat button: move icon toward left edge of circle */
 .chat-btn {
   justify-content: flex-start;
-  padding-left: 8px;   /* move icon closer to left edge */
-  padding-right: 18px; /* balance total padding */
+  padding-left: 8px;
+  /* move icon closer to left edge */
+  padding-right: 18px;
+  /* balance total padding */
 }
 
 .logo-link {
@@ -95,7 +98,7 @@
   font-weight: 600;
   color: #333;
 
-  @media(max-width : 600px){
+  @media(max-width : 600px) {
     font-size: small;
     margin-top: .3rem;
   }
@@ -122,7 +125,7 @@
   font-size: 16px;
   transition: background 0.2s ease;
 
-  @media(max-width : 600px){
+  @media(max-width : 600px) {
     padding: 20px;
   }
 }
@@ -138,10 +141,14 @@
 
 /* separator line */
 .separator {
-  width: 1px;             /* thin vertical line */
-  height: 24px;           /* line height */
-  background-color: #D2D2D2; /* gray line */
-  margin: 0 16px;         /* spacing around the line */
+  width: 1px;
+  /* thin vertical line */
+  height: 24px;
+  /* line height */
+  background-color: #D2D2D2;
+  /* gray line */
+  margin: 0 16px;
+  /* spacing around the line */
 }
 
 /* Small user container (slightly larger than circle icons) */
@@ -177,11 +184,12 @@
   height: 60px;
   /* background: white; */
   border-radius: 10%;
-  margin-left: 0; /* spacing handled by separator */
+  margin-left: 0;
+  /* spacing handled by separator */
 
-   @media(max-width : 600px){
-     width: 40px;
-  height: 40px;
+  @media(max-width : 600px) {
+    width: 40px;
+    height: 40px;
   }
 }
 
@@ -235,8 +243,10 @@
   box-shadow: none;
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
   position: fixed;
-  top: 120px; /* slightly moved upward */
-  right: 60px; /* align with profile button area */
+  top: 120px;
+  /* slightly moved upward */
+  right: 60px;
+  /* align with profile button area */
   transform: none;
   z-index: 1001;
 }
@@ -303,11 +313,14 @@
   border-radius: 26.41px;
   width: 534px;
   height: auto;
-  padding: 24px 20px; /* 20px left/right so inner width = 494px, matching notification box */
+  padding: 24px 20px;
+  /* 20px left/right so inner width = 494px, matching notification box */
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
   position: fixed;
-  top: 120px; /* same vertical position as profile popup */
-  right: 60px; /* aligned under the bell/profile area */
+  top: 120px;
+  /* same vertical position as profile popup */
+  right: 60px;
+  /* aligned under the bell/profile area */
   transform: none;
   z-index: 1001;
 }
@@ -316,17 +329,22 @@
 .notification-list {
   margin-top: 0;
   height: auto;
-  max-height: 338.053px; /* within container, becomes scrollable when content is taller */
+  max-height: 338.053px;
+  /* within container, becomes scrollable when content is taller */
   display: flex;
   flex-direction: column;
-  gap: 16px; /* visual gap only between date groups */
-  overflow-y: auto; /* scroll vertically inside the container */
-  overflow-x: hidden; /* prevent horizontal scroll */
+  gap: 16px;
+  /* visual gap only between date groups */
+  overflow-y: auto;
+  /* scroll vertically inside the container */
+  overflow-x: hidden;
+  /* prevent horizontal scroll */
 }
 
 /* Hide scrollbar but keep scrolling */
 .notification-list {
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .notification-list::-webkit-scrollbar {
@@ -340,7 +358,7 @@
 }
 
 /* Gap between notification boxes inside the same date group */
-.notification-date-group .notification-item + .notification-item {
+.notification-date-group .notification-item+.notification-item {
   margin-top: 8px;
 }
 
@@ -351,17 +369,22 @@
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  margin-bottom: 12px; /* increased gap below Today/Yesterday labels */
+  margin-bottom: 12px;
+  /* increased gap below Today/Yesterday labels */
 }
 
 .notification-item {
   display: flex;
-  align-items: center;
-  height: 76px; /* equal row height for each notification */
+  align-items: flex-start;
+  /* align to top since height varies */
+  min-height: 76px;
+  /* minimum height instead of fixed */
+  height: auto;
   border-radius: 10px;
-  padding: 0 16px;
+  padding: 12px 16px;
+  /* added vertical padding */
   width: 494px;
-  margin: 0 auto; /* center inside 534px modal */
+  margin: 0 auto;
   background: #FFFFFF;
 }
 
@@ -369,11 +392,11 @@
   width: 52px;
   height: 52px;
   border-radius: 4px;
-  background: #F6F0FF; /* light placeholder background */
+  background: #F6F0FF;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: center; /* center SVG inside the box */
+  justify-content: center;
 }
 
 .notification-content {
@@ -386,24 +409,22 @@
 
 .notification-title {
   color: #252525;
-
-font-family: Poppins;
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  /* slightly bolder for readability */
+  line-height: 1.4;
   margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* show ... when too long */
+  word-break: break-word;
+  /* prevent overflow */
 }
 
 .notification-subtext {
   font-size: 14px;
   color: rgba(37, 37, 37, 0.5);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* show ... when too long */
+  line-height: 1.5;
+  word-break: break-word;
 }
 
 .notification-delete-btn {
@@ -416,6 +437,7 @@ line-height: normal;
   flex-shrink: 0;
   cursor: pointer;
 }
+
 .notification-text {
   font-size: 13px;
   color: #252525;
@@ -434,18 +456,24 @@ line-height: normal;
 
 /* Responsive adjustments for popups on small screens */
 @media (max-width: 600px) {
+
   .profile-popup-card,
   .notification-popup-card {
-    width: calc(100% - 32px); /* 16px margin on left and right */
+    width: calc(100% - 32px);
+    /* 16px margin on left and right */
     left: 16px;
-    right: 16px; /* override desktop right */
-    top: 80px;   /* a bit below header */
+    right: 16px;
+    /* override desktop right */
+    top: 80px;
+    /* a bit below header */
     max-height: calc(100vh - 120px);
-    overflow-y: auto; /* scroll inside card if content is tall */
+    overflow-y: auto;
+    /* scroll inside card if content is tall */
   }
 
   .notification-list {
-    max-height: none; /* let card manage the max-height on mobile */
+    max-height: none;
+    /* let card manage the max-height on mobile */
   }
 }
 
@@ -467,29 +495,30 @@ line-height: normal;
 .profile-popup-text {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* centers name + email relative to avatar height */
+  justify-content: center;
+  /* centers name + email relative to avatar height */
 }
 
 .profile-popup-text h3 {
-color: var(--Primary-Text, #303134);
-font-family: Poppins;
-font-size: 12.214px;
-font-style: normal;
-font-weight: 600;
-line-height: normal;
-width: 74px;
-height: 9.601px;
+  color: var(--Primary-Text, #303134);
+  font-family: Poppins;
+  font-size: 12.214px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  width: 74px;
+  height: 9.601px;
 }
 
 .profile-popup-text p {
   color: rgba(37, 37, 37, 0.50);
-font-family: Poppins;
-font-size: 9.5px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
-width: 114px;
-height: 7.468px;
+  font-family: Poppins;
+  font-size: 9.5px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  width: 114px;
+  height: 7.468px;
 }
 
 .profile-popup-body {
@@ -539,8 +568,9 @@ height: 7.468px;
 }
 
 /* Extra spacing around the separator line between Change Password and My Calendar */
-.profile-popup-actions > svg {
-  margin: 6px 0; /* increase if you want even more gap */
+.profile-popup-actions>svg {
+  margin: 6px 0;
+  /* increase if you want even more gap */
 }
 
 .profile-action-item {
@@ -553,17 +583,18 @@ height: 7.468px;
   background: #FFF;
   color: #252525;
 
-font-family: Poppins;
-font-size: 14px;
-font-style: normal;
-font-weight: 400;
-line-height: var(--Spacing-5-rem, 20px);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--Spacing-5-rem, 20px);
   text-decoration: none;
   cursor: pointer;
 }
 
 .profile-action-icon {
-  width: 24px;                /* common icon column width */
+  width: 24px;
+  /* common icon column width */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -572,9 +603,9 @@ line-height: var(--Spacing-5-rem, 20px);
 
 .profile-action-item:hover {
   border-radius: 12px;
-border: 0.5px solid #EAE9FE;
+  border: 0.5px solid #EAE9FE;
 
-background: #F8F8F8;
+  background: #F8F8F8;
 }
 
 .profile-logout-btn {
@@ -585,21 +616,24 @@ background: #F8F8F8;
   height: 44.729px;
   gap: 8px;
   padding: var(--Spacing-2-rem, 8px);
-  align-items: center;      /* vertically center icon + text */
-  justify-content: center;  /* center icon + text horizontally */
+  align-items: center;
+  /* vertically center icon + text */
+  justify-content: center;
+  /* center icon + text horizontally */
   border-radius: 8.52px;
-background: #FDB73E;
-box-shadow: -3.195px -3.195px 5.325px 0 rgba(0, 0, 0, 0.30) inset;
+  background: #FDB73E;
+  box-shadow: -3.195px -3.195px 5.325px 0 rgba(0, 0, 0, 0.30) inset;
   border: none;
   font-weight: 600;
   color: #C13232;
   cursor: pointer;
   color: var(--white, #FFF);
-text-shadow: 0 1.485px 0 rgba(0, 0, 0, 0.15);
-font-family: Poppins;
-font-size: 15.136px;
-font-style: normal;
-font-weight: 500;
-line-height: 20.794px; /* 137.382% */
-letter-spacing: 0.303px;
+  text-shadow: 0 1.485px 0 rgba(0, 0, 0, 0.15);
+  font-family: Poppins;
+  font-size: 15.136px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20.794px;
+  /* 137.382% */
+  letter-spacing: 0.303px;
 }

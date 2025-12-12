@@ -46,7 +46,7 @@ export const getTraineePackageSummary = async ({ startDate, endDate, page = 1, l
 
 export const getPackageAndBookingDetailsForSessionSchedule = async (bookingId) => {
   try {
-    
+
     const response = await api.get(
       `/api/trainee/package-and-booking-details-for-session-schedule?bookingId=${bookingId}`
     );
@@ -107,9 +107,9 @@ export const getTraineeMyPackages = async (page = 1, limit = 3) => {
 };
 
 
-export const getPackageById = async(id) =>{
+export const getPackageById = async (id) => {
   try {
-    const packageId = id 
+    const packageId = id
     const response = await api.get(`/api/trainee/marketplace/package?packageId=${packageId}`);
     return response.data;
   } catch (error) {
@@ -136,16 +136,16 @@ export const bookPackage = async ({ packageId, startDateUtc, endDateUtc, invite 
 };
 
 
-export const schedulePackageSession = async ({ packageId,bookingId, startLocalUTC, endLocalUTC }) => {
+export const schedulePackageSession = async ({ packageId, bookingId, startLocalUTC, endLocalUTC }) => {
   try {
     const response = await api.post("/api/trainee/marketplace/schedule-session", {
       packageId,
       bookingId,
-      startDate:startLocalUTC,
-      endDate:endLocalUTC,
+      startDate: startLocalUTC,
+      endDate: endLocalUTC,
     });
-    console.log("responseforschedule",response.data);
-    
+    console.log("responseforschedule", response.data);
+
     return response.data;
   } catch (error) {
     throw error;
@@ -154,12 +154,12 @@ export const schedulePackageSession = async ({ packageId,bookingId, startLocalUT
 
 export const reschedulePackageSession = async ({ sessionId, startNewDate, endNewDate }) => {
   try {
-    console.log("sesion",sessionId,startNewDate,endNewDate);
-    
+    console.log("sesion", sessionId, startNewDate, endNewDate);
+
     const response = await api.post("/api/trainee/marketplace/request-session-reschedule", {
       sessionId,
-      newStartDate:startNewDate,
-      newEndDate:endNewDate,
+      newStartDate: startNewDate,
+      newEndDate: endNewDate,
     });
     return response.data;
   } catch (error) {
@@ -172,7 +172,7 @@ export const cancelScheduledSession = async ({ id, reason }) => {
     const response = await api.post(
       "/api/trainee/marketplace/cancel-scheduled-session",
       {
-        sessionId:id,
+        sessionId: id,
         reason,
       }
     );
@@ -201,14 +201,14 @@ export const updateTraineePersonalInfo = async ({
   phoneNumber,
 }) => {
   try {
-    console.log("name",name,dateOfBirth,location,countryCode,phoneNumber);
-    
+    console.log("name", name, dateOfBirth, location, countryCode, phoneNumber);
+
     const response = await api.post("/api/trainee/profile/update-personal-info", {
       name,
       dateOfBirth,
       location,
       countryCode,
-      mobile:phoneNumber,
+      mobile: phoneNumber,
     });
     return response.data;
   } catch (error) {
@@ -236,3 +236,13 @@ export const updateTraineeProfileImage = async (file) => {
     throw error;
   }
 };
+
+export const getTraineeNotifications = async () => {
+  try {
+    const response = await api.get("/api/trainee/notifications");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
