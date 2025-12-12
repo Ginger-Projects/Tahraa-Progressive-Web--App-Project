@@ -8,6 +8,8 @@ import "./Chat.css";
 import api from "../../../api/axios";
 import { useParams } from "react-router-dom";
 
+import { useSelector } from "react-redux";
+
 // Seed messages per chat so each person has their own conversation
 const initialMessagesByChat = {};
 
@@ -19,7 +21,17 @@ export default function ChatLayout() {
   const [showListOnMobile, setShowListOnMobile] = useState(true);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [conversations, setConversations] = useState([]);
-  const [traineeInfo, setTraineeInfo] = useState(null);
+
+  // Fetch trainee info from Redux
+  const user = useSelector((state) => state.trainee);
+ console.log("user",user);
+ 
+  // Format it to match expected shape if needed, or use directly
+  const traineeInfo = {
+    name: user?.user?.name || user?.fullName,
+    profileImage: user?.user?.profileImage
+  };
+
   const { conversationId: routeConversationId } = useParams();
 
   useEffect(() => {
@@ -45,7 +57,7 @@ export default function ChatLayout() {
       try {
         const res = await api.get("/api/trainee/chat/get-conversations");
         const convs = res?.data?.data?.conversations || [];
-        console.log("conv", convs);
+
 
         const mapped = convs.map((conv) => {
           const expert = conv?.participants?.expert || {};
@@ -65,18 +77,7 @@ export default function ChatLayout() {
 
         setConversations(mapped);
 
-        if (convs.length > 0) {
-          const firstConv = convs[0];
-          const trainee = firstConv?.participants?.trainee;
 
-          if (trainee) {
-            setTraineeInfo({
-              name: trainee.name || "",
-              profileImage:
-                trainee.profilePicture || trainee.profileImage || null,
-            });
-          }
-        }
       } catch (error) {
         console.error("Failed to load conversations", error);
       }
@@ -113,9 +114,9 @@ export default function ChatLayout() {
             : traineeInfo?.name || "You";
           const time = m.createdAt
             ? new Date(m.createdAt).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
+              hour: "2-digit",
+              minute: "2-digit",
+            })
             : "";
 
           return {
@@ -231,9 +232,9 @@ export default function ChatLayout() {
             : traineeInfo?.name || "You";
           const time = m.createdAt
             ? new Date(m.createdAt).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
+              hour: "2-digit",
+              minute: "2-digit",
+            })
             : "";
 
           return {

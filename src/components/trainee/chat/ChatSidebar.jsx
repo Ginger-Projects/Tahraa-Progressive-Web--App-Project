@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Chat.css";
 import KateAvatar from "../../../assets/images/kate.png";
-
+import Profile from "../../../assets/images/placeholder.jpg";
 export default function ChatSidebar({
   activeFilter = "all",
   onChangeFilter,
@@ -29,9 +29,7 @@ export default function ChatSidebar({
   }
   const traineeName = trainee?.name || "";
   const traineeAvatar =
-    trainee?.profileImage || trainee?.profilePicture 
-  console.log("tarine",traineeAvatar);
-  
+    trainee?.profileImage || trainee?.profilePicture || Profile;  
   return (
     <aside className="chat-sidebar">
       <div className="chat-sidebar-header">

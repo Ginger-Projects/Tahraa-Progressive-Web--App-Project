@@ -102,13 +102,29 @@ function App() {
           </ProtectedRoute>
           } />
         
-        <Route path="/our-packages" element={<PackagesPage />} />
-        <Route path="/expert-profile" element={<ExpertsProfileMain />} />
+        <Route path="/our-packages" element={
+          <ProtectedRoute>
+          <PackagesPage />
+          </ProtectedRoute>
+          } />
+        <Route path="/expert-profile" element={
+          <ProtectedRoute>
+          <ExpertsProfileMain />
+          </ProtectedRoute>
+            } />
 
         <Route path="/expert-booking" element=
-        {<ExpertsBookingMain />}
+        {
+          <ProtectedRoute>
+        <ExpertsBookingMain />
+        </ProtectedRoute>
+      }
          />
-        <Route path="/confirm-booking" element={<BookingConfirmMain />} />
+        <Route path="/confirm-booking" element={
+          <ProtectedRoute>
+          <BookingConfirmMain />
+          </ProtectedRoute>
+          } />
         <Route path="/how-it-works-learners" element={<HowItWorksLearnersMain />} />
         <Route path="/how-it-works-experts" element={<HowItWorksExpertsMain />} />
         <Route path="/reach-us" element={<ReachusMain />} />
@@ -125,7 +141,11 @@ function App() {
           </ProtectedRoute>
         }
       />
-        <Route path="/traineeCalendar" element={<TrainerCalendar />} />
+        <Route path="/traineeCalendar" element={
+          <ProtectedRoute>
+          <TrainerCalendar />
+          </ProtectedRoute>
+          } />
 
         <Route path='/edit-traineeProfile' 
        
@@ -143,8 +163,16 @@ function App() {
          <Route path='/package-summary' element={<PackageSummaryPage/>} />
 
         {/* Chat */}
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/chat/:conversationId" element={<Chat />} />
+        <Route path="/chat" element={
+          <ProtectedRoute>
+          <Chat />
+          </ProtectedRoute>
+          } />
+        <Route path="/chat/:conversationId" element={
+          <ProtectedRoute>
+          <Chat />
+          </ProtectedRoute>
+          } />
         {/* Registration */}
         <Route path="/registration" element={<RegistrationBasicsMain />} />
         <Route path="/registraion-education" element={<RegistrationEducationMain />} />

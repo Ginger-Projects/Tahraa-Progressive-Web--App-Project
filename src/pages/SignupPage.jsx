@@ -53,6 +53,44 @@ const getPasswordStrength = (password) => {
     percent,
   };
 };
+ const mentors = [
+  {
+    name: "Peggy Carter",
+    role: "Vocal Trainer",
+    years: "10 Years of experience",
+    image: Person,
+  },
+  {
+    name: "Bucky Barnes",
+    role: "Vocal Trainer",
+    years: "10 Years of experience",
+    image: Person,
+  },
+  {
+    name: "Tony Stark",
+    role: "Vocal Trainer",
+    years: "10 Years of experience",
+    image: Person,
+  },
+  {
+    name: "Steve Rogers",
+    role: "Vocal Trainer",
+    years: "10 Years of experience",
+    image: Person,
+  },
+  {
+    name: "Natasha Romanoff",
+    role: "Vocal Trainer",
+    years: "10 Years of experience",
+    image: Person,
+  },
+  {
+    name: "Clint Barton",
+    role: "Vocal Trainer",
+    years: "10 Years of experience",
+    image: Person,
+  },
+];
 
 const TahraaSignup = () => {
   const [fullName, setFullName] = useState("");
@@ -72,7 +110,7 @@ const TahraaSignup = () => {
   const navigate = useNavigate();
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-
+ 
 
   const searchParams = new URLSearchParams(location.search || "");
   const invite = searchParams.get("invite");
@@ -180,8 +218,8 @@ const TahraaSignup = () => {
       }
       console.log("payload", payload);
 
-      await signupTrainee(payload);
-      toast.success("Signup Successfully");
+      const res = await signupTrainee(payload);
+      console.log("res", res);
 
       if (invite) {
         const qp = new URLSearchParams();
@@ -192,59 +230,61 @@ const TahraaSignup = () => {
 
         navigate(`/expert-booking?${qp.toString()}`);
       }
+      
     } catch (error) {
       console.error("Signup failed", error);
+      toast.error(error?.response?.data?.message);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const baseMentors = useMemo(() => {
-    return experts.map((expert, index) => {
-      const name =
-        expert?.name ||
-        expert?.fullName ||
-        expert?.expertName ||
-        `Expert ${index + 1}`;
+  // const baseMentors = useMemo(() => {
+  //   return experts.map((expert, index) => {
+  //     const name =
+  //       expert?.name ||
+  //       expert?.fullName ||
+  //       expert?.expertName ||
+  //       `Expert ${index + 1}`;
 
-      const role =
-        expert?.role ||
-        expert?.profession ||
-        expert?.specialization ||
-        "Expert";
+  //     const role =
+  //       expert?.role ||
+  //       expert?.profession ||
+  //       expert?.specialization ||
+  //       "Expert";
 
-      const rawYears =
-        expert?.experienceYears ||
-        expert?.experience ||
-        expert?.yearsOfExperience;
+  //     const rawYears =
+  //       expert?.experienceYears ||
+  //       expert?.experience ||
+  //       expert?.yearsOfExperience;
 
-      const years = rawYears
-        ? `${rawYears} Years of experience`
-        : "Experienced mentor";
+  //     const years = rawYears
+  //       ? `${rawYears} Years of experience`
+  //       : "Experienced mentor";
 
-      const rawImage =
-        expert?.imageUrl ||
-        expert?.profileImage ||
-        expert?.photo;
+  //     const rawImage =
+  //       expert?.imageUrl ||
+  //       expert?.profileImage ||
+  //       expert?.photo;
 
-      const image =
-        typeof rawImage === "string" && rawImage.startsWith("http")
-          ? rawImage
-          : Person;
+  //     const image =
+  //       typeof rawImage === "string" && rawImage.startsWith("http")
+  //         ? rawImage
+  //         : Person;
 
-      return {
-        id: expert?._id || index,
-        name,
-        role,
-        years,
-        image,
-      };
-    });
-  }, [experts]);
+  //     return {
+  //       id: expert?._id || index,
+  //       name,
+  //       role,
+  //       years,
+  //       image,
+  //     };
+  //   });
+  // }, [experts]);
 
   const marqueeCards = useMemo(
-    () => [...baseMentors, ...baseMentors], // duplicate for seamless loop
-    [baseMentors]
+    () => [...mentors, ...mentors], // duplicate for seamless loop
+    []
   );
 
   const leftColumnMentors = useMemo(
