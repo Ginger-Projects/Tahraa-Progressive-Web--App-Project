@@ -1,7 +1,6 @@
 import "./header.css";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { HiOutlineChat, HiOutlineBell } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import ProfilePopup from "./ProfilePopup";

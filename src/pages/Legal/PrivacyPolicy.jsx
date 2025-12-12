@@ -3,11 +3,11 @@ import "./PrivacyPolicy.css";
 import Header from "../../components/Dashbaord/Header";
 import { Footer } from "../../components/Home/Footer";
 
-export default function PrivacyPolicy() {
+export default function PrivacyPolicy({ isModal = false }) {
   return (
-    <div className="privacy-policy-wrapper">
-      <Header/>
-      <div className="privacy-page">
+    <div className={isModal ? "privacy-page" : "privacy-policy-wrapper"}>
+      {!isModal && <Header />}
+      <div className={isModal ? "" : "privacy-page"}>
         <header className="privacy-header">
           <h1>Privacy Policy</h1>
           <p className="privacy-updated">Last updated: 12 December, 2025 — Yanmu, Bloom Consulting LLC</p>
@@ -124,6 +124,7 @@ export default function PrivacyPolicy() {
           <p>Yanmu, Bloom Consulting LLC — <strong>info@yanmu.qa</strong></p>
         </main>
       </div>
-      <Footer />
-    </div>);
+      {!isModal && <Footer />}
+    </div>
+  );
 }

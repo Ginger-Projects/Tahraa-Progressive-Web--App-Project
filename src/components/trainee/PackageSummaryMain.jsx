@@ -1,22 +1,169 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import "./PackageSummaryMain.css"
+import { getTraineePackageSummary } from "../../services/trainee/trainee"
+import Logo from "../../assets/images/logo.png"
 
 export default function PackageSummaryMain() {
-  const sessions = [
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "Completed" },
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "On Going" },
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "Completed" },
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "On Going" },
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "Completed" },
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "Completed" },
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "On Going" },
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "Completed" },
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "On Going" },
-    { name: "Violin Class", sessions: "2/12", validity: "1st Jan - 1 Feb", fees: "QAR 200.00", status: "Completed" },
-  ]
+  const [packages, setPackages] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
-  const [dateLabel, setDateLabel] = useState("1 - 31 October 2025")
+  // Default to today's date
+  const getTodayDate = () => {
+    const now = new Date()
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  }
+
+  const [selectedDate, setSelectedDate] = useState(getTodayDate())
   const dateInputRef = useRef(null)
+
+  // Format date for display
+  const formatDateLabel = (date) => {
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
+  }
+
+  const [dateLabel, setDateLabel] = useState(formatDateLabel(getTodayDate()))
+
+  // Fetch data when selectedDate changes
+  useEffect(() => {
+    const fetchPackagesForDate = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        // Calculate UTC start (selected date at 00:00 UTC) and end (next day at 00:00 UTC)
+        const startOfDay = new Date(Date.UTC(
+          selectedDate.getFullYear(),
+          selectedDate.getMonth(),
+          selectedDate.getDate(),
+          0, 0, 0, 0
+        ))
+        const endOfDay = new Date(Date.UTC(
+          selectedDate.getFullYear(),
+          selectedDate.getMonth(),
+          selectedDate.getDate() + 1,
+          0, 0, 0, 0
+        ))
+
+        const formatDateForApi = (date) => date.toISOString().split(".")[0] + "Z"
+
+        const startDate = formatDateForApi(startOfDay)
+        const endDate = formatDateForApi(endOfDay)
+
+        console.log("Fetching package summary for:", { startDate, endDate })
+
+        const data = await getTraineePackageSummary({ startDate, endDate })
+        console.log("Package summary data:", data)
+
+        const items = data?.data?.packageSummary || []
+        setPackages(items)
+      } catch (err) {
+        console.error("Failed to fetch package summary:", err)
+        setError("Unable to load package summary")
+        setPackages([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPackagesForDate()
+  }, [selectedDate])
+
+  // Handle date change from picker
+  const handleDateChange = (e) => {
+    const value = e.target.value
+    if (!value) return
+
+    const d = new Date(value)
+    if (Number.isNaN(d.getTime())) return
+
+    setSelectedDate(d)
+    setDateLabel(formatDateLabel(d))
+  }
+
+  // Filter packages based on search query
+  const filteredPackages = packages.filter((pkg) => {
+    if (!searchQuery.trim()) return true
+    const query = searchQuery.toLowerCase()
+    return pkg.packageName?.toLowerCase().includes(query)
+  })
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredPackages.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedPackages = filteredPackages.slice(startIndex, endIndex)
+
+  // Reset to page 1 when search or date changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, selectedDate])
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1)
+    }
+  }
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1)
+    }
+  }
+
+  // Download package summary as CSV
+  const handleDownload = () => {
+    if (filteredPackages.length === 0) return
+
+    // Create CSV content
+    const headers = ["Package Name", "Completed Sessions", "Total Sessions", "Start Date", "End Date", "Fees Paid", "Status"]
+
+    const rows = filteredPackages.map(pkg => {
+      const totalSessions = pkg?.usage?.totalSessions ?? 0
+      const completedSessions = pkg?.usage?.completedSessions ?? 0
+      const status = totalSessions > 0 && completedSessions === totalSessions ? "Completed" : "On Going"
+      const startDate = pkg?.validity?.startDate ? new Date(pkg.validity.startDate).toLocaleDateString() : ""
+      const endDate = pkg?.validity?.endDate ? new Date(pkg.validity.endDate).toLocaleDateString() : ""
+      const sessionsPaidAmount = pkg?.fees?.sessionsPaidAmount ?? ""
+
+      return [
+        pkg.packageName || "",
+        completedSessions,
+        totalSessions,
+        startDate,
+        endDate,
+        sessionsPaidAmount,
+        status
+      ]
+    })
+
+    // Add Yanmu branding header
+    const csvContent = [
+      ["YANMU - Package Summary Report"],
+      [`Date: ${dateLabel}`],
+      [""],
+      headers,
+      ...rows
+    ].map(row => row.join(",")).join("\n")
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+    const link = document.createElement("a")
+    const url = URL.createObjectURL(blob)
+    link.setAttribute("href", url)
+    link.setAttribute("download", `yanmu_package_summary_${selectedDate.toISOString().split('T')[0]}.csv`)
+    link.style.visibility = "hidden"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   return (
     <div className="package-summary-card">
@@ -86,18 +233,8 @@ export default function PackageSummaryMain() {
             ref={dateInputRef}
             type="date"
             className="ps-date-input"
-            onChange={(e) => {
-              const value = e.target.value
-              if (!value) return
-              const d = new Date(value)
-              if (Number.isNaN(d.getTime())) return
-              const formatted = d.toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })
-              setDateLabel(formatted)
-            }}
+            value={selectedDate.toISOString().split('T')[0]}
+            onChange={handleDateChange}
           />
         </div>
         <div className="package-summary-controls">
@@ -106,6 +243,8 @@ export default function PackageSummaryMain() {
               type="text"
               className="package-summary-search"
               placeholder="Search transaction"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <span className="package-summary-search-icon">
               <svg
@@ -134,33 +273,330 @@ export default function PackageSummaryMain() {
               </svg>
             </span>
           </div>
-          <button className="package-summary-download" type="button">
-            <span className="ps-download-left">
+          {filteredPackages.length > 0 && (
+            <button
+              className="package-summary-download"
+              type="button"
+              onClick={handleDownload}
+            >
+              <span className="ps-download-left">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="5"
+                  height="25"
+                  viewBox="0 0 5 25"
+                  fill="none"
+                >
+                  <g filter="url(#filter0_f_121_1658)">
+                    <path
+                      d="M1.65601 2.62557C1.72142 1.35844 2.66456 1.4741 3.09055 1.5924C3.2018 1.6233 3.24441 1.75063 3.18984 1.85239C2.99079 2.22355 2.57454 3.08647 2.47636 3.97405C1.97336 8.52167 2.15949 16.6295 2.23028 19.0618C2.244 19.5334 2.21231 20.0049 2.13231 20.4698L1.65601 23.2381C1.65601 23.2381 1.35772 8.40478 1.65601 2.62557Z"
+                      fill="white"
+                      fillOpacity="0.3"
+                    />
+                    <path
+                      d="M1.65601 2.62557C1.72142 1.35844 2.66456 1.4741 3.09055 1.5924C3.2018 1.6233 3.24441 1.75063 3.18984 1.85239C2.99079 2.22355 2.57454 3.08647 2.47636 3.97405C1.97336 8.52167 2.15949 16.6295 2.23028 19.0618C2.244 19.5334 2.21231 20.0049 2.13231 20.4698L1.65601 23.2381C1.65601 23.2381 1.35772 8.40478 1.65601 2.62557Z"
+                      fill="url(#paint0_linear_121_1658)"
+                    />
+                  </g>
+                  <defs>
+                    <filter
+                      id="filter0_f_121_1658"
+                      x="-0.000372052"
+                      y="-5.84126e-06"
+                      width="4.73707"
+                      height="24.7619"
+                      filterUnits="userSpaceOnUse"
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend
+                        mode="normal"
+                        in="SourceGraphic"
+                        in2="BackgroundImageFix"
+                        result="shape"
+                      />
+                      <feGaussianBlur
+                        stdDeviation="0.761905"
+                        result="effect1_foregroundBlur_121_1658"
+                      />
+                    </filter>
+                    <linearGradient
+                      id="paint0_linear_121_1658"
+                      x1="1.52344"
+                      y1="2.10173"
+                      x2="2.72716"
+                      y2="2.52112"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="white" />
+                      <stop offset="1" stopColor="white" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
+              <span className="ps-download-top">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="90"
+                  height="4"
+                  viewBox="0 0 90 4"
+                  fill="none"
+                >
+                  <g filter="url(#filter0_f_121_1659)">
+                    <path
+                      d="M1.61914 1.61905H88.2208"
+                      stroke="white"
+                      strokeWidth="0.190476"
+                      strokeLinecap="round"
+                    />
+                  </g>
+                  <defs>
+                    <filter
+                      id="filter0_f_121_1659"
+                      x="-0.000372052"
+                      y="-5.84126e-06"
+                      width="89.8406"
+                      height="3.23811"
+                      filterUnits="userSpaceOnUse"
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend
+                        mode="normal"
+                        in="SourceGraphic"
+                        in2="BackgroundImageFix"
+                        result="shape"
+                      />
+                      <feGaussianBlur
+                        stdDeviation="0.761905"
+                        result="effect1_foregroundBlur_121_1659"
+                      />
+                    </filter>
+                  </defs>
+                </svg>
+              </span>
+              <span className="ps-download-label">Download</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="package-summary-table-container">
+        {loading ? (
+          <div className="package-summary-empty">Loading...</div>
+        ) : !filteredPackages || filteredPackages.length === 0 ? (
+          <div className="package-summary-empty">No package summary</div>
+        ) : (
+          <table className="package-summary-table">
+            <thead>
+              <tr>
+                <th>
+                  Session Name
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    style={{ flexShrink: 0, marginLeft: 4 }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
+                      fill="white"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
+                      fill="white"
+                    />
+                  </svg>
+                </th>
+                <th>
+                  Usage
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    style={{ flexShrink: 0, marginLeft: 4 }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
+                      fill="white"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
+                      fill="white"
+                    />
+                  </svg>
+                </th>
+                <th>
+                  Validity
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    style={{ flexShrink: 0, marginLeft: 4 }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
+                      fill="white"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
+                      fill="white"
+                    />
+                  </svg>
+                </th>
+                <th>
+                  Fees
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    style={{ flexShrink: 0, marginLeft: 4 }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
+                      fill="white"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
+                      fill="white"
+                    />
+                  </svg>
+                </th>
+                <th>
+                  Status
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    style={{ flexShrink: 0, marginLeft: 4 }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
+                      fill="white"
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
+                      fill="white"
+                    />
+                  </svg>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedPackages.map((pkg) => {
+                const totalSessions = pkg?.usage?.totalSessions ?? 0
+                const completedSessions = pkg?.usage?.completedSessions ?? 0
+                const sessionsDisplay = `${completedSessions}/${totalSessions}`
+                const status = totalSessions > 0 && completedSessions === totalSessions ? "Completed" : "On Going"
+                const startDate = pkg?.validity?.startDate ? new Date(pkg.validity.startDate) : null
+                const endDate = pkg?.validity?.endDate ? new Date(pkg.validity.endDate) : null
+                const validityDisplay =
+                  startDate && endDate
+                    ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`
+                    : ""
+                const sessionsPaidAmount = pkg?.fees?.sessionsPaidAmount
+
+                return (
+                  <tr key={pkg.bookingId}>
+                    <td>
+                      <p>{pkg.packageName}</p>
+                      <p className="text-muted">Number of sessions - {totalSessions}</p>
+                    </td>
+                    <td>
+                      <p>{sessionsDisplay}</p>
+                      <p className="text-muted">
+                        {completedSessions}/{totalSessions} (completed / total)
+                      </p>
+                    </td>
+                    <td>
+                      <p>{validityDisplay}</p>
+                      <p className="text-muted">
+                        {startDate && endDate
+                          ? `Start date - ${startDate.toLocaleDateString()} | End date - ${endDate.toLocaleDateString()}`
+                          : "Start date - End date"}
+                      </p>
+                    </td>
+                    <td>{sessionsPaidAmount}</td>
+                    <td>
+                      <span
+                        className={`status-pill ${status === "Completed" ? "status-completed" : "status-ongoing"
+                          }`}
+                      >
+                        {status}
+                      </span>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {filteredPackages.length > 0 && (
+        <div className="package-summary-pagination">
+          <button
+            type="button"
+            className={`ps-page-btn ps-page-btn-prev ${currentPage > 1 ? 'ps-page-btn--active' : 'ps-page-btn--inactive'}`}
+            onClick={handlePrevPage}
+            disabled={currentPage <= 1}
+          >
+            <span className="ps-page-glow-left">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="5"
-                height="25"
-                viewBox="0 0 5 25"
+                width="7"
+                height="24"
+                viewBox="0 0 7 24"
                 fill="none"
               >
-                <g filter="url(#filter0_f_121_1658)">
+                <g filter="url(#filter0_f_134_1769)">
                   <path
-                    d="M1.65601 2.62557C1.72142 1.35844 2.66456 1.4741 3.09055 1.5924C3.2018 1.6233 3.24441 1.75063 3.18984 1.85239C2.99079 2.22355 2.57454 3.08647 2.47636 3.97405C1.97336 8.52167 2.15949 16.6295 2.23028 19.0618C2.244 19.5334 2.21231 20.0049 2.13231 20.4698L1.65601 23.2381C1.65601 23.2381 1.35772 8.40478 1.65601 2.62557Z"
+                    d="M1.74815 2.46143C1.90823 1.25841 4.24391 1.38489 5.25381 1.49706C5.41629 1.51511 5.46548 1.72713 5.33478 1.82533C4.82315 2.20974 3.94973 2.95785 3.7308 3.72563C2.65711 7.49105 2.8826 13.86 3.06779 16.8674C3.13528 17.9633 2.95634 19.0618 2.51114 20.0655L1.74815 21.7857C1.74815 21.7857 1.02721 7.87944 1.74815 2.46143Z"
                     fill="white"
                     fillOpacity="0.3"
                   />
                   <path
-                    d="M1.65601 2.62557C1.72142 1.35844 2.66456 1.4741 3.09055 1.5924C3.2018 1.6233 3.24441 1.75063 3.18984 1.85239C2.99079 2.22355 2.57454 3.08647 2.47636 3.97405C1.97336 8.52167 2.15949 16.6295 2.23028 19.0618C2.244 19.5334 2.21231 20.0049 2.13231 20.4698L1.65601 23.2381C1.65601 23.2381 1.35772 8.40478 1.65601 2.62557Z"
-                    fill="url(#paint0_linear_121_1658)"
+                    d="M1.74815 2.46143C1.90823 1.25841 4.24391 1.38489 5.25381 1.49706C5.41629 1.51511 5.46548 1.72713 5.33478 1.82533C4.82315 2.20974 3.94973 2.95785 3.7308 3.72563C2.65711 7.49105 2.8826 13.86 3.06779 16.8674C3.13528 17.9633 2.95634 19.0618 2.51114 20.0655L1.74815 21.7857C1.74815 21.7857 1.02721 7.87944 1.74815 2.46143Z"
+                    fill="url(#paint0_linear_134_1769)"
                   />
                 </g>
                 <defs>
                   <filter
-                    id="filter0_f_121_1658"
-                    x="-0.000372052"
-                    y="-5.84126e-06"
-                    width="4.73707"
-                    height="24.7619"
+                    id="filter0_f_134_1769"
+                    x="-0.000810742"
+                    y="-1.72853e-05"
+                    width="6.83951"
+                    height="23.2142"
                     filterUnits="userSpaceOnUse"
                     colorInterpolationFilters="sRGB"
                   >
@@ -172,16 +608,16 @@ export default function PackageSummaryMain() {
                       result="shape"
                     />
                     <feGaussianBlur
-                      stdDeviation="0.761905"
-                      result="effect1_foregroundBlur_121_1658"
+                      stdDeviation="0.714273"
+                      result="effect1_foregroundBlur_134_1769"
                     />
                   </filter>
                   <linearGradient
-                    id="paint0_linear_121_1658"
-                    x1="1.52344"
-                    y1="2.10173"
-                    x2="2.72716"
-                    y2="2.52112"
+                    id="paint0_linear_134_1769"
+                    x1="1.42773"
+                    y1="1.97033"
+                    x2="3.23336"
+                    y2="3.59215"
                     gradientUnits="userSpaceOnUse"
                   >
                     <stop stopColor="white" />
@@ -190,29 +626,29 @@ export default function PackageSummaryMain() {
                 </defs>
               </svg>
             </span>
-            <span className="ps-download-top">
+            <span className="ps-page-top-left">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="90"
+                width="21"
                 height="4"
-                viewBox="0 0 90 4"
+                viewBox="0 0 21 4"
                 fill="none"
               >
-                <g filter="url(#filter0_f_121_1659)">
+                <g filter="url(#filter0_f_134_1784)">
                   <path
-                    d="M1.61914 1.61905H88.2208"
+                    d="M18.6602 1.51782L1.5173 1.51782"
                     stroke="white"
-                    strokeWidth="0.190476"
+                    strokeWidth="0.178568"
                     strokeLinecap="round"
                   />
                 </g>
                 <defs>
                   <filter
-                    id="filter0_f_121_1659"
-                    x="-0.000372052"
-                    y="-5.84126e-06"
-                    width="89.8406"
-                    height="3.23811"
+                    id="filter0_f_134_1784"
+                    x="-0.000810742"
+                    y="-1.72853e-05"
+                    width="20.1794"
+                    height="3.03568"
                     filterUnits="userSpaceOnUse"
                     colorInterpolationFilters="sRGB"
                   >
@@ -224,406 +660,156 @@ export default function PackageSummaryMain() {
                       result="shape"
                     />
                     <feGaussianBlur
-                      stdDeviation="0.761905"
-                      result="effect1_foregroundBlur_121_1659"
+                      stdDeviation="0.714273"
+                      result="effect1_foregroundBlur_134_1784"
                     />
                   </filter>
                 </defs>
               </svg>
             </span>
-            <span className="ps-download-label">Download</span>
+            <span className="ps-page-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+              >
+                <g filter="url(#filter0_d_134_1775)">
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M10.2329 4.18414C10.4626 4.423 10.4551 4.80282 10.2163 5.0325L7.06605 8L10.2163 10.9675C10.4551 11.1972 10.4626 11.577 10.2329 11.8159C10.0032 12.0547 9.62339 12.0622 9.38452 11.8325L5.78452 8.4325C5.66688 8.31938 5.60039 8.16321 5.60039 8C5.60039 7.83679 5.66688 7.68062 5.78452 7.5675L9.38452 4.1675C9.62339 3.93782 10.0032 3.94527 10.2329 4.18414Z"
+                    fill="#EAEAEA"
+                  />
+                </g>
+              </svg>
+            </span>
+          </button>
+          <span className="ps-page-indicator">{currentPage}/{totalPages || 1}</span>
+          <button
+            type="button"
+            className={`ps-page-btn ps-page-btn-next ${currentPage < totalPages ? 'ps-page-btn--active' : 'ps-page-btn--inactive'}`}
+            onClick={handleNextPage}
+            disabled={currentPage >= totalPages}
+          >
+            <span className="ps-page-glow-right">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="7"
+                height="24"
+                viewBox="0 0 7 24"
+                fill="none"
+              >
+                <g filter="url(#filter0_f_134_1783)">
+                  <path
+                    d="M5.08974 2.46143C4.92966 1.25841 2.59398 1.38489 1.58408 1.49706C1.4216 1.51511 1.37241 1.72713 1.50311 1.82533C2.01474 2.20974 2.88816 2.95785 3.10709 3.72563C4.18078 7.49105 3.95529 13.86 3.7701 16.8674C3.70261 17.9633 3.88155 19.0618 4.32675 20.0655L5.08974 21.7857C5.08974 21.7857 5.81068 7.87944 5.08974 2.46143Z"
+                    fill="white"
+                    fillOpacity="0.3"
+                  />
+                  <path
+                    d="M5.08974 2.46143C4.92966 1.25841 2.59398 1.38489 1.58408 1.49706C1.4216 1.51511 1.37241 1.72713 1.50311 1.82533C2.01474 2.20974 2.88816 2.95785 3.10709 3.72563C4.18078 7.49105 3.95529 13.86 3.7701 16.8674C3.70261 17.9633 3.88155 19.0618 4.32675 20.0655L5.08974 21.7857C5.08974 21.7857 5.81068 7.87944 5.08974 2.46143Z"
+                    fill="url(#paint0_linear_134_1783)"
+                  />
+                </g>
+                <defs>
+                  <filter
+                    id="filter0_f_134_1783"
+                    x="-0.000810742"
+                    y="-1.72853e-05"
+                    width="6.83951"
+                    height="23.2142"
+                    filterUnits="userSpaceOnUse"
+                    colorInterpolationFilters="sRGB"
+                  >
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="BackgroundImageFix"
+                      result="shape"
+                    />
+                    <feGaussianBlur
+                      stdDeviation="0.714273"
+                      result="effect1_foregroundBlur_134_1783"
+                    />
+                  </filter>
+                  <linearGradient
+                    id="paint0_linear_134_1783"
+                    x1="5.41016"
+                    y1="1.97033"
+                    x2="3.60453"
+                    y2="3.59215"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stopColor="white" />
+                    <stop offset="1" stopColor="white" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </span>
+            <span className="ps-page-top-right">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="21"
+                height="4"
+                viewBox="0 0 21 4"
+                fill="none"
+              >
+                <g filter="url(#filter0_f_134_1784)">
+                  <path
+                    d="M18.6602 1.51782L1.5173 1.51782"
+                    stroke="white"
+                    strokeWidth="0.178568"
+                    strokeLinecap="round"
+                  />
+                </g>
+                <defs>
+                  <filter
+                    id="filter0_f_134_1784"
+                    x="-0.000810742"
+                    y="-1.72853e-05"
+                    width="20.1794"
+                    height="3.03568"
+                    filterUnits="userSpaceOnUse"
+                    colorInterpolationFilters="sRGB"
+                  >
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="BackgroundImageFix"
+                      result="shape"
+                    />
+                    <feGaussianBlur
+                      stdDeviation="0.714273"
+                      result="effect1_foregroundBlur_134_1784"
+                    />
+                  </filter>
+                </defs>
+              </svg>
+            </span>
+            <span className="ps-page-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="5"
+                height="10"
+                viewBox="0 0 5 10"
+                fill="none"
+              >
+                <g filter="url(#filter0_d_3138_292)">
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M0.167501 0.184136C-0.0621751 0.422999 -0.0547276 0.802824 0.184136 1.0325L3.33434 4L0.184136 6.9675C-0.0547272 7.19718 -0.0621748 7.577 0.167501 7.81587C0.397177 8.05473 0.777003 8.06218 1.01587 7.8325L4.61587 4.4325C4.73351 4.31938 4.8 4.16321 4.8 4C4.8 3.83679 4.73351 3.68062 4.61587 3.5675L1.01587 0.167501C0.777003 -0.0621752 0.397177 -0.0547276 0.167501 0.184136Z"
+                    fill="#EAEAEA"
+                  />
+                </g>
+              </svg>
+            </span>
           </button>
         </div>
-      </div>
-
-      <div className="package-summary-table-container">
-        <table className="package-summary-table">
-          <thead>
-            <tr>
-              <th>
-                Session Name
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  style={{ flexShrink: 0, marginLeft: 4 }}
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
-                    fill="white"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
-                    fill="white"
-                  />
-                </svg>
-              </th>
-              <th>
-                Usage
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  style={{ flexShrink: 0, marginLeft: 4 }}
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
-                    fill="white"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
-                    fill="white"
-                  />
-                </svg>
-              </th>
-              <th>
-                Validity
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  style={{ flexShrink: 0, marginLeft: 4 }}
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
-                    fill="white"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
-                    fill="white"
-                  />
-                </svg>
-              </th>
-              <th>
-                Fees
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  style={{ flexShrink: 0, marginLeft: 4 }}
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
-                    fill="white"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
-                    fill="white"
-                  />
-                </svg>
-              </th>
-              <th>
-                Status
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  style={{ flexShrink: 0, marginLeft: 4 }}
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 6.85983C4.00628 6.71339 4.24372 6.71339 4.39017 6.85983L6 8.46967L7.60984 6.85983C7.75628 6.71339 7.99372 6.71339 8.14016 6.85983C8.28661 7.00628 8.28661 7.24372 8.14016 7.39017L6.26516 9.26516C6.11872 9.41161 5.88128 9.41161 5.73484 9.26516L3.85983 7.39017C3.71339 7.24372 3.71339 7.00628 3.85983 6.85983Z"
-                    fill="white"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.85983 5.14017C4.00628 5.28661 4.24372 5.28661 4.39017 5.14017L6 3.53033L7.60984 5.14017C7.75628 5.28661 7.99372 5.28661 8.14016 5.14017C8.28661 4.99372 8.28661 4.75628 8.14016 4.60983L6.26516 2.73484C6.11872 2.58839 5.88128 2.58839 5.73484 2.73484L3.85983 4.60983C3.71339 4.75628 3.71339 4.99372 3.85983 5.14017Z"
-                    fill="white"
-                  />
-                </svg>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {sessions.map((session, idx) => (
-              <tr key={idx}>
-                <td>
-                  <p>{session.name}</p>
-                  <p className="text-muted">Number of sessions - 12</p>
-                </td>
-                <td>
-                  <p>{session.sessions}</p>
-                  <p className="text-muted">2/10 (2 out of 2 sessions)</p>
-                </td>
-                <td>
-                  <p>{session.validity}</p>
-                  <p className="text-muted">Start date - End date</p>
-                </td>
-                <td>{session.fees}</td>
-                <td>
-                  <span className={`status-pill ${session.status === "Completed" ? "status-completed" : "status-ongoing"}`}>
-                    {session.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="package-summary-pagination">
-        <button type="button" className="ps-page-btn ps-page-btn-prev ps-page-btn--inactive">
-          <span className="ps-page-glow-left">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="7"
-              height="24"
-              viewBox="0 0 7 24"
-              fill="none"
-            >
-              <g filter="url(#filter0_f_134_1769)">
-                <path
-                  d="M1.74815 2.46143C1.90823 1.25841 4.24391 1.38489 5.25381 1.49706C5.41629 1.51511 5.46548 1.72713 5.33478 1.82533C4.82315 2.20974 3.94973 2.95785 3.7308 3.72563C2.65711 7.49105 2.8826 13.86 3.06779 16.8674C3.13528 17.9633 2.95634 19.0618 2.51114 20.0655L1.74815 21.7857C1.74815 21.7857 1.02721 7.87944 1.74815 2.46143Z"
-                  fill="white"
-                  fillOpacity="0.3"
-                />
-                <path
-                  d="M1.74815 2.46143C1.90823 1.25841 4.24391 1.38489 5.25381 1.49706C5.41629 1.51511 5.46548 1.72713 5.33478 1.82533C4.82315 2.20974 3.94973 2.95785 3.7308 3.72563C2.65711 7.49105 2.8826 13.86 3.06779 16.8674C3.13528 17.9633 2.95634 19.0618 2.51114 20.0655L1.74815 21.7857C1.74815 21.7857 1.02721 7.87944 1.74815 2.46143Z"
-                  fill="url(#paint0_linear_134_1769)"
-                />
-              </g>
-              <defs>
-                <filter
-                  id="filter0_f_134_1769"
-                  x="-0.000810742"
-                  y="-1.72853e-05"
-                  width="6.83951"
-                  height="23.2142"
-                  filterUnits="userSpaceOnUse"
-                  colorInterpolationFilters="sRGB"
-                >
-                  <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="BackgroundImageFix"
-                    result="shape"
-                  />
-                  <feGaussianBlur
-                    stdDeviation="0.714273"
-                    result="effect1_foregroundBlur_134_1769"
-                  />
-                </filter>
-                <linearGradient
-                  id="paint0_linear_134_1769"
-                  x1="1.42773"
-                  y1="1.97033"
-                  x2="3.23336"
-                  y2="3.59215"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stopColor="white" />
-                  <stop offset="1" stopColor="white" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </span>
-          <span className="ps-page-top-left">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="21"
-              height="4"
-              viewBox="0 0 21 4"
-              fill="none"
-            >
-              <g filter="url(#filter0_f_134_1784)">
-                <path
-                  d="M18.6602 1.51782L1.5173 1.51782"
-                  stroke="white"
-                  strokeWidth="0.178568"
-                  strokeLinecap="round"
-                />
-              </g>
-              <defs>
-                <filter
-                  id="filter0_f_134_1784"
-                  x="-0.000810742"
-                  y="-1.72853e-05"
-                  width="20.1794"
-                  height="3.03568"
-                  filterUnits="userSpaceOnUse"
-                  colorInterpolationFilters="sRGB"
-                >
-                  <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="BackgroundImageFix"
-                    result="shape"
-                  />
-                  <feGaussianBlur
-                    stdDeviation="0.714273"
-                    result="effect1_foregroundBlur_134_1784"
-                  />
-                </filter>
-              </defs>
-            </svg>
-          </span>
-          <span className="ps-page-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-            >
-              <g filter="url(#filter0_d_134_1775)">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M10.2329 4.18414C10.4626 4.423 10.4551 4.80282 10.2163 5.0325L7.06605 8L10.2163 10.9675C10.4551 11.1972 10.4626 11.577 10.2329 11.8159C10.0032 12.0547 9.62339 12.0622 9.38452 11.8325L5.78452 8.4325C5.66688 8.31938 5.60039 8.16321 5.60039 8C5.60039 7.83679 5.66688 7.68062 5.78452 7.5675L9.38452 4.1675C9.62339 3.93782 10.0032 3.94527 10.2329 4.18414Z"
-                  fill="#EAEAEA"
-                />
-              </g>
-            </svg>
-          </span>
-        </button>
-        <span className="ps-page-indicator">1/20</span>
-        <button type="button" className="ps-page-btn ps-page-btn-next ps-page-btn--active">
-          <span className="ps-page-glow-right">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="7"
-              height="24"
-              viewBox="0 0 7 24"
-              fill="none"
-            >
-              <g filter="url(#filter0_f_134_1783)">
-                <path
-                  d="M5.08974 2.46143C4.92966 1.25841 2.59398 1.38489 1.58408 1.49706C1.4216 1.51511 1.37241 1.72713 1.50311 1.82533C2.01474 2.20974 2.88816 2.95785 3.10709 3.72563C4.18078 7.49105 3.95529 13.86 3.7701 16.8674C3.70261 17.9633 3.88155 19.0618 4.32675 20.0655L5.08974 21.7857C5.08974 21.7857 5.81068 7.87944 5.08974 2.46143Z"
-                  fill="white"
-                  fillOpacity="0.3"
-                />
-                <path
-                  d="M5.08974 2.46143C4.92966 1.25841 2.59398 1.38489 1.58408 1.49706C1.4216 1.51511 1.37241 1.72713 1.50311 1.82533C2.01474 2.20974 2.88816 2.95785 3.10709 3.72563C4.18078 7.49105 3.95529 13.86 3.7701 16.8674C3.70261 17.9633 3.88155 19.0618 4.32675 20.0655L5.08974 21.7857C5.08974 21.7857 5.81068 7.87944 5.08974 2.46143Z"
-                  fill="url(#paint0_linear_134_1783)"
-                />
-              </g>
-              <defs>
-                <filter
-                  id="filter0_f_134_1783"
-                  x="-0.000810742"
-                  y="-1.72853e-05"
-                  width="6.83951"
-                  height="23.2142"
-                  filterUnits="userSpaceOnUse"
-                  colorInterpolationFilters="sRGB"
-                >
-                  <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="BackgroundImageFix"
-                    result="shape"
-                  />
-                  <feGaussianBlur
-                    stdDeviation="0.714273"
-                    result="effect1_foregroundBlur_134_1783"
-                  />
-                </filter>
-                <linearGradient
-                  id="paint0_linear_134_1783"
-                  x1="5.41016"
-                  y1="1.97033"
-                  x2="3.60453"
-                  y2="3.59215"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stopColor="white" />
-                  <stop offset="1" stopColor="white" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </span>
-          <span className="ps-page-top-right">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="21"
-              height="4"
-              viewBox="0 0 21 4"
-              fill="none"
-            >
-              <g filter="url(#filter0_f_134_1784)">
-                <path
-                  d="M18.6602 1.51782L1.5173 1.51782"
-                  stroke="white"
-                  strokeWidth="0.178568"
-                  strokeLinecap="round"
-                />
-              </g>
-              <defs>
-                <filter
-                  id="filter0_f_134_1784"
-                  x="-0.000810742"
-                  y="-1.72853e-05"
-                  width="20.1794"
-                  height="3.03568"
-                  filterUnits="userSpaceOnUse"
-                  colorInterpolationFilters="sRGB"
-                >
-                  <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="BackgroundImageFix"
-                    result="shape"
-                  />
-                  <feGaussianBlur
-                    stdDeviation="0.714273"
-                    result="effect1_foregroundBlur_134_1784"
-                  />
-                </filter>
-              </defs>
-            </svg>
-          </span>
-          <span className="ps-page-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="5"
-              height="10"
-              viewBox="0 0 5 10"
-              fill="none"
-            >
-              <g filter="url(#filter0_d_3138_292)">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M0.167501 0.184136C-0.0621751 0.422999 -0.0547276 0.802824 0.184136 1.0325L3.33434 4L0.184136 6.9675C-0.0547272 7.19718 -0.0621748 7.577 0.167501 7.81587C0.397177 8.05473 0.777003 8.06218 1.01587 7.8325L4.61587 4.4325C4.73351 4.31938 4.8 4.16321 4.8 4C4.8 3.83679 4.73351 3.68062 4.61587 3.5675L1.01587 0.167501C0.777003 -0.0621752 0.397177 -0.0547276 0.167501 0.184136Z"
-                  fill="#EAEAEA"
-                />
-              </g>
-            </svg>
-          </span>
-        </button>
-      </div>
+      )}
     </div>
   )
 }

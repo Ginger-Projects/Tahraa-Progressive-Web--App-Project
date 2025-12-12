@@ -53,7 +53,7 @@ const getPasswordStrength = (password) => {
     percent,
   };
 };
- const mentors = [
+const mentors = [
   {
     name: "Peggy Carter",
     role: "Vocal Trainer",
@@ -110,7 +110,7 @@ const TahraaSignup = () => {
   const navigate = useNavigate();
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
- 
+
 
   const searchParams = new URLSearchParams(location.search || "");
   const invite = searchParams.get("invite");
@@ -159,7 +159,7 @@ const TahraaSignup = () => {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(email)) {
       newErrors.email = "Enter a valid email address";
-    } 
+    }
 
     if (!dob) {
       newErrors.dob = "Date of birth is required";
@@ -217,8 +217,8 @@ const TahraaSignup = () => {
       console.log("payload", payload);
 
       const res = await signupTrainee(payload);
-      console.log("res",res);
-      
+      console.log("res", res);
+
       toast.success(res?.message)
       if (invite) {
         const qp = new URLSearchParams();
@@ -481,7 +481,7 @@ const TahraaSignup = () => {
                   isOpen={showTermsModal}
                   onClose={() => setShowTermsModal(false)}
                 >
-                  <TermsOfUse />
+                  <TermsOfUse isModal={true} />
                 </LegalModal>
               )}
 
@@ -490,7 +490,7 @@ const TahraaSignup = () => {
                   isOpen={showPrivacyModal}
                   onClose={() => setShowPrivacyModal(false)}
                 >
-                  <PrivacyPolicy />
+                  <PrivacyPolicy isModal={true} />
                 </LegalModal>
               )}
               {/* Strength bar */}
@@ -553,7 +553,7 @@ const TahraaSignup = () => {
 
               <div className='label'>{submitting ? "Submitting..." : "Sign Up"}</div>
             </button>
-{/* 
+            {/* 
             <button className='BTNaa'>
               <div className='rectangle-2' />
 

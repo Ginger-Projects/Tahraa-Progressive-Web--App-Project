@@ -5,7 +5,7 @@ import "./PackageSummaryPage.css";
 export default function PackageSummaryPage() {
     return (
         <div className="package-summary-page">
-           <TraineeHeader/>
+           <TraineeHeader title="Package Summary"/>
            <div className="package-summary-container">
             <PackageSummaryMain/>
            </div>

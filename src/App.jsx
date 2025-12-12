@@ -160,7 +160,12 @@ function App() {
           <EditTraineeProfilePicture />
           </ProtectedRoute>
           } />
-         <Route path='/package-summary' element={<PackageSummaryPage/>} />
+         <Route
+          path='/package-summary' element={
+            <ProtectedRoute>
+          <PackageSummaryPage/>
+          </ProtectedRoute>
+          } />
 
         {/* Chat */}
         <Route path="/chat" element={

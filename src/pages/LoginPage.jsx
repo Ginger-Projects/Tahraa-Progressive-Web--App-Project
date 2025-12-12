@@ -258,7 +258,7 @@ const LoginPage = () => {
                 isOpen={showTermsModal}
                 onClose={() => setShowTermsModal(false)}
               >
-                <TermsOfUse />
+                <TermsOfUse isModal={true} />
               </LegalModal>
             )}
 
@@ -267,7 +267,7 @@ const LoginPage = () => {
                 isOpen={showPrivacyModal}
                 onClose={() => setShowPrivacyModal(false)}
               >
-                <PrivacyPolicy />
+                <PrivacyPolicy isModal={true} />
               </LegalModal>
             )}
           </form>

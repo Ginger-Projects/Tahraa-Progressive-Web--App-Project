@@ -2,11 +2,12 @@ import React from "react";
 import "./TermsOfUse.css";
 import { Footer } from "../../components/Home/Footer";
 import Header from "../../components/Dashbaord/Header";
-export default function TermsOfUse() {
+
+export default function TermsOfUse({ isModal = false }) {
   return (
-    <div className="terms-wrapper">
-      <Header />
-      <div className="terms-page">
+    <div className={isModal ? "terms-page" : "terms-wrapper"}>
+      {!isModal && <Header />}
+      <div className={isModal ? "" : "terms-page"}>
         <header className="terms-header">
           <h1>Terms of Use</h1>
           <p className="terms-updated">Last updated: 7 December, 2025 — Yanmu, Bloom Consulting LLC</p>
@@ -133,7 +134,7 @@ export default function TermsOfUse() {
           <p>For questions, email: <strong>info@yanmu.qa</strong></p>
         </main>
       </div>
-      <Footer />
+      {!isModal && <Footer />}
     </div>
   );
 }
