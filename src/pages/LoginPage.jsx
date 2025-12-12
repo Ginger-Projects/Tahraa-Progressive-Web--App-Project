@@ -46,6 +46,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const navigate = useNavigate()
@@ -64,12 +65,15 @@ const LoginPage = () => {
   }, [navigate]);
 
   const from = location.state?.from;
-  console.log("location", from);
+  console.log("location state from:", from);
 
-  const searchParams = new URLSearchParams(from?.search || "");
-  const invite = searchParams.get("invite");
-  const packageId = searchParams.get("packageId");
-  console.log("invite", invite, packageId);
+  // Try to get invite/packageId from navigation state first, then fallback to current URL
+  const stateSearchParams = new URLSearchParams(from?.search || "");
+  const currentSearchParams = new URLSearchParams(location.search || "");
+
+  const invite = stateSearchParams.get("invite") || currentSearchParams.get("invite");
+  const packageId = stateSearchParams.get("packageId") || currentSearchParams.get("packageId");
+  console.log("invite:", invite, "packageId:", packageId);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -155,14 +159,28 @@ const LoginPage = () => {
             {/* Password */}
             <div className='lp-field'>
               <label className='lp-label'>Password</label>
-              <input
-                type='password'
-                className='lp-input'
-                placeholder='Enter your password*'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={submitting}
-              />
+              <div className='lp-input-wrapper'>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className='lp-input'
+                  placeholder='Enter your password*'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={submitting}
+                />
+                <span className='lp-eye-icon' onClick={() => setShowPassword((prev) => !prev)}>
+                  {showPassword ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18" fill="none">
+                      <path d="M10.3687 0C15.5365 0 19.836 3.7184 20.7373 8.62568C19.836 13.5329 15.5365 17.2514 10.3687 17.2514C5.20079 17.2514 0.901393 13.5329 0 8.62568C0.901393 3.7184 5.20079 0 10.3687 0ZM10.3687 15.3345C14.4281 15.3345 17.9018 12.5091 18.781 8.62568C17.9018 4.74223 14.4281 1.91682 10.3687 1.91682C6.30917 1.91682 2.83553 4.74223 1.95625 8.62568C2.83553 12.5091 6.30917 15.3345 10.3687 15.3345ZM10.3687 12.9385C7.98675 12.9385 6.05582 11.0076 6.05582 8.62568C6.05582 6.24376 7.98675 4.31284 10.3687 4.31284C12.7505 4.31284 14.6815 6.24376 14.6815 8.62568C14.6815 11.0076 12.7505 12.9385 10.3687 12.9385ZM10.3687 11.0217C11.692 11.0217 12.7647 9.94895 12.7647 8.62568C12.7647 7.3024 11.692 6.22966 10.3687 6.22966C9.04542 6.22966 7.97264 7.3024 7.97264 8.62568C7.97264 9.94895 9.04542 11.0217 10.3687 11.0217Z" fill="#898989" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18" fill="none">
+                      <path d="M10.3687 0C15.5365 0 19.836 3.7184 20.7373 8.62568C19.836 13.5329 15.5365 17.2514 10.3687 17.2514C5.20079 17.2514 0.901393 13.5329 0 8.62568C0.901393 3.7184 5.20079 0 10.3687 0ZM10.3687 15.3345C14.4281 15.3345 17.9018 12.5091 18.781 8.62568C17.9018 4.74223 14.4281 1.91682 10.3687 1.91682C6.30917 1.91682 2.83553 4.74223 1.95625 8.62568C2.83553 12.5091 6.30917 15.3345 10.3687 15.3345ZM10.3687 12.9385C7.98675 12.9385 6.05582 11.0076 6.05582 8.62568C6.05582 6.24376 7.98675 4.31284 10.3687 4.31284C12.7505 4.31284 14.6815 6.24376 14.6815 8.62568C14.6815 11.0076 12.7505 12.9385 10.3687 12.9385ZM10.3687 11.0217C11.692 11.0217 12.7647 9.94895 12.7647 8.62568C12.7647 7.3024 11.692 6.22966 10.3687 6.22966C9.04542 6.22966 7.97264 7.3024 7.97264 8.62568C7.97264 9.94895 9.04542 11.0217 10.3687 11.0217Z" fill="#898989" />
+                      <path d="M2 15L19 2" stroke="#898989" strokeWidth="1.6" strokeLinecap="round" />
+                    </svg>
+                  )}
+                </span>
+              </div>
             </div>
 
             {/* Sign in button */}

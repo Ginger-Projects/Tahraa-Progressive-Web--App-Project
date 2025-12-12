@@ -64,9 +64,9 @@ function App() {
         <Route
   path="/signup"
   element={
-    <PublicRoute>
+    
       <SignupPage />
-    </PublicRoute>
+   
   }
 />
 
@@ -108,9 +108,9 @@ function App() {
           </ProtectedRoute>
           } />
         <Route path="/expert-profile" element={
-          <ProtectedRoute>
+          
           <ExpertsProfileMain />
-          </ProtectedRoute>
+          
             } />
 
         <Route path="/expert-booking" element=

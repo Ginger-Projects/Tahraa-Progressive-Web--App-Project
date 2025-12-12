@@ -1,3 +1,8 @@
+.privacy-policy-wrapper {
+  min-height: 100vh;
+  background: #f3f4fb;
+}
+
 .privacy-page {
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
@@ -12,7 +17,7 @@
 
 .privacy-header h1 {
   font-size: 2.5rem;
-  color: #004080;
+  color: #775DA6;
   margin-bottom: 0.5rem;
 }
 
@@ -22,23 +27,58 @@
 }
 
 .privacy-content {
-  max-width: 800px;
+  width: 90%;
+  max-width: 1400px;
   margin: 0 auto;
   background: #fff;
-  padding: 2rem;
+  padding: 2rem 3rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .privacy-content {
+    width: 94%;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .privacy-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .privacy-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .privacy-content h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .privacy-page {
+    padding: 1rem;
+  }
+
+  .privacy-content {
+    width: 96%;
+    padding: 1rem;
+  }
+
+  .privacy-header h1 {
+    font-size: 1.5rem;
+  }
 }
 
 .privacy-content h2 {
-  color: #004080;
+  color: #775DA6;
   font-size: 1.5rem;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
 }
 
 .privacy-content h3 {
-  color: #0059b3;
+  color: #775DA6;
   font-size: 1.2rem;
   margin-top: 1rem;
   margin-bottom: 0.5rem;

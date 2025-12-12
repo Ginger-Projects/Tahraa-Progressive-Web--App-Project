@@ -114,6 +114,7 @@ const TahraaSignup = () => {
 
   const searchParams = new URLSearchParams(location.search || "");
   const invite = searchParams.get("invite");
+  console.log("invite", invite);
   const packageId = searchParams.get("packageId");
 
   const today = new Date();
@@ -158,9 +159,7 @@ const TahraaSignup = () => {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(email)) {
       newErrors.email = "Enter a valid email address";
-    } else if (!email.toLowerCase().endsWith("@gmail.com")) {
-      newErrors.email = "Email must be a gmail.com address";
-    }
+    } 
 
     if (!dob) {
       newErrors.dob = "Date of birth is required";
@@ -211,7 +210,6 @@ const TahraaSignup = () => {
         gender,
         password,
       };
-      console.log("pauload", payload);
 
       if (invite) {
         payload.invite = invite;
@@ -219,8 +217,9 @@ const TahraaSignup = () => {
       console.log("payload", payload);
 
       const res = await signupTrainee(payload);
-      console.log("res", res);
-
+      console.log("res",res);
+      
+      toast.success(res?.message)
       if (invite) {
         const qp = new URLSearchParams();
         if (packageId) {
@@ -230,7 +229,13 @@ const TahraaSignup = () => {
 
         navigate(`/expert-booking?${qp.toString()}`);
       }
-      
+
+      setFullName("")
+      setEmail("")
+      setDob("")
+      setGender("")
+      setPassword("")
+      setSubmitting(false)
     } catch (error) {
       console.error("Signup failed", error);
       toast.error(error?.response?.data?.message);

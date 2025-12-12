@@ -58,7 +58,7 @@ const Header = () => {
         </button>
 
         {/* Desktop Header Right */}
-        <div className={`exp-header-right ${mobileMenuOpen ? 'active' : ''}`}>
+        {user &&(<div className={`exp-header-right ${mobileMenuOpen ? 'active' : ''}`}>
           <div className="exp-user-info">
             <div className="exp-user-text">
               <span className="exp-user-name">{displayName}</span>
@@ -71,7 +71,8 @@ const Header = () => {
               <img src={profileImage} alt={displayName} />
             </div>
           </div>
-        </div>
+        </div>)}
+        
       </header>
 
       <ProfilePopup open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />

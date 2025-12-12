@@ -1,7 +1,12 @@
+.terms-wrapper {
+  min-height: 100vh;
+  background: #f3f4fb;
+}
+
 .terms-page {
   font-family: Arial, sans-serif;
   color: #333;
-  background-color: #f5f5f5;
+  background-color: #f9f9f9;
   padding: 2rem;
 }
 
@@ -13,7 +18,7 @@
 .terms-header h1 {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
-  color: #004080;
+  color: #775DA6;
 }
 
 .terms-updated {
@@ -22,24 +27,25 @@
 }
 
 .terms-content {
-  max-width: 800px;
+  width: 90%;
+  max-width: 1400px;
   margin: 0 auto;
   background-color: #fff;
-  padding: 2rem;
+  padding: 2rem 3rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .terms-content h2 {
   font-size: 1.5rem;
-  color: #004080;
+  color: #775DA6;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
 }
 
 .terms-content h3 {
   font-size: 1.2rem;
-  color: #0059b3;
+  color: #775DA6;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
 }
@@ -47,6 +53,7 @@
 .terms-content p {
   margin: 0.5rem 0;
   color: black;
+  line-height: 1.6;
 }
 
 .terms-content ul {
@@ -56,4 +63,38 @@
 
 .terms-content ul li {
   margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .terms-content {
+    width: 94%;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .terms-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .terms-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .terms-content h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .terms-page {
+    padding: 1rem;
+  }
+
+  .terms-content {
+    width: 96%;
+    padding: 1rem;
+  }
+
+  .terms-header h1 {
+    font-size: 1.5rem;
+  }
 }

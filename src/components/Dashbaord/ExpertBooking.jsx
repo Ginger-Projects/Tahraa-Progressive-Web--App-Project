@@ -30,79 +30,100 @@ const ExpertBooking = ({ setLoading = () => { } }) => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("packageId");
   const invite = searchParams.get("invite");
- 
-const showInviteAlert = () => {
-  toast(
-    ({ closeToast }) => (
-      <div
-        style={{
-          width: "100%",           // make full width
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",    // center horizontally
-          justifyContent: "center",// center vertically
-          textAlign: "center",
-          padding: "8px 0",
-        }}
-      >
-        <p
-          style={{
-            marginBottom: "12px",
-            color:"black",
-            fontSize: "16px",
-            fontWeight: 600,
-            lineHeight: "20px",
-          }}
-        >
-          You are invited!
-        </p>
 
-        <button
+  const showInviteAlert = () => {
+    toast(
+      ({ closeToast }) => (
+        <div
           style={{
-            background: "#775da6",
-            color: "white",
-            padding: "6px 18px",
-            borderRadius: "6px",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "14px",
+            width: "100%",           // make full width
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",    // center horizontally
+            justifyContent: "center",// center vertically
             textAlign: "center",
+            padding: "8px 0",
           }}
-          onClick={closeToast}
         >
-          Continue
-        </button>
-      </div>
-    ),
-    {
-      position: "top-center",
-      autoClose: false,
-      closeOnClick: false,
-      draggable: false,
-      closeButton: false,
-      hideProgressBar: true,
-      icon: false,
+          <p
+            style={{
+              marginBottom: "12px",
+              color: "black",
+              fontSize: "16px",
+              fontWeight: 600,
+              lineHeight: "20px",
+            }}
+          >
+            You are invited!
+          </p>
+
+          <button
+            style={{
+              background: "#775da6",
+              color: "white",
+              padding: "6px 18px",
+              borderRadius: "6px",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "14px",
+              textAlign: "center",
+            }}
+            onClick={closeToast}
+          >
+            Continue
+          </button>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
+        hideProgressBar: true,
+        icon: false,
+      }
+    );
+  };
+
+
+
+
+  useEffect(() => {
+    if (invite) {
+      showInviteAlert()
     }
-  );
-};
-
-
-
-
-useEffect(()=>{
-if(invite){
-  showInviteAlert()
-}
-},[invite])
+  }, [invite])
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const token = localStorage.getItem("traineeToken") || sessionStorage.getItem('traineeToken');
-
+    console.log("toke",token);
+    
     if (!token) {
-      navigate("/login", {
+      // Parse params directly from location.search to avoid race conditions
+      const currentParams = new URLSearchParams(location.search);
+      const currentInvite = currentParams.get("invite");
+      const currentPackageId = currentParams.get("packageId");
+      console.log("currentInvite", currentInvite);
+      console.log("currentPackageId", currentPackageId);  
+      // Build login URL with query params
+      const loginParams = new URLSearchParams();
+      if (currentInvite) loginParams.set("invite", currentInvite);
+      if (currentPackageId) loginParams.set("packageId", currentPackageId);
+
+      const loginUrl = loginParams.toString()
+        ? `/login?${loginParams.toString()}`
+        : "/login";
+
+      navigate(loginUrl, {
         replace: true,
-        state: { from: location },
+        state: {
+          from: {
+            pathname: location.pathname,
+            search: location.search,
+          }
+        },
       });
     }
   }, [location, navigate]);

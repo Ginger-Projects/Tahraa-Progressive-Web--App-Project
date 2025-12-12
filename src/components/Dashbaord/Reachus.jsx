@@ -12,11 +12,16 @@ import Fb from "../../assets/images/fb-reach.png";
 import Insta from "../../assets/images/insta-reach.png";
 import Maill from "../../assets/images/mail-reach.png";
 import ProfilePopup from "../trainee/ProfilePopup";
+import { useSelector } from "react-redux";
+import Profile from '../../assets/images/placeholder.jpg'
 
 
 const Reachus = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const user = useSelector((state) => state.trainee.user);
+  console.log("user",user);
+  
 
   return (
     <section className="main-reach">
@@ -38,13 +43,12 @@ const Reachus = () => {
             <span className="reachus-nav-link reachus-nav-link-active">Reach Us</span>
           </nav>
         </div>
-
-        <div className="reachus-header-right">
+      {user &&(<div className="reachus-header-right">
           <div
             className="reachus-header-avatar"
             onClick={() => setIsProfileOpen(true)}
           >
-              <img src={kate} alt="" />
+              <img src={user?.profileImage || Profile} alt="" />
           </div>
           <button
             type="button"
@@ -53,7 +57,8 @@ const Reachus = () => {
           >
            <i class="fa fa-bars" aria-hidden="true"></i>
           </button>
-        </div>
+        </div>)}
+        
       </header>
 
       <div className="reachus-wrapper">
