@@ -110,7 +110,7 @@ const ForgotPassword = () => {
 
 
           <p className='fp-footer-note'>
-            Protected by reCAPTCHA and subject to the Tahraa{" "}
+            Protected by reCAPTCHA and subject to the Yanmu{" "}
             <span
               className="link-text"
               onClick={() => setShowPrivacyModal(true)}

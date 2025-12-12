@@ -32,7 +32,16 @@ body {
   background-repeat: no-repeat;
   background-position: center;
 }
-
+.lp-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  @media(max-width : 768px){
+    display: none !important;
+  }
+}
 /* GRID LAYOUT */
 .lp-wrapper {
   width: 100%;

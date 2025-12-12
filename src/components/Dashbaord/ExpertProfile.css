@@ -268,14 +268,16 @@
 
 @media (max-width: 576px) {
   .ep-hero-btn-row {
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
     justify-content: center;
     align-items: center;
     a{
       width: fit-content !important;
     }
-
+    .BTNmain{
+      min-width: 50%;
+    }
   }
   
   .ep-hero-btn-row > * {

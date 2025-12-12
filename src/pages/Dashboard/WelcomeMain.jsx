@@ -15,8 +15,14 @@ const WelcomeMain = () => {
   };
 
   useEffect(() => {
+    // Push a new state to history to create a "buffer" entry
+    // This allows us to intercept the back button without actually leaving the page immediately
+    window.history.pushState(null, document.title, window.location.href);
+
     const handlePopState = (e) => {
-      e.preventDefault();
+      // Prevent default browser behavior is not strictly possible with popstate, 
+      // but we can override the navigation
+      window.history.pushState(null, document.title, window.location.href);
       handleNavigate();
     };
 

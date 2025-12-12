@@ -26,6 +26,10 @@
   gap:12px;
   margin-bottom:16px;
   padding: 0 32px;          /* inset month label + Today/Weekly/Monthly */
+
+  @media(max-width : 768px){
+    flex-direction: column;
+  }
 }
 
 .calendar-header-left {
