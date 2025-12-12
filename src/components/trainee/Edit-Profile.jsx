@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import Loader from "../Loader/Loader"
 import './Edit-Profile.css'
+import Profile from "../../assets/images/placeHolder.jpg"
 import { getTraineeProfile, updateTraineePersonalInfo } from "../../services/trainee/trainee"
 import { setTrainee } from "../../features/slice/trainer/traineeSlice"
 const LOCATIONS = ["Lusail, Qatar", "Doha, Qatar", "Al Wakrah, Qatar", "Al Khor, Qatar", "Umm Salal, Qatar"]
@@ -221,7 +222,7 @@ export default function EditProfileForm() {
             onClick={() => navigate('/edit-traineeProfilePicture')}
           >
             <img
-              src={profileHeader.avatar || formData.avatar}
+              src={profileHeader.avatar || Profile}
               alt="Avatar"
               className="avatar-img"
             />

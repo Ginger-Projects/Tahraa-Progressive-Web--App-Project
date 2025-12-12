@@ -6,6 +6,7 @@ import Logo from '../../assets/images/logo.png'
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProfilePopup from "../trainee/ProfilePopup";
+import Profile from "../../assets/images/placeHolder.jpg"
 const Header = () => {
   const location = useLocation();
   const { pathname } = location;
@@ -18,7 +19,7 @@ const Header = () => {
   const displayEmail = user?.email || user?.username || "";
 
   const profileImage =
-    user?.profileImage || user?.imageUrl || user?.photo || kate;
+    user?.profileImage || user?.imageUrl || user?.photo || Profile
 
   const navLinkClass = (path) => {
     const isHowItWorks = path === "/how-it-works-learners";

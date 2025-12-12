@@ -4,6 +4,7 @@ import { CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./welcomeCard.css";
 import { useSelector } from "react-redux";
+import Profile from "../../assets/images/placeholder.jpg";
 
 export default function WelcomeCard() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -67,16 +68,15 @@ export default function WelcomeCard() {
 
       <div className="welcome-content">
         <div className="welcome-image">
-          {hasValidImage ? (
-            <img src={rawImage} alt={displayName} />
-          ) : (
-            <div className="welcome-image-placeholder">Image</div>
-          )}
+          
+            <img src={rawImage||Profile} alt={displayName} />
+         
         </div>
 
         <div className="welcome-text">
           <p className="welcome-hey">Hey 👋</p>
-
+          
+          
           <div className="welcome-badge">
             
             <span>Welcome back!</span>

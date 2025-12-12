@@ -4,7 +4,7 @@ import ProfileEllipse from '../../assets/images/Ellipse 3077.png'
 import "./header.css"
 import { useDispatch, useSelector } from "react-redux"
 import { logoutTrainee } from "../../features/slice/trainer/traineeSlice"
-
+import Profile from "../../assets/images/placeholder.jpg"
 export default function ProfilePopup({ open, onClose }) {
   const [confirmLogout, setConfirmLogout] = useState(false)
   const dispatch = useDispatch()
@@ -44,7 +44,7 @@ export default function ProfilePopup({ open, onClose }) {
         
 
         <div className="profile-popup-header" onClick={handleProfileClick}>
-          <img src={profileImage} alt={displayName} className="profile-popup-avatar" />
+          <img src={profileImage||Profile} alt={displayName} className="profile-popup-avatar" />
           <div className="profile-popup-text">
             <h3>{displayName}</h3>
             <p>{displayEmail}</p>

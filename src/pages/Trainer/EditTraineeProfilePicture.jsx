@@ -6,7 +6,7 @@ import './EditTraineeProfilePicture.css';
 import TraineeHeader from '../../components/trainee/header';
 import { FiUpload, FiX } from 'react-icons/fi';
 
-import ProfileKeta from "../../assets/images/ProfileKeta.jpg"
+import Profile from "../../assets/images/placeHolder.jpg"
 import avatar1 from "../../assets/images/avatar1.png"
 import avatar2 from "../../assets/images/avatar2.png"
 import avatar3 from "../../assets/images/avatar3.png"
@@ -163,15 +163,13 @@ export default function EditTraineeProfilePicture() {
       <div className="violet-container">
         <div className="profile-image-container">
           <div className="profile-image-wrapper">
-            {previewImage ? (
+           
               <img 
-                src={previewImage} 
+                src={previewImage||Profile} 
                 alt="Profile Preview" 
                 className="profile-image"
               />
-            ) : (
-              <div className="default-avatar" />
-            )}
+           
           </div>
         </div>
       </div>

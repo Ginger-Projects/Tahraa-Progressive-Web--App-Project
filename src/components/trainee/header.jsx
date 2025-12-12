@@ -6,8 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import ProfilePopup from "./ProfilePopup";
 import NotificationPopup from "./NotificationPopup";
-
-
+import Profile from "../../assets/images/placeholder.jpg";
 
 export default function TraineeHeader({ title = "Dashboard" }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -205,7 +204,7 @@ export default function TraineeHeader({ title = "Dashboard" }) {
     onClick={() => setIsProfileOpen(true)}
   >
     <img
-      src={profileImage}
+      src={profileImage||Profile}
       alt={displayName}
       className="user-chip-avatar"
     />
