@@ -15,23 +15,38 @@ const RegistrationEducation = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const basics = useSelector((state) => state.registration?.basics || {});
+  const education = useSelector((state) => state.registration?.education || {});
 
-  const [yearsOfExperience, setYearsOfExperience] = useState("");
-  const [teachingCategory, setTeachingCategory] = useState("");
-  const [modeOfDelivery, setModeOfDelivery] = useState("");
-  const [feeRange, setFeeRange] = useState("");
-  const [languages, setLanguages] = useState([]);
+  const [yearsOfExperience, setYearsOfExperience] = useState(education.yearsOfExperience || "");
+  const [teachingCategory, setTeachingCategory] = useState(education.teachingCategory || "");
+  const [modeOfDelivery, setModeOfDelivery] = useState(education.delivery || "");
+  const [feeRange, setFeeRange] = useState(education.feeRange || "");
+  const [languages, setLanguages] = useState(education.languages || []);
   const [languageInput, setLanguageInput] = useState("");
-  const [existingLearners, setExistingLearners] = useState("");
-  const [previousWorksLinks, setPreviousWorksLinks] = useState([]);
+
+  const getExistingLearners = () => {
+    if (education.existingTrainees === true) return "yes";
+    if (education.existingTrainees === false) return "no";
+    return "";
+  };
+  const [existingLearners, setExistingLearners] = useState(getExistingLearners());
+
+  const [previousWorksLinks, setPreviousWorksLinks] = useState(education.previousWorksLinks || []);
   const [previousWorkLinkInput, setPreviousWorkLinkInput] = useState("");
-  const [previousWorks, setPreviousWorks] = useState([]);
+  const [previousWorks, setPreviousWorks] = useState(education.previousWorks || []);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
-  const [haveCertificate, setHaveCertificate] = useState("");
+
+  const getHaveCertificate = () => {
+    if (education.haveCertificate === true) return "yes";
+    if (education.haveCertificate === false) return "no";
+    return "";
+  };
+  const [haveCertificate, setHaveCertificate] = useState(getHaveCertificate());
+
   const [certificationName, setCertificationName] = useState("");
   const [certificationExpiry, setCertificationExpiry] = useState(""); // display (dd-mm-yyyy)
   const [certificationExpiryRaw, setCertificationExpiryRaw] = useState(""); // raw yyyy-mm-dd
-  const [certificates, setCertificates] = useState([]);
+  const [certificates, setCertificates] = useState(education.certificates || []);
   const [categories, setCategories] = useState([]);
 
   const expiryInputRef = useRef(null);
@@ -122,6 +137,33 @@ const RegistrationEducation = () => {
     setCertificationExpiryRaw("");
   };
 
+  const handleRemoveLanguage = (indexToRemove) => {
+    setLanguages((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleRemoveCertificate = (indexToRemove) => {
+    setCertificates((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleClear = () => {
+    setYearsOfExperience("");
+    setTeachingCategory("");
+    setModeOfDelivery("");
+    setFeeRange("");
+    setLanguages([]);
+    setLanguageInput("");
+    setExistingLearners("");
+    setPreviousWorksLinks([]);
+    setPreviousWorkLinkInput("");
+    setPreviousWorks([]);
+    setIsPreviewModalOpen(false);
+    setHaveCertificate("");
+    setCertificationName("");
+    setCertificationExpiry("");
+    setCertificationExpiryRaw("");
+    setCertificates([]);
+  };
+
   const handleNext = () => {
     const missingFields = [];
 
@@ -135,6 +177,14 @@ const RegistrationEducation = () => {
     // Require EITHER at least one YouTube link OR at least one uploaded file
     if (previousWorksLinks.length === 0 && previousWorks.length === 0) {
       missingFields.push("Previous work or intro video (link or file)");
+    }
+
+    if (!haveCertificate) missingFields.push("Do you have any related certificates selection");
+
+    // Logic: if haveCertificate === 'yes', user must add at least one cert
+    // If 'no', we don't force them to add certs to the table
+    if (haveCertificate === "yes" && certificates.length === 0) {
+      missingFields.push("At least one certificate (since you selected 'Yes')");
     }
 
     if (missingFields.length > 0) {
@@ -179,7 +229,7 @@ const RegistrationEducation = () => {
           </div>
           <div className="registration-left-overlay">
             <h2 className="registration-left-heading">
-              Tahraa wants to give you
+              Yanmu wants to give you
               <br />
               those hours back
             </h2>
@@ -204,8 +254,8 @@ const RegistrationEducation = () => {
                 </span>
                 <span className="registration-left-social">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M8 3.85542C5.68675 3.85542 3.85542 5.68675 3.85542 8C3.85542 10.3133 5.68675 12.1446 8 12.1446C10.3133 12.1446 12.1446 10.3133 12.1446 8C12.1446 5.68675 10.3133 3.85542 8 3.85542ZM8 10.6988C6.55422 10.6988 5.30121 9.54217 5.30121 8C5.30121 6.55422 6.45783 5.30121 8 5.30121C9.44578 5.30121 10.6988 6.45783 10.6988 8C10.6988 9.44578 9.44578 10.6988 8 10.6988Z" fill="white"/>
-                    <path d="M12.241 4.72289C12.7733 4.72289 13.2048 4.29136 13.2048 3.75904C13.2048 3.22671 12.7733 2.79518 12.241 2.79518C11.7086 2.79518 11.2771 3.22671 11.2771 3.75904C11.2771 4.29136 11.7086 4.72289 12.241 4.72289Z" fill="white"/>
+                    <path d="M8 3.85542C5.68675 3.85542 3.85542 5.68675 3.85542 8C3.85542 10.3133 5.68675 12.1446 8 12.1446C10.3133 12.1446 12.1446 10.3133 12.1446 8C12.1446 5.68675 10.3133 3.85542 8 3.85542ZM8 10.6988C6.55422 10.6988 5.30121 9.54217 5.30121 8C5.30121 6.55422 6.45783 5.30121 8 5.30121C9.44578 5.30121 10.6988 6.45783 10.6988 8C10.6988 9.44578 9.44578 10.6988 8 10.6988Z" fill="white" />
+                    <path d="M12.241 4.72289C12.7733 4.72289 13.2048 4.29136 13.2048 3.75904C13.2048 3.22671 12.7733 2.79518 12.241 2.79518C11.7086 2.79518 11.2771 3.22671 11.2771 3.75904C11.2771 4.29136 11.7086 4.72289 12.241 4.72289Z" fill="white" />
                   </svg>
                 </span>
               </div>
@@ -352,8 +402,36 @@ const RegistrationEducation = () => {
                     </button>
                   </div>
                   {languages && languages.length > 0 && (
-                    <div style={{ marginTop: 8, fontSize: 12, color: "#555" }}>
-                      {languages.join(", ")}
+                    <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {languages.map((lang, index) => (
+                        <div key={index} style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          background: "#e0e0e0",
+                          borderRadius: 16,
+                          padding: "4px 12px",
+                          fontSize: 12,
+                          color: "#333",
+                        }}>
+                          {lang}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveLanguage(index)}
+                            style={{
+                              marginLeft: 6,
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                              padding: 0,
+                              fontSize: 14,
+                              lineHeight: 1,
+                              color: "#666"
+                            }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -698,6 +776,7 @@ const RegistrationEducation = () => {
                     placeholder="Name of certification (optional)"
                     value={certificationName}
                     onChange={(e) => setCertificationName(e.target.value)}
+                    disabled={haveCertificate === "no"}
                   />
                 </div>
                 <div className="registration-field">
@@ -710,10 +789,12 @@ const RegistrationEducation = () => {
                       value={certificationExpiry}
                       readOnly
                       onClick={() => {
+                        if (haveCertificate === "no") return;
                         if (expiryPickerRef.current && expiryPickerRef.current.showPicker) {
                           expiryPickerRef.current.showPicker();
                         }
                       }}
+                      disabled={haveCertificate === "no"}
                     />
                     <input
                       ref={expiryPickerRef}
@@ -789,30 +870,50 @@ const RegistrationEducation = () => {
                   <span
                     style={{
                       fontSize: 12,
-                      color: "#775da6",
+                      color: haveCertificate === "no" ? "#ccc" : "#775da6",
                       textDecoration: "underline",
-                      cursor: "pointer",
+                      cursor: haveCertificate === "no" ? "not-allowed" : "pointer",
+                      pointerEvents: haveCertificate === "no" ? "none" : "auto",
                     }}
-                    onClick={handleAddCertificate}
+                    onClick={() => {
+                      if (haveCertificate !== "no") {
+                        handleAddCertificate();
+                      }
+                    }}
                   >
                     Add certificate
                   </span>
                   {certificates.length > 0 && (
-                    <div
-                      style={{
-                        marginTop: 8,
-                        fontSize: 12,
-                        color: "#555",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {certificates
-                        .map(
-                          (cert) => `${cert.nameOfCertificate} - ${cert.expiryDate}`
-                        )
-                        .join(", ")}
+                    <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {certificates.map((cert, index) => (
+                        <div key={index} style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          background: "#e0e0e0",
+                          borderRadius: 16,
+                          padding: "4px 12px",
+                          fontSize: 12,
+                          color: "#333",
+                        }}>
+                          {cert.nameOfCertificate} - {cert.expiryDate}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveCertificate(index)}
+                            style={{
+                              marginLeft: 6,
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                              padding: 0,
+                              fontSize: 14,
+                              lineHeight: 1,
+                              color: "#666"
+                            }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -825,6 +926,7 @@ const RegistrationEducation = () => {
                 type="button"
                 className="registration-btn registration-btn-clear"
                 style={{ position: "relative", overflow: "hidden" }}
+                onClick={handleClear}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -836,19 +938,19 @@ const RegistrationEducation = () => {
                 >
                   <g filter="url(#filter0_f_162_2214)">
                     <path
-                      d="M2.90067 4.20661C3.12969 2.15452 6.46543 2.36603 7.91731 2.55746C8.17774 2.59179 8.2636 2.92163 8.06746 3.09635C7.33809 3.74607 6.06 5.03936 5.74247 6.3671C4.15774 12.9935 4.54759 24.3379 4.81564 29.2692C4.90214 30.8606 4.6796 32.4494 4.1239 33.9432L2.90067 37.2312C2.90067 37.2312 1.86732 13.4659 2.90067 4.20661Z" fill="white" fill-opacity="0.3"/>
+                      d="M2.90067 4.20661C3.12969 2.15452 6.46543 2.36603 7.91731 2.55746C8.17774 2.59179 8.2636 2.92163 8.06746 3.09635C7.33809 3.74607 6.06 5.03936 5.74247 6.3671C4.15774 12.9935 4.54759 24.3379 4.81564 29.2692C4.90214 30.8606 4.6796 32.4494 4.1239 33.9432L2.90067 37.2312C2.90067 37.2312 1.86732 13.4659 2.90067 4.20661Z" fill="white" fill-opacity="0.3" />
                     <path
-                      d="M2.90067 4.20661C3.12969 2.15452 6.46543 2.36603 7.91731 2.55746C8.17774 2.59179 8.2636 2.92163 8.06746 3.09635C7.33809 3.74607 6.06 5.03936 5.74247 6.3671C4.15774 12.9935 4.54759 24.3379 4.81564 29.2692C4.90214 30.8606 4.6796 32.4494 4.1239 33.9432L2.90067 37.2312C2.90067 37.2312 1.86732 13.4659 2.90067 4.20661Z" fill="url(#paint0_linear_162_2214)"/>
+                      d="M2.90067 4.20661C3.12969 2.15452 6.46543 2.36603 7.91731 2.55746C8.17774 2.59179 8.2636 2.92163 8.06746 3.09635C7.33809 3.74607 6.06 5.03936 5.74247 6.3671C4.15774 12.9935 4.54759 24.3379 4.81564 29.2692C4.90214 30.8606 4.6796 32.4494 4.1239 33.9432L2.90067 37.2312C2.90067 37.2312 1.86732 13.4659 2.90067 4.20661Z" fill="url(#paint0_linear_162_2214)" />
                   </g>
                   <defs>
                     <filter id="filter0_f_162_2214" x="1.43051e-05" y="1.43051e-05" width="10.6172" height="39.6726" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_162_2214"/>
+                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_162_2214" />
                     </filter>
                     <linearGradient id="paint0_linear_162_2214" x1="2.44141" y1="3.36733" x2="5.4245" y2="5.61461" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="white"/>
-                      <stop offset="1" stop-color="white" stop-opacity="0"/>
+                      <stop stop-color="white" />
+                      <stop offset="1" stop-color="white" stop-opacity="0" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -944,7 +1046,7 @@ const RegistrationEducation = () => {
           </div>
 
           <p className="registration-recaptcha">
-            Protected by reCAPTCHA and subject to the Tahraa
+            Protected by reCAPTCHA and subject to the Yanmu
             <span> Privacy Policy</span> and <span>Terms of Use</span>.
           </p>
         </div>

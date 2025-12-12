@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../components/Dashbaord/RegistrationBasics.css";
 import welcomeImage from "../../assets/images/welcome-image.png";
 import Logo from "../../assets/images/logo.png";
+import { useDispatch } from "react-redux";
+import { clearRegistration } from "../../features/slice/registrationSlice";
 
 const WelcomeMain = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleNavigate = () => {
+    navigate("/");
+    dispatch(clearRegistration());
+  };
+
+  useEffect(() => {
+    const handlePopState = (e) => {
+      e.preventDefault();
+      handleNavigate();
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
   return (
     <section className="registration-main" style={{ minHeight: "100vh" }}>
       <div
@@ -23,7 +43,7 @@ const WelcomeMain = () => {
             color: "#775da6",
           }}
         >
-         <img src={Logo} alt="" />
+          <img src={Logo} alt="" />
         </div>
 
         {/* Single centered panel */}
@@ -49,7 +69,7 @@ const WelcomeMain = () => {
               }}
               className="work-title"
             >
-              Welcome Aboard – Tahraa Team
+              Welcome Aboard – Yanmu Team
             </h1>
 
             {/* Message */}
@@ -63,7 +83,7 @@ const WelcomeMain = () => {
                 margin: "0 auto 40px",
               }}
             >
-              <p style={{ margin: 0 }} >Welcome to the Tahraa community!</p>
+              <p style={{ margin: 0 }} >Welcome to the Yanmu community!</p>
               <p style={{ margin: 0 }} className="work-descr">
                 We’ve received your information and our team is currently reviewing it. You’ll hear from us shortly.
                 Kindly check your mailbox for further communication.
@@ -88,10 +108,13 @@ const WelcomeMain = () => {
                   height: 53,
                   borderRadius: 10,
                   boxShadow: "-3.7px -3.7px 6.3px rgba(0,0,0,0.3) inset",
-                  maxWidth : "228px",
-                  width : "100%",
+                  maxWidth: "228px",
+                  width: "100%",
                 }}
-                onClick={() => navigate("/")}
+                onClick={
+
+                  handleNavigate
+                }
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +189,7 @@ const WelcomeMain = () => {
                   </defs>
                 </svg>
 
-                Back To Tahraa
+                Back To Yanmu
               </button>
             </div>
           </div>

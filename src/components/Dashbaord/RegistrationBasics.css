@@ -588,16 +588,38 @@ justify-content: center;
 
   .registration-right {
     padding: 24px 18px 32px;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   /* prevent stepper overflow on smaller screens */
   .registration-stepper {
-    flex-wrap: wrap;
-    gap: 24px;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    max-width: 100%;
+    padding-bottom: 8px; /* Gap for scrollbar */
+    scrollbar-color: #775da6 #eaecf2; /* Firefox support */
+  }
+
+  /* Custom scrollbar for Webkit */
+  .registration-stepper::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .registration-stepper::-webkit-scrollbar-track {
+    background: #eaecf2;
+    border-radius: 4px;
+  }
+
+  .registration-stepper::-webkit-scrollbar-thumb {
+    background: #775da6;
+    border-radius: 4px;
   }
 
   .registration-step-line {
-    flex: 0 0 40px; /* shorter connectors so 3 steps fit */
+    flex: 1 1 auto;
+    min-width: 10px;
   }
 
   .registration-row,

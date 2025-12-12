@@ -32,7 +32,7 @@
 
 @media (max-width: 480px) {
   .hero-content {
-    padding-top: 250px;
+    padding-top: 160px;
     padding-bottom: 50px;
   }
 }
@@ -499,8 +499,8 @@
   @media (max-width: 480px) {
     font-size: 13px;
     width: 90%;
-    right: 5%;
-    top: 10px;
+    right: 0%;
+    top: 8px;
   }
 }
 
@@ -584,9 +584,16 @@
   }
 }
 @media (max-width: 768px) {
-  .box .women-KB-copy,
-  .box .basket-ball-man-copy {
-    display: none;
+  .box .women-KB-copy {
+    display: block !important;
+    left: -135px;
+    transform: scale(0.4);
+    bottom: 100px;
+  }
+  .box .basket-ball-man-copy{
+    right: -155px;
+    transform: scale(0.4);
+    bottom: 100px;
   }
 }
 
