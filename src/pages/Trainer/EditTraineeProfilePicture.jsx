@@ -6,7 +6,7 @@ import './EditTraineeProfilePicture.css';
 import TraineeHeader from '../../components/trainee/header';
 import { FiUpload, FiX } from 'react-icons/fi';
 
-import Profile from "../../assets/images/placeHolder.jpg"
+import Profile from "../../assets/images/placeholder.jpg"
 import avatar1 from "../../assets/images/avatar1.png"
 import avatar2 from "../../assets/images/avatar2.png"
 import avatar3 from "../../assets/images/avatar3.png"
@@ -163,13 +163,13 @@ export default function EditTraineeProfilePicture() {
       <div className="violet-container">
         <div className="profile-image-container">
           <div className="profile-image-wrapper">
-           
-              <img 
-                src={previewImage||Profile} 
-                alt="Profile Preview" 
-                className="profile-image"
-              />
-           
+
+            <img
+              src={previewImage || Profile}
+              alt="Profile Preview"
+              className="profile-image"
+            />
+
           </div>
         </div>
       </div>
@@ -179,9 +179,9 @@ export default function EditTraineeProfilePicture() {
             <div className="upload-content">
               <p className="upload-text">Select a photo from your device</p>
               <label className="upload-button">
-                <input 
-                  type="file" 
-                  className="file-input" 
+                <input
+                  type="file"
+                  className="file-input"
                   accept="image/*"
                   onChange={handleFileChange}
                 />
@@ -395,14 +395,14 @@ export default function EditTraineeProfilePicture() {
             <h3 className="section-title">Choose your avatar</h3>
             <div className="avatar-grid">
               {avatarOptions.map((avatar) => (
-                <div 
+                <div
                   key={avatar.id}
                   className={`avatar-option ${selectedAvatar === avatar.id ? 'selected' : ''}`}
                   onClick={() => handleAvatarSelect(avatar)}
                 >
-                  <img 
-                    src={avatar.src} 
-                    alt={avatar.alt} 
+                  <img
+                    src={avatar.src}
+                    alt={avatar.alt}
                     className="avatar-image"
                   />
                 </div>
@@ -419,18 +419,18 @@ export default function EditTraineeProfilePicture() {
               <span className="button-left-glow">
                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="40" viewBox="0 0 8 40" fill="none">
                   <g filter="url(#filter0_f_204_419_cancel)">
-                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="white" fillOpacity="0.3"/>
-                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="url(#paint0_linear_204_419_cancel)"/>
+                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="white" fillOpacity="0.3" />
+                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="url(#paint0_linear_204_419_cancel)" />
                   </g>
                   <defs>
                     <filter id="filter0_f_204_419_cancel" x="1.43051e-05" y="1.43051e-05" width="7.59079" height="39.6726" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_419"/>
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_419" />
                     </filter>
                     <linearGradient id="paint0_linear_204_419_cancel" x1="2.44141" y1="3.36733" x2="4.36996" y2="4.03927" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="white"/>
-                      <stop offset="1" stopColor="white" stopOpacity="0"/>
+                      <stop stopColor="white" />
+                      <stop offset="1" stopColor="white" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -440,13 +440,13 @@ export default function EditTraineeProfilePicture() {
               <span className="button-top-glow">
                 <svg xmlns="http://www.w3.org/2000/svg" width="140" height="6" viewBox="0 0 144 6" fill="none">
                   <g filter="url(#filter0_f_204_420_cancel)">
-                    <path d="M2.59375 2.59399H141.344" stroke="white" strokeWidth="0.305174" strokeLinecap="round"/>
+                    <path d="M2.59375 2.59399H141.344" stroke="white" strokeWidth="0.305174" strokeLinecap="round" />
                   </g>
                   <defs>
                     <filter id="filter0_f_204_420_cancel" x="1.43051e-05" y="1.43051e-05" width="143.937" height="5.18796" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_420"/>
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_420" />
                     </filter>
                   </defs>
                 </svg>
@@ -462,18 +462,18 @@ export default function EditTraineeProfilePicture() {
               <span className="button-left-glow">
                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="40" viewBox="0 0 8 40" fill="none">
                   <g filter="url(#filter0_f_204_419_save)">
-                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="white" fillOpacity="0.3"/>
-                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="url(#paint0_linear_204_419_save)"/>
+                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="white" fillOpacity="0.3" />
+                    <path d="M2.65382 4.20661C2.7586 2.17647 4.26968 2.36177 4.95217 2.55131C5.13042 2.60082 5.19868 2.80482 5.11125 2.96785C4.79235 3.56251 4.12544 4.94505 3.96815 6.3671C3.16225 13.6531 3.46046 26.6432 3.57388 30.5402C3.59587 31.2957 3.5451 32.0511 3.41693 32.7961L2.65382 37.2312C2.65382 37.2312 2.17589 13.4659 2.65382 4.20661Z" fill="url(#paint0_linear_204_419_save)" />
                   </g>
                   <defs>
                     <filter id="filter0_f_204_419_save" x="1.43051e-05" y="1.43051e-05" width="7.59079" height="39.6726" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_419"/>
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_419" />
                     </filter>
                     <linearGradient id="paint0_linear_204_419_save" x1="2.44141" y1="3.36733" x2="4.36996" y2="4.03927" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="white"/>
-                      <stop offset="1" stopColor="white" stopOpacity="0"/>
+                      <stop stopColor="white" />
+                      <stop offset="1" stopColor="white" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -483,13 +483,13 @@ export default function EditTraineeProfilePicture() {
               <span className="button-top-glow">
                 <svg xmlns="http://www.w3.org/2000/svg" width="140" height="6" viewBox="0 0 144 6" fill="none">
                   <g filter="url(#filter0_f_204_420_save)">
-                    <path d="M2.59375 2.59399H141.344" stroke="white" strokeWidth="0.305174" strokeLinecap="round"/>
+                    <path d="M2.59375 2.59399H141.344" stroke="white" strokeWidth="0.305174" strokeLinecap="round" />
                   </g>
                   <defs>
                     <filter id="filter0_f_204_420_save" x="1.43051e-05" y="1.43051e-05" width="143.937" height="5.18796" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_420"/>
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_204_420" />
                     </filter>
                   </defs>
                 </svg>
