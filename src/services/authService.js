@@ -18,3 +18,13 @@ export const loginTrainee = async (payload) => {
     throw error;
   }
 };
+
+export const forgotPassword = async (payload) => {
+  try {
+    const response = await api.post("/api/trainee/public/forgot-password", payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+

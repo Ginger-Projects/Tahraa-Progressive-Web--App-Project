@@ -17,7 +17,7 @@ export default function ProfilePopup({ open, onClose }) {
   const displayEmail = user?.email || user?.username || ""
 
   const profileImage =
-    user?.profileImage || user?.imageUrl || user?.photo || ProfileEllipse
+    user?.profileImage
   if (!open) return null
 
   const handleOverlayClick = (e) => {

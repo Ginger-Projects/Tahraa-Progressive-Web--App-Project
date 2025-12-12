@@ -173,14 +173,14 @@ const ChangePassword = () => {
               <div className='label'>{submitting ? "Changing..." : "Change password"}</div>
             </button>
           </form>
-
+{/* 
           <p className='fp-help m-0'>
             Want to help? <button className='fp-link'>Contact us on WhatsApp</button>
-          </p>
+          </p> */}
 
-          <p className='fp-footer-note'>
+          {/* <p className='fp-footer-note'>
             Protected by reCAPTCHA and subject to the Tahraa <a href='#'>Privacy Policy</a> and <a href='#'>Terms of Service</a>.
-          </p>
+          </p> */}
         </div>
 
         {/* RIGHT SECTION */}

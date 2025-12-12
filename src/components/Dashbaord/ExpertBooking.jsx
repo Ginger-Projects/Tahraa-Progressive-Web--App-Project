@@ -4,9 +4,6 @@ import BookingConfirmationModal from "../BookingConfirmationModal";
 import ebCheckoutIcon from "../../assets/images/checkoutIcon.png";
 import natsha from "../../assets/images/natsha.png";
 import courseImg1 from "../../assets/images/forPackages.jpg";
-import courseImg2 from "../../../.figma-assets/2e27c8ec9b2e62d7e02b7a898460b9c85b07a4af.png";
-import courseImg3 from "../../../.figma-assets/8b3b31282497da4d053b4ebe389aa6f116046f55.png";
-import courseImg4 from "../../../.figma-assets/e7d3ea202e9dc8fead3d08e953408484251ce14c.png";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { getPackageById, bookPackage } from "../../services/trainee/trainee";
 import { getExpertPackages, createExpertConversation } from "../../services/expertService";
@@ -15,7 +12,7 @@ import { convertTimeTo12H } from "../../utils/helper";
 import { DateTime } from "luxon";
 import { toast } from "react-toastify";
 
-const ExpertBooking = ({ setLoading = () => {} }) => {
+const ExpertBooking = ({ setLoading = () => { } }) => {
   const [packageData, setPackageData] = useState(null);
   const [expertPackages, setExpertPackages] = useState([]);
   const [totalPackagesCount, setTotalPackagesCount] = useState(0);
@@ -33,11 +30,74 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("packageId");
   const invite = searchParams.get("invite");
+ 
+const showInviteAlert = () => {
+  toast(
+    ({ closeToast }) => (
+      <div
+        style={{
+          width: "100%",           // make full width
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",    // center horizontally
+          justifyContent: "center",// center vertically
+          textAlign: "center",
+          padding: "8px 0",
+        }}
+      >
+        <p
+          style={{
+            marginBottom: "12px",
+            color:"black",
+            fontSize: "16px",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          You are invited!
+        </p>
 
+        <button
+          style={{
+            background: "#775da6",
+            color: "white",
+            padding: "6px 18px",
+            borderRadius: "6px",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "14px",
+            textAlign: "center",
+          }}
+          onClick={closeToast}
+        >
+          Continue
+        </button>
+      </div>
+    ),
+    {
+      position: "top-center",
+      autoClose: false,
+      closeOnClick: false,
+      draggable: false,
+      closeButton: false,
+      hideProgressBar: true,
+      icon: false,
+    }
+  );
+};
+
+
+
+
+useEffect(()=>{
+if(invite){
+  showInviteAlert()
+}
+},[invite])
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const token = localStorage.getItem("traineeToken")|| sessionStorage.getItem('traineeToken');
+    const token = localStorage.getItem("traineeToken") || sessionStorage.getItem('traineeToken');
 
     if (!token) {
       navigate("/login", {
@@ -46,6 +106,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
       });
     }
   }, [location, navigate]);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -74,7 +135,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
     try {
       setLoading(true);
       const response = await getPackageById(id);
-      console.log("response", response.data.package);
+      console.log("responseBooking", response.data.package);
       setPackageData(response.data.package);
     } catch (error) {
       console.error("Failed to load package", error);
@@ -308,6 +369,8 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
   };
 
   return (
+
+
     <div className='eb-page-shell'>
       <div className='eb-container'>
         <div className='eb-content-wrapper'>
@@ -531,56 +594,56 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
               {packageData && (
                 <h2 className='eb-expert-name'>
                   {packageData.expert?.name}
-                <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'>
-                  <path
-                    d='M7.3558 0.821454C7.66006 0.495917 8.17631 0.495917 8.48056 0.821454L9.88868 2.32807C10.0404 2.49044 10.2549 2.57929 10.4771 2.57179L12.5381 2.50214C12.9834 2.48709 13.3485 2.85213 13.3334 3.29746L13.2638 5.35849C13.2562 5.5806 13.3451 5.79512 13.5075 5.94687L15.0141 7.35498C15.3396 7.65923 15.3396 8.17548 15.0141 8.47974L13.5075 9.88785C13.3451 10.0396 13.2562 10.2541 13.2638 10.4762L13.3334 12.5373C13.3485 12.9826 12.9834 13.3476 12.5381 13.3326L10.4771 13.2629C10.2549 13.2554 10.0404 13.3443 9.88868 13.5066L8.48056 15.0133C8.17631 15.3388 7.66006 15.3388 7.35581 15.0133L5.94769 13.5066C5.79594 13.3443 5.58142 13.2554 5.35931 13.2629L3.29828 13.3326C2.85295 13.3476 2.48791 12.9826 2.50296 12.5373L2.57261 10.4762C2.58012 10.2541 2.49126 10.0396 2.3289 9.88785L0.822278 8.47974C0.496741 8.17548 0.49674 7.65924 0.822278 7.35498L2.3289 5.94687C2.49126 5.79512 2.58012 5.5806 2.57261 5.35849L2.50296 3.29746C2.48791 2.85213 2.85295 2.48709 3.29828 2.50214L5.35931 2.57179C5.58142 2.57929 5.79594 2.49044 5.94769 2.32807L7.3558 0.821454Z'
-                    fill='url(#paint0_linear_140_5737)'
-                  />
-                  <path
-                    fill-rule='evenodd'
-                    clip-rule='evenodd'
-                    d='M6.93322 0.427268C7.46566 -0.142422 8.3691 -0.142423 8.90154 0.427268L10.3097 1.93389C10.3476 1.97448 10.4012 1.99669 10.4568 1.99482L12.5178 1.92516C13.2971 1.89883 13.9359 2.53765 13.9096 3.31698L13.8399 5.37801C13.8381 5.43354 13.8603 5.48717 13.9009 5.5251L15.4075 6.93322C15.9772 7.46566 15.9772 8.3691 15.4075 8.90154L13.9009 10.3097C13.8603 10.3476 13.8381 10.4012 13.8399 10.4568L13.9096 12.5178C13.9359 13.2971 13.2971 13.9359 12.5178 13.9096L10.4568 13.8399C10.4012 13.8381 10.3476 13.8603 10.3097 13.9009L8.90154 15.4075C8.3691 15.9772 7.46566 15.9772 6.93322 15.4075L5.5251 13.9009C5.48717 13.8603 5.43354 13.8381 5.37801 13.8399L3.31698 13.9096C2.53765 13.9359 1.89883 13.2971 1.92516 12.5178L1.99482 10.4568C1.99669 10.4012 1.97448 10.3476 1.93389 10.3097L0.427268 8.90154C-0.142422 8.3691 -0.142423 7.46566 0.427268 6.93322L1.93389 5.5251C1.97448 5.48717 1.99669 5.43354 1.99482 5.37801L1.92516 3.31698C1.89883 2.53765 2.53765 1.89883 3.31698 1.92516L5.37801 1.99482C5.43354 1.99669 5.48717 1.97448 5.5251 1.93389L6.93322 0.427268ZM8.05797 1.21568C7.98191 1.1343 7.85285 1.1343 7.77679 1.21568L6.36867 2.7223C6.10311 3.00644 5.7277 3.16194 5.33901 3.1488L3.27798 3.07915C3.16665 3.07539 3.07539 3.16665 3.07915 3.27798L3.1488 5.33901C3.16194 5.7277 3.00644 6.10311 2.7223 6.36867L1.21568 7.77679C1.1343 7.85285 1.1343 7.98191 1.21568 8.05797L2.7223 9.46609C3.00644 9.73165 3.16194 10.1071 3.1488 10.4958L3.07915 12.5568C3.07539 12.6681 3.16665 12.7594 3.27798 12.7556L5.33901 12.686C5.7277 12.6728 6.10311 12.8283 6.36867 13.1125L7.77679 14.6191C7.85285 14.7005 7.98191 14.7005 8.05797 14.6191L9.46609 13.1125C9.73165 12.8283 10.1071 12.6728 10.4958 12.686L12.5568 12.7556C12.6681 12.7594 12.7594 12.6681 12.7556 12.5568L12.686 10.4958C12.6728 10.1071 12.8283 9.73165 13.1125 9.46609L14.6191 8.05797C14.7005 7.98191 14.7005 7.85285 14.6191 7.77679L13.1125 6.36867C12.8283 6.10311 12.6728 5.7277 12.686 5.33901L12.7556 3.27798C12.7594 3.16665 12.6681 3.07539 12.5568 3.07915L10.4958 3.1488C10.1071 3.16194 9.73165 3.00644 9.46609 2.7223L8.05797 1.21568Z'
-                    fill='url(#paint1_linear_140_5737)'
-                  />
-                  <path
-                    fill-rule='evenodd'
-                    clip-rule='evenodd'
-                    d='M11.2588 4.95388C11.5139 5.14518 11.5656 5.50705 11.3743 5.76213L8.13436 10.082C7.88097 10.4199 7.37864 10.4327 7.10827 10.1083L4.97172 7.54442C4.7676 7.29948 4.80069 6.93544 5.04563 6.73132C5.29058 6.5272 5.65462 6.5603 5.85874 6.80524L7.59026 8.88306L10.4505 5.06934C10.6419 4.81426 11.0037 4.76257 11.2588 4.95388Z'
-                    fill='white'
-                  />
-                  <defs>
-                    <linearGradient
-                      id='paint0_linear_140_5737'
-                      x1='0.578125'
-                      y1='7.91736'
-                      x2='15.2582'
-                      y2='7.91736'
-                      gradientUnits='userSpaceOnUse'
-                    >
-                      <stop stop-color='#049A0E' />
-                      <stop offset='1' stop-color='#02B346' />
-                    </linearGradient>
-                    <linearGradient
-                      id='paint1_linear_140_5737'
-                      x1='0'
-                      y1='7.91738'
-                      x2='15.8348'
-                      y2='7.91738'
-                      gradientUnits='userSpaceOnUse'
-                    >
-                      <stop stop-color='#049A0E' />
-                      <stop offset='1' stop-color='#02B346' />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </h2>
+                  <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'>
+                    <path
+                      d='M7.3558 0.821454C7.66006 0.495917 8.17631 0.495917 8.48056 0.821454L9.88868 2.32807C10.0404 2.49044 10.2549 2.57929 10.4771 2.57179L12.5381 2.50214C12.9834 2.48709 13.3485 2.85213 13.3334 3.29746L13.2638 5.35849C13.2562 5.5806 13.3451 5.79512 13.5075 5.94687L15.0141 7.35498C15.3396 7.65923 15.3396 8.17548 15.0141 8.47974L13.5075 9.88785C13.3451 10.0396 13.2562 10.2541 13.2638 10.4762L13.3334 12.5373C13.3485 12.9826 12.9834 13.3476 12.5381 13.3326L10.4771 13.2629C10.2549 13.2554 10.0404 13.3443 9.88868 13.5066L8.48056 15.0133C8.17631 15.3388 7.66006 15.3388 7.35581 15.0133L5.94769 13.5066C5.79594 13.3443 5.58142 13.2554 5.35931 13.2629L3.29828 13.3326C2.85295 13.3476 2.48791 12.9826 2.50296 12.5373L2.57261 10.4762C2.58012 10.2541 2.49126 10.0396 2.3289 9.88785L0.822278 8.47974C0.496741 8.17548 0.49674 7.65924 0.822278 7.35498L2.3289 5.94687C2.49126 5.79512 2.58012 5.5806 2.57261 5.35849L2.50296 3.29746C2.48791 2.85213 2.85295 2.48709 3.29828 2.50214L5.35931 2.57179C5.58142 2.57929 5.79594 2.49044 5.94769 2.32807L7.3558 0.821454Z'
+                      fill='url(#paint0_linear_140_5737)'
+                    />
+                    <path
+                      fill-rule='evenodd'
+                      clip-rule='evenodd'
+                      d='M6.93322 0.427268C7.46566 -0.142422 8.3691 -0.142423 8.90154 0.427268L10.3097 1.93389C10.3476 1.97448 10.4012 1.99669 10.4568 1.99482L12.5178 1.92516C13.2971 1.89883 13.9359 2.53765 13.9096 3.31698L13.8399 5.37801C13.8381 5.43354 13.8603 5.48717 13.9009 5.5251L15.4075 6.93322C15.9772 7.46566 15.9772 8.3691 15.4075 8.90154L13.9009 10.3097C13.8603 10.3476 13.8381 10.4012 13.8399 10.4568L13.9096 12.5178C13.9359 13.2971 13.2971 13.9359 12.5178 13.9096L10.4568 13.8399C10.4012 13.8381 10.3476 13.8603 10.3097 13.9009L8.90154 15.4075C8.3691 15.9772 7.46566 15.9772 6.93322 15.4075L5.5251 13.9009C5.48717 13.8603 5.43354 13.8381 5.37801 13.8399L3.31698 13.9096C2.53765 13.9359 1.89883 13.2971 1.92516 12.5178L1.99482 10.4568C1.99669 10.4012 1.97448 10.3476 1.93389 10.3097L0.427268 8.90154C-0.142422 8.3691 -0.142423 7.46566 0.427268 6.93322L1.93389 5.5251C1.97448 5.48717 1.99669 5.43354 1.99482 5.37801L1.92516 3.31698C1.89883 2.53765 2.53765 1.89883 3.31698 1.92516L5.37801 1.99482C5.43354 1.99669 5.48717 1.97448 5.5251 1.93389L6.93322 0.427268ZM8.05797 1.21568C7.98191 1.1343 7.85285 1.1343 7.77679 1.21568L6.36867 2.7223C6.10311 3.00644 5.7277 3.16194 5.33901 3.1488L3.27798 3.07915C3.16665 3.07539 3.07539 3.16665 3.07915 3.27798L3.1488 5.33901C3.16194 5.7277 3.00644 6.10311 2.7223 6.36867L1.21568 7.77679C1.1343 7.85285 1.1343 7.98191 1.21568 8.05797L2.7223 9.46609C3.00644 9.73165 3.16194 10.1071 3.1488 10.4958L3.07915 12.5568C3.07539 12.6681 3.16665 12.7594 3.27798 12.7556L5.33901 12.686C5.7277 12.6728 6.10311 12.8283 6.36867 13.1125L7.77679 14.6191C7.85285 14.7005 7.98191 14.7005 8.05797 14.6191L9.46609 13.1125C9.73165 12.8283 10.1071 12.6728 10.4958 12.686L12.5568 12.7556C12.6681 12.7594 12.7594 12.6681 12.7556 12.5568L12.686 10.4958C12.6728 10.1071 12.8283 9.73165 13.1125 9.46609L14.6191 8.05797C14.7005 7.98191 14.7005 7.85285 14.6191 7.77679L13.1125 6.36867C12.8283 6.10311 12.6728 5.7277 12.686 5.33901L12.7556 3.27798C12.7594 3.16665 12.6681 3.07539 12.5568 3.07915L10.4958 3.1488C10.1071 3.16194 9.73165 3.00644 9.46609 2.7223L8.05797 1.21568Z'
+                      fill='url(#paint1_linear_140_5737)'
+                    />
+                    <path
+                      fill-rule='evenodd'
+                      clip-rule='evenodd'
+                      d='M11.2588 4.95388C11.5139 5.14518 11.5656 5.50705 11.3743 5.76213L8.13436 10.082C7.88097 10.4199 7.37864 10.4327 7.10827 10.1083L4.97172 7.54442C4.7676 7.29948 4.80069 6.93544 5.04563 6.73132C5.29058 6.5272 5.65462 6.5603 5.85874 6.80524L7.59026 8.88306L10.4505 5.06934C10.6419 4.81426 11.0037 4.76257 11.2588 4.95388Z'
+                      fill='white'
+                    />
+                    <defs>
+                      <linearGradient
+                        id='paint0_linear_140_5737'
+                        x1='0.578125'
+                        y1='7.91736'
+                        x2='15.2582'
+                        y2='7.91736'
+                        gradientUnits='userSpaceOnUse'
+                      >
+                        <stop stop-color='#049A0E' />
+                        <stop offset='1' stop-color='#02B346' />
+                      </linearGradient>
+                      <linearGradient
+                        id='paint1_linear_140_5737'
+                        x1='0'
+                        y1='7.91738'
+                        x2='15.8348'
+                        y2='7.91738'
+                        gradientUnits='userSpaceOnUse'
+                      >
+                        <stop stop-color='#049A0E' />
+                        <stop offset='1' stop-color='#02B346' />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </h2>
               )}
               <p className='eb-expert-role'>{packageData?.category?.name}</p>
               {packageData?.expert?.experienceAndQualifications?.yearsOfExperience && (
-  <p className='eb-expert-exp'>
-    {packageData.expert.experienceAndQualifications.yearsOfExperience} Years of experience
-  </p>
-)}
+                <p className='eb-expert-exp'>
+                  {packageData.expert.experienceAndQualifications.yearsOfExperience} Years of experience
+                </p>
+              )}
 
               <button
                 className='eb-card-enquire-btn'
@@ -591,18 +654,18 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                 <span className='eb-card-btn-left'>
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
                     <g filter="url(#filter0_f_178_1398)">
-                      <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3"/>
-                      <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)"/>
+                      <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3" />
+                      <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)" />
                     </g>
                     <defs>
                       <filter id="filter0_f_178_1398" x="-0.00147986" y="1.54972e-05" width="17.0186" height="36.4596" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                        <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398"/>
+                        <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                        <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398" />
                       </filter>
                       <linearGradient id="paint0_linear_178_1398" x1="2.24219" y1="3.09462" x2="4.64423" y2="7.48478" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="white"/>
-                        <stop offset="1" stopColor="white" stopOpacity="0"/>
+                        <stop stopColor="white" />
+                        <stop offset="1" stopColor="white" stopOpacity="0" />
                       </linearGradient>
                     </defs>
                   </svg>
@@ -610,13 +673,13 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                 <span className='eb-card-btn-top'>
                   <svg xmlns="http://www.w3.org/2000/svg" width="266" height="5" viewBox="0 0 266 5" fill="none">
                     <g filter="url(#filter0_f_178_1399)">
-                      <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round"/>
+                      <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round" />
                     </g>
                     <defs>
                       <filter id="filter0_f_178_1399" x="-0.00147986" y="1.54972e-05" width="265.636" height="4.76779" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                        <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399"/>
+                        <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                        <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399" />
                       </filter>
                     </defs>
                   </svg>
@@ -686,9 +749,8 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                         return (
                           <button
                             key={dayIdx}
-                            className={`eb-calendar-day ${!dayObj ? "empty" : ""} ${
-                              isSameDay(dayObj, selectedDate) ? "selected" : ""
-                            } ${isSpecialDay(dayObj) ? "highlighted" : ""}`}
+                            className={`eb-calendar-day ${!dayObj ? "empty" : ""} ${isSameDay(dayObj, selectedDate) ? "selected" : ""
+                              } ${isSpecialDay(dayObj) ? "highlighted" : ""}`}
                             onClick={() => {
                               if (!dayObj || isDisabled) return;
                               setSelectedDate(dayObj);
@@ -705,22 +767,22 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
               </div>
 
               <div className='eb-action-buttons'>
-                <button className='eb-btn eb-btn-primary' type='button' onClick={handleBookNow}>
+                {packageData?.freeTrial ? (<button className='eb-btn eb-btn-success' type='button' onClick={handleBookNow}>
                   <span className='eb-card-btn-left'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="37" viewBox="0 0 18 37" fill="none">
                       <g filter="url(#filter0_f_178_1398)">
-                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3"/>
-                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)"/>
+                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3" />
+                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)" />
                       </g>
                       <defs>
                         <filter id="filter0_f_178_1398" x="-0.00147986" y="1.54972e-05" width="17.0186" height="36.4596" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398"/>
+                          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398" />
                         </filter>
                         <linearGradient id="paint0_linear_178_1398" x1="2.24219" y1="3.09462" x2="4.64423" y2="7.48478" gradientUnits="userSpaceOnUse">
-                          <stop stopColor="white"/>
-                          <stop offset="1" stopColor="white" stopOpacity="0"/>
+                          <stop stopColor="white" />
+                          <stop offset="1" stopColor="white" stopOpacity="0" />
                         </linearGradient>
                       </defs>
                     </svg>
@@ -728,60 +790,61 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                   <span className='eb-card-btn-top'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="266" height="5" viewBox="0 0 266 5" fill="none">
                       <g filter="url(#filter0_f_178_1399)">
-                        <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round"/>
+                        <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round" />
                       </g>
                       <defs>
                         <filter id="filter0_f_178_1399" x="-0.00147986" y="1.54972e-05" width="265.636" height="4.76779" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399"/>
-                        </filter>
-                      </defs>
-                    </svg>
-                  </span>
-                  <span className='eb-card-btn-label'>Book Now</span>
-                </button>
-                <button className='eb-btn eb-btn-success' type='button'>
-                  <span className='eb-card-btn-left'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="37" viewBox="0 0 18 37" fill="none">
-                      <g filter="url(#filter0_f_178_1398)">
-                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3"/>
-                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)"/>
-                      </g>
-                      <defs>
-                        <filter id="filter0_f_178_1398" x="-0.00147986" y="1.54972e-05" width="17.0186" height="36.4596" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398"/>
-                        </filter>
-                        <linearGradient id="paint0_linear_178_1398" x1="2.24219" y1="3.09462" x2="4.64423" y2="7.48478" gradientUnits="userSpaceOnUse">
-                          <stop stopColor="white"/>
-                          <stop offset="1" stopColor="white" stopOpacity="0"/>
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                  </span>
-                  <span className='eb-card-btn-top'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="266" height="5" viewBox="0 0 266 5" fill="none">
-                      <g filter="url(#filter0_f_178_1399)">
-                        <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round"/>
-                      </g>
-                      <defs>
-                        <filter id="filter0_f_178_1399" x="-0.00147986" y="1.54972e-05" width="265.636" height="4.76779" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399"/>
+                          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399" />
                         </filter>
                       </defs>
                     </svg>
                   </span>
                   <span className='eb-card-btn-label'>Book Free Trial</span>
-                </button>
+                </button>) : (<button className='eb-btn eb-btn-primary' type='button' onClick={handleBookNow}>
+                  <span className='eb-card-btn-left'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="37" viewBox="0 0 18 37" fill="none">
+                      <g filter="url(#filter0_f_178_1398)">
+                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="white" fillOpacity="0.3" />
+                        <path d="M3.26618 3.86592C3.77994 1.96845 11.3059 2.17688 14.5106 2.35357C14.818 2.37052 14.8751 2.81159 14.5868 2.91953C12.9369 3.5372 10.2822 4.67972 9.60234 5.85144C6.66426 10.9152 6.77027 18.977 7.233 24.1552C7.51358 27.2951 6.63443 30.4841 4.5223 32.8242L3.26618 34.2159C3.26618 34.2159 0.962196 12.3753 3.26618 3.86592Z" fill="url(#paint0_linear_178_1398)" />
+                      </g>
+                      <defs>
+                        <filter id="filter0_f_178_1398" x="-0.00147986" y="1.54972e-05" width="17.0186" height="36.4596" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1398" />
+                        </filter>
+                        <linearGradient id="paint0_linear_178_1398" x1="2.24219" y1="3.09462" x2="4.64423" y2="7.48478" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="white" />
+                          <stop offset="1" stopColor="white" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span className='eb-card-btn-top'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="266" height="5" viewBox="0 0 266 5" fill="none">
+                      <g filter="url(#filter0_f_178_1399)">
+                        <path d="M2.38281 2.38391H263.249" stroke="white" strokeWidth="0.280458" strokeLinecap="round" />
+                      </g>
+                      <defs>
+                        <filter id="filter0_f_178_1399" x="-0.00147986" y="1.54972e-05" width="265.636" height="4.76779" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                          <feGaussianBlur stdDeviation="1.12183" result="effect1_foregroundBlur_178_1399" />
+                        </filter>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span className='eb-card-btn-label'>Book Now</span>
+                </button>)}
+
+
               </div>
             </div>
 
             {/* Expert Appointment List */}
-            <div className='eb-appointments-section'>
+            {/* <div className='eb-appointments-section'>
               <div className='eb-section-header'>
                 <h3>Expert Appointment List</h3>
                 <button className='eb-more-btn'>
@@ -850,7 +913,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                 </span>
                 <span className='eb-card-btn-label'>See All</span>
               </button>
-            </div>
+            </div> */}
 
             {/* Checkout Info */}
             <div className='eb-checkout-info'>
@@ -876,53 +939,53 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
           <main className='eb-main-content'>
             {/* Hero Banner */}
             {packageData && (
-            <div className='eb-hero-banner' style={{backgroundImage:`url(${packageData.detailPageImage})`}}>
-              <div className='eb-hero-left'>
-                <h1>
-                  Book Your
-                  <br />
-                  {packageData?.name}
-                </h1>
-                <p className='eb-hero-subtext'>
-                  “Choose your package, schedule your sessions,
-                  <br />
-                  and start your journey.”
-                </p>
-                <div className='eb-hero-fee'>
-                  <span className='eb-hero-fee-label'>Fee Range</span>
-                  <span className='eb-hero-fee-value'>{`QAR ${packageData?.price}/Session`}</span>
+              <div className='eb-hero-banner' style={{ backgroundImage: `url(${packageData.detailPageImage})` }}>
+                <div className='eb-hero-left'>
+                  <h1>
+                    Book Your
+                    <br />
+                    {packageData?.name}
+                  </h1>
+                  <p className='eb-hero-subtext'>
+                    “Choose your package, schedule your sessions,
+                    <br />
+                    and start your journey.”
+                  </p>
+                  <div className='eb-hero-fee'>
+                    <span className='eb-hero-fee-label'>Fee Range</span>
+                    <span className='eb-hero-fee-value'>{`QAR ${packageData?.price}/Session`}</span>
+                  </div>
                 </div>
+                <div className='eb-hero-image' />
               </div>
-              <div className='eb-hero-image' />
-            </div>
             )}
-            
+
 
             {/* Package Details */}
             {packageData && (
               <div className='eb-package-details'>
-              <h3 className='eb-section-title'>Package Details</h3>
+                <h3 className='eb-section-title'>Package Details</h3>
 
-              <div className='eb-detail-section'>
-                <h4>{packageData.name}</h4>
-                <div
-        dangerouslySetInnerHTML={{ __html: packageData.description }}
-      />
-              </div>
+                <div className='eb-detail-section'>
+                  <h4>{packageData.name}</h4>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: packageData.description }}
+                  />
+                </div>
 
-              <div className='eb-detail-section'>
-                <h4>Strength Level:</h4>
-                <ul>
-                  <li>
-                    <strong>Suitable For:</strong>&nbsp;{packageData.skillLevel}
-                  </li>
-                  <li>
-                    <strong>Size:</strong>&nbsp;{packageData.groupSettings.maxParticipants}
-                  </li>
-                </ul>
-              </div>
+                <div className='eb-detail-section'>
+                  <h4>Strength Level:</h4>
+                  <ul>
+                    <li>
+                      <strong>Suitable For:</strong>&nbsp;{packageData.skillLevel}
+                    </li>
+                    <li>
+                      <strong>Size:</strong>&nbsp;{packageData.groupSettings.maxParticipants}
+                    </li>
+                  </ul>
+                </div>
 
-              {/* <div className='eb-warning-box'>
+                {/* <div className='eb-warning-box'>
                 <div className='eb-warning-icon' />
                 <p>
                   Seats are filling fast! Just 5 spots left — book now to secure yours.
@@ -931,71 +994,71 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
                 </p>
               </div> */}
 
-              <div className='eb-detail-section eb-detail-section-divider'>
-                <h4>Scheduling &amp; Duration:</h4>
-                <ul>
-                  <li>Number of Sessions: {packageData.noOfSessions}</li>
-                  <li>
-      Validity: Start:{" "}
-      {DateTime.fromISO(packageData.start)
-        .setZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
-        .toFormat("MMMM d")}{" "}
-      End:{" "}
-      {DateTime.fromISO(packageData.end)
-        .setZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
-        .toFormat("MMMM d")}
-    </li>
-                   <li>
-  Preferred Timing:
-  <ul>
-    {packageData.timeSlots.map((slot) => {
-    const traineeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    const start = convertTimeTo12H(slot.startTime, packageData.timeZone, traineeZone);
-    const end = convertTimeTo12H(slot.endTime, packageData.timeZone, traineeZone);
-
-    return (
-      <li key={slot._id}>
-        {slot.day}: {start} - {end} 
-      </li>
-    );
-  })}
-  </ul>
-</li>
-
-                  <li>Type of Audience: {packageData.targetAudience.map((audience)=>{
-                     return `${audience}`
-                  }).join(", ")}</li>
-                </ul>
-              </div>
-
-              <div className='eb-detail-section'>
-                <h4>Mode of Delivery:</h4>
-                <ul>
-                  {packageData.delivery === DELIVERY.ONLINE?(
+                <div className='eb-detail-section eb-detail-section-divider'>
+                  <h4>Scheduling &amp; Duration:</h4>
+                  <ul>
+                    <li>Number of Sessions: {packageData.noOfSessions}</li>
                     <li>
-                    <strong>Online:</strong> Live interactive sessions via video conferencing with personalized feedback and
-                    progress tracking.
-                  </li>
-                  ):( <li>
-                    <strong>Offline:</strong> In-person classes at our training studio, including one-on-one guidance and group
-                    practice sessions.
-                  </li>)}
-                  
-                </ul>
-              </div>
+                      Validity: Start:{" "}
+                      {DateTime.fromISO(packageData.start)
+                        .setZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+                        .toFormat("MMMM d")}{" "}
+                      End:{" "}
+                      {DateTime.fromISO(packageData.end)
+                        .setZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+                        .toFormat("MMMM d")}
+                    </li>
+                    <li>
+                      Preferred Timing:
+                      <ul>
+                        {packageData.timeSlots.map((slot) => {
+                          const traineeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-              <div className='eb-detail-section eb-detail-section-divider'>
-                <h4>Terms and Conditions:</h4>
-                <p>
-                  Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                  magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                  consequat.
-                </p>
+                          const start = convertTimeTo12H(slot.startTime, packageData.timeZone, traineeZone);
+                          const end = convertTimeTo12H(slot.endTime, packageData.timeZone, traineeZone);
+
+                          return (
+                            <li key={slot._id}>
+                              {slot.day}: {start} - {end}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </li>
+
+                    <li>Type of Audience: {packageData.targetAudience.map((audience) => {
+                      return `${audience}`
+                    }).join(", ")}</li>
+                  </ul>
+                </div>
+
+                <div className='eb-detail-section'>
+                  <h4>Mode of Delivery:</h4>
+                  <ul>
+                    {packageData.delivery === DELIVERY.ONLINE ? (
+                      <li>
+                        <strong>Online:</strong> Live interactive sessions via video conferencing with personalized feedback and
+                        progress tracking.
+                      </li>
+                    ) : (<li>
+                      <strong>Offline:</strong> In-person classes at our training studio, including one-on-one guidance and group
+                      practice sessions.
+                    </li>)}
+
+                  </ul>
+                </div>
+
+                <div className='eb-detail-section eb-detail-section-divider'>
+                  <h4>Terms and Conditions:</h4>
+                  <p>
+                    Lorem Ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+                    magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat.
+                  </p>
+                </div>
               </div>
-            </div>
             )}
-          
+
 
             {/* Explore More Packages */}
             <div className='eb-more-packages'>
@@ -1042,7 +1105,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
               <div className='eb-packages-slider-wrapper'>
                 <div className='eb-packages-slider' ref={packagesSliderRef}>
                   {morePackages.map((pkg) => (
-                    
+
                     <div key={pkg.id} className='eb-package-card'>
                       <div className='eb-package-image'>
                         <img src={pkg.image} alt={pkg.title} />
@@ -1167,7 +1230,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
       </div>
 
       {/* Booking Confirmation Modal */}
-      <BookingConfirmationModal 
+      <BookingConfirmationModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
         onConfirm={async () => {
@@ -1179,7 +1242,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
             const startDateUtc = bookingStartDate.toUTC().toISO();
             const endDateUtc = bookingEndDate.plus({ days: 1 }).toUTC().toISO();
             console.log("endDateUtc", endDateUtc);
-            
+
             await bookPackage({
               packageId: packageData._id,
               startDateUtc,
@@ -1227,30 +1290,30 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
               >
                 <svg className="bcm-btn-glossy-top" width="272" height="6" viewBox="0 0 272 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g filter="url(#filter0_f_151_2845)">
-                    <path d="M2.59375 2.59399H268.44" stroke="white" strokeWidth="0.305174" strokeLinecap="round"/>
+                    <path d="M2.59375 2.59399H268.44" stroke="white" strokeWidth="0.305174" strokeLinecap="round" />
                   </g>
                   <defs>
                     <filter id="filter0_f_151_2845" x="1.43051e-05" y="1.43051e-05" width="271.033" height="5.18796" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_151_2845"/>
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_151_2845" />
                     </filter>
                   </defs>
                 </svg>
                 <svg className="bcm-btn-vector" width="10" height="40" viewBox="0 0 10 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g filter="url(#filter0_f_151_2844)">
-                    <path d="M2.84839 4.20661C3.05104 2.15744 5.9989 2.36543 7.2884 2.55664C7.53645 2.59342 7.6217 2.90139 7.44446 3.07879C6.80129 3.72256 5.6506 5.02729 5.36666 6.3671C3.93727 13.1118 4.3207 24.7445 4.55795 29.5271C4.62839 30.9471 4.45094 32.3701 4.00581 33.7203L2.84839 37.2312C2.84839 37.2312 1.93268 13.4659 2.84839 4.20661Z" fill="white" fillOpacity="0.3"/>
-                    <path d="M2.84839 4.20661C3.05104 2.15744 5.9989 2.36543 7.2884 2.55664C7.53645 2.59342 7.6217 2.90139 7.44446 3.07879C6.80129 3.72256 5.6506 5.02729 5.36666 6.3671C3.93727 13.1118 4.3207 24.7445 4.55795 29.5271C4.62839 30.9471 4.45094 32.3701 4.00581 33.7203L2.84839 37.2312C2.84839 37.2312 1.93268 13.4659 2.84839 4.20661Z" fill="url(#paint0_linear_151_2844)"/>
+                    <path d="M2.84839 4.20661C3.05104 2.15744 5.9989 2.36543 7.2884 2.55664C7.53645 2.59342 7.6217 2.90139 7.44446 3.07879C6.80129 3.72256 5.6506 5.02729 5.36666 6.3671C3.93727 13.1118 4.3207 24.7445 4.55795 29.5271C4.62839 30.9471 4.45094 32.3701 4.00581 33.7203L2.84839 37.2312C2.84839 37.2312 1.93268 13.4659 2.84839 4.20661Z" fill="white" fillOpacity="0.3" />
+                    <path d="M2.84839 4.20661C3.05104 2.15744 5.9989 2.36543 7.2884 2.55664C7.53645 2.59342 7.6217 2.90139 7.44446 3.07879C6.80129 3.72256 5.6506 5.02729 5.36666 6.3671C3.93727 13.1118 4.3207 24.7445 4.55795 29.5271C4.62839 30.9471 4.45094 32.3701 4.00581 33.7203L2.84839 37.2312C2.84839 37.2312 1.93268 13.4659 2.84839 4.20661Z" fill="url(#paint0_linear_151_2844)" />
                   </g>
                   <defs>
                     <filter id="filter0_f_151_2844" x="1.43051e-05" y="1.43051e-05" width="9.98044" height="39.6726" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_151_2844"/>
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feGaussianBlur stdDeviation="1.2207" result="effect1_foregroundBlur_151_2844" />
                     </filter>
                     <linearGradient id="paint0_linear_151_2844" x1="2.44141" y1="3.36733" x2="5.30773" y2="5.2808" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="white"/>
-                      <stop offset="1" stopColor="white" stopOpacity="0"/>
+                      <stop stopColor="white" />
+                      <stop offset="1" stopColor="white" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -1261,6 +1324,7 @@ const ExpertBooking = ({ setLoading = () => {} }) => {
         </div>
       )}
     </div>
+
   );
 };
 

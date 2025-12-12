@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { HiOutlineChat, HiOutlineBell } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
-import Profile from "../../assets/images/kate.png";
 import ProfilePopup from "./ProfilePopup";
 import NotificationPopup from "./NotificationPopup";
 
@@ -28,7 +27,7 @@ export default function TraineeHeader({ title = "Dashboard" }) {
     .toUpperCase();
 
   const profileImage =
-    user?.profileImage || user?.imageUrl || user?.photo || Profile;
+    user?.profileImage || user?.imageUrl || user?.photo
   return (
     <header className="header">
       <div className="header-container">

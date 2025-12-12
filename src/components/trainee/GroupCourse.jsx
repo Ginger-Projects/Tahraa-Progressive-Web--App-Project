@@ -15,6 +15,8 @@ export default function ViolinClassCard({ onLoadingChange = () => {} }) {
         onLoadingChange(true);
         const data = await getTraineeProgressSummary();
         const list = data?.data?.analytics || [];
+        console.log("list",list);
+        
         setAnalytics(list);
         setCurrentIndex(0);
       } catch (error) {
@@ -280,7 +282,8 @@ export default function ViolinClassCard({ onLoadingChange = () => {} }) {
         )}
 
         {/* CTA Button */}
-        <button
+        {totalSessions === completedSessions &&(
+<button 
           className="course-button"
           type="button"
           onClick={() => navigate('/confirm-booking')}
@@ -316,8 +319,10 @@ export default function ViolinClassCard({ onLoadingChange = () => {} }) {
       </defs>
     </svg>
   </div>
-  Book My Next Class
+  Add Review
 </button>
+        )}
+        
 
       </div>
     </div>

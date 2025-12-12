@@ -12,6 +12,9 @@ import { toast } from "react-toastify";
 import { loginTrainee } from "../services/authService";
 import { useDispatch } from "react-redux";
 import { setTrainee } from "../features/slice/trainer/traineeSlice";
+import TermsOfUse from './Legal/TermsOfUse';
+import PrivacyPolicy from './Legal/PrivacyPolicy';
+import LegalModal from '../components/LegalModal';
 
 const slides = [
   {
@@ -43,6 +46,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -59,13 +64,13 @@ const LoginPage = () => {
   }, [navigate]);
 
   const from = location.state?.from;
-  console.log("location",from);
-  
+  console.log("location", from);
+
   const searchParams = new URLSearchParams(from?.search || "");
   const invite = searchParams.get("invite");
   const packageId = searchParams.get("packageId");
-  console.log("invite",invite,packageId);
-  
+  console.log("invite", invite, packageId);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -86,9 +91,9 @@ const LoginPage = () => {
 
       if (response && (response.success || response.token || response.user)) {
         toast(
-  <div className="projected-toast-text">{response.message}</div>,
-  { className: "projected-toast" }  // optional if you're using the 3D box
-);
+          <div className="projected-toast-text">{response.message}</div>,
+          { className: "projected-toast" }  // optional if you're using the 3D box
+        );
 
         let redirectTo = "/trainee";
 
@@ -100,9 +105,9 @@ const LoginPage = () => {
           qp.set("invite", invite);
           redirectTo = `/expert-booking?${qp.toString()}`;
         }
-        console.log("redirect",redirectTo);
-        console.log("response.date",response.data);
-        
+        console.log("redirect", redirectTo);
+        console.log("response.date", response.data);
+
         dispatch(setTrainee({ ...response.data, rememberMe }));
         navigate(redirectTo);
 
@@ -211,9 +216,42 @@ const LoginPage = () => {
 
             {/* Terms / reCAPTCHA text */}
             <p className='lp-terms'>
-              Protected by reCAPTCHA and subject to the Tahraa <a href='#privacy'>Privacy Policy</a> and{" "}
-              <a href='#terms'>Terms of Service</a>.
+              Protected by reCAPTCHA and subject to the Tahraa{" "}
+              <span
+                className="link-text"
+                onClick={() => setShowPrivacyModal(true)}
+                style={{ color: "#007bff", cursor: "pointer" }}
+              >
+                Privacy Policy
+              </span>{" "}
+              and{" "}
+              <span
+                className="link-text"
+                onClick={() => setShowTermsModal(true)}
+                style={{ color: "#007bff", cursor: "pointer" }}
+              >
+                Terms of Service
+              </span>
+              .
             </p>
+
+            {showTermsModal && (
+              <LegalModal
+                isOpen={showTermsModal}
+                onClose={() => setShowTermsModal(false)}
+              >
+                <TermsOfUse />
+              </LegalModal>
+            )}
+
+            {showPrivacyModal && (
+              <LegalModal
+                isOpen={showPrivacyModal}
+                onClose={() => setShowPrivacyModal(false)}
+              >
+                <PrivacyPolicy />
+              </LegalModal>
+            )}
           </form>
         </div>
 
