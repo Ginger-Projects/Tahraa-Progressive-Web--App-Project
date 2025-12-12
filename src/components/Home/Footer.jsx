@@ -41,7 +41,7 @@ export const Footer = () => {
 
         {/* Bottom Copy */}
         <p className="footer-copy">
-          Copyright © 2025 Tahraa. All rights reserved. Developed by Ginger
+          Copyright © 2025 Yanmu. All rights reserved. Developed by Ginger
           Technologies.
         </p>
       </div>

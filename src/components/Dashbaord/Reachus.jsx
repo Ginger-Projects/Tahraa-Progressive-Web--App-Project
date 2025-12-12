@@ -121,7 +121,7 @@ const Reachus = () => {
           <div className="reachus-banner">
             {/* LEFT: Text + contact details */}
             <div className="reachChild">
-              <h2 className="reachus-left-title">How Can Tahraa <br /> Assistants Help You?</h2>
+              <h2 className="reachus-left-title">How Can Yanmu <br /> Assistants Help You?</h2>
               <p className="reachus-left-text">
                 Drop in your requests or feedback and we&apos;ll get back to you as soon as possible.
               </p>
@@ -240,7 +240,7 @@ const Reachus = () => {
         </div>
 
         <p className="reachus-footer-text">
-          Copyright © 2025 Tahraa. All rights reserved. Developed by Ginger Technologies.
+          Copyright © 2025 Yanmu. All rights reserved. Developed by Ginger Technologies.
         </p>
       </div>
     </section>

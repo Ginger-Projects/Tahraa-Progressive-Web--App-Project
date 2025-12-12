@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="exp-footer">
       <div className="exp-footer-inner">
-        <div className="exp-footer-logo">Tahraa</div>
+        <div className="exp-footer-logo">Yanmu</div>
 
         <div className="exp-footer-social">
           <button>f</button>
@@ -20,7 +20,7 @@ const Footer = () => {
         </div>
 
         <p className="exp-footer-copy">
-          Copyright © 2025 Tahraa. All rights reserved. Developed by Ginger
+          Copyright © 2025 Yanmu. All rights reserved. Developed by Ginger
           Technologies.
         </p>
       </div>

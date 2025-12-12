@@ -445,6 +445,15 @@
 .eb-btn-primary {
   background: linear-gradient(180deg, #8a6bba 0%, #775da6 100%);
   color: white;
+
+   @media(max-width : 577px){
+    padding: .5rem 0 !important;
+
+    .eb-card-btn-top 
+{
+  left: -120px;
+}
+  }
 }
 
 .eb-btn-primary:hover {

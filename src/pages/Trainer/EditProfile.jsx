@@ -14,7 +14,7 @@ export default function EditProfile() {
     </div>
     <div className="edit-profile-footer">
         <p>
-          Copyright © 2025 Tahma. All rights reserved. Developed by Ginger Technologies.
+          Copyright © 2025 Yanmu. All rights reserved. Developed by Ginger Technologies.
         </p>
       </div>
     </>

@@ -13,7 +13,7 @@ export default function TrainerCalendar(){
 
             <footer className="calendar-footer">
                 <p>
-                    Copyright 2025 Tahra. All rights reserved. Developed by Ginger Technologies.
+                    Copyright 2025 Yanmu. All rights reserved. Developed by Ginger Technologies.
                 </p>
             </footer>
         </div>
