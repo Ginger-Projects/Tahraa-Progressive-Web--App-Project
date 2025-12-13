@@ -10,7 +10,7 @@ import Prev from "../../assets/images/prev.png";
 
 // Import Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -31,10 +31,15 @@ export const Slider = () => {
         <div className='position-relative wrap-div'>
           {/* Swiper Container */}
           <Swiper
-            modules={[Navigation]}
+            modules={[Navigation, Autoplay]}
             navigation={{
               nextEl: ".right-arrow",
               prevEl: ".left-arrow",
+            }}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
             }}
             slidesPerView={4}
             spaceBetween={40}

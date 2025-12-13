@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL:"https://api.yanmu.qa/api",
+    baseURL:"https://tahraa.preview.gingertechnologies.app/api",
+    timeout: 30000,
     headers:{"Content-Type":"application/json"},
 
 })
@@ -20,6 +21,21 @@ api.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.code === "ECONNABORTED" || /timeout/i.test(error?.message || "")) {
+      return Promise.reject(new Error("Request timeout exceeded. Please try again."));
+    }
+
+    if (!error?.response) {
+      return Promise.reject(new Error("Network error. Please check your internet connection."));
+    }
+
+    return Promise.reject(error);
+  }
 );
 
 

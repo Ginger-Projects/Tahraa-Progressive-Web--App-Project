@@ -70,6 +70,13 @@ body {
   flex-direction: column;
   max-width: 100%;
   padding: 5rem 1rem;
+
+  @media(max-width : 768px){
+    padding: 2rem 1rem;
+  }
+   @media(max-width : 500px){
+    padding: 1rem 0.5rem;
+  }
 }
 
 .tahraa-logo {
@@ -284,6 +291,10 @@ input[type="password"]::-webkit-clear-button {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+
+  @media(max-width : 641px){
+    gap: 0;
+  }
 }
 
 /* select */
@@ -662,7 +673,7 @@ input[type="password"]::-webkit-clear-button {
   }
 
   .tahraa-wrapper {
-    padding: 24px 18px 26px;
+    padding: 0;
     border-radius: 24px;
   }
 

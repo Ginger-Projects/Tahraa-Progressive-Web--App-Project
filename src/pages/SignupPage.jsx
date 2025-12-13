@@ -119,7 +119,7 @@ const TahraaSignup = () => {
 
   const today = new Date();
   const maxDobDate = new Date(
-    today.getFullYear() - 5,
+    today.getFullYear() - 18,
     today.getMonth(),
     today.getDate()
   );
@@ -166,7 +166,7 @@ const TahraaSignup = () => {
     } else {
       const selected = new Date(dob);
       if (selected > maxDobDate) {
-        newErrors.dob = "You must be at least 5 years old";
+        newErrors.dob = "You must be at least 18 years old";
       }
     }
 
@@ -228,6 +228,10 @@ const TahraaSignup = () => {
         qp.set("invite", invite);
 
         navigate(`/expert-booking?${qp.toString()}`);
+      } else {
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       }
 
       setFullName("")
