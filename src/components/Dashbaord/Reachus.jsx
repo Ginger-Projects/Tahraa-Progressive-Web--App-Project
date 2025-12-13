@@ -104,7 +104,7 @@ const Reachus = () => {
               className="reachus-header-avatar"
               onClick={() => setIsProfileOpen(true)}
             >
-              <img src={user?.profileImage || Profile} alt="" />
+              <img style={{width:"50px",height:"50px"}} src={user?.profileImage || Profile} alt="" />
             </div>
             <button
               type="button"

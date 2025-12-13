@@ -1,6 +1,7 @@
 .main-reach{
   padding: 1rem;
   background-color: #EAECF2;
+  overflow-x: hidden;
 }
 .reachus-page {
   background-color: #eaecf2;

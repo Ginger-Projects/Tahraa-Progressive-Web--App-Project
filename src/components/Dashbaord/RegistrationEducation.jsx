@@ -141,6 +141,10 @@ const RegistrationEducation = () => {
     setLanguages((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
+  const handleRemoveYoutubeLink = (indexToRemove) => {
+    setPreviousWorksLinks((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
   const handleRemoveCertificate = (indexToRemove) => {
     setCertificates((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
@@ -514,20 +518,53 @@ const RegistrationEducation = () => {
                   </div>
 
                   {previousWorksLinks.length > 0 && (
-                    <div
-                      style={{
-                        marginTop: 8,
-                        fontSize: 12,
-                        color: "#555",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {previousWorksLinks.join(", ")}
+                    <div style={{ marginTop: 8, display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {previousWorksLinks.map((link, index) => (
+                        <div
+                          key={`${link}-${index}`}
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            background: "#e0e0e0",
+                            borderRadius: 16,
+                            padding: "4px 12px",
+                            fontSize: 12,
+                            color: "#333",
+                            maxWidth: "100%",
+                          }}
+                          title={link}
+                        >
+                          <span
+                            style={{
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              maxWidth: 220,
+                              display: "inline-block",
+                            }}
+                          >
+                            {link}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveYoutubeLink(index)}
+                            style={{
+                              marginLeft: 6,
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                              padding: 0,
+                              fontSize: 14,
+                              lineHeight: 1,
+                              color: "#666",
+                            }}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
-
                   <div
                     style={{
                       textAlign: "center",
