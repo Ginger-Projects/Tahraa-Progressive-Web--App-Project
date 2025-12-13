@@ -1,9 +1,19 @@
 import React from "react";
 import Package1 from "../../assets/images/forPackages.jpg";
 import { Package } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const PackageCard = ({ data, view }) => {
   console.log("data",data);
+  const trainee = useSelector((state) => state.trainee.token);
+  const navigate = useNavigate();
+  const handlePackageClick = (id) => {
     
+    if(!trainee){
+      navigate('/login')
+      return;   }
+    navigate(`/expert-booking?packageId=${id}`);
+  };
   return (
     
     <article className={`expert-cardss ${view === "list" ? "list-view" : ""}`}>
@@ -32,7 +42,7 @@ const PackageCard = ({ data, view }) => {
         </div>
 
         <div className="package-btn-bar">
-          <button className="package-btn">
+          <button onClick={() => handlePackageClick(data._id)} className="package-btn">
             <span className="package-btn-vector-left">
               <svg xmlns="http://www.w3.org/2000/svg" width="8" height="26" viewBox="0 0 8 26" fill="none">
                 <g filter="url(#filter0_f_183_4428)">

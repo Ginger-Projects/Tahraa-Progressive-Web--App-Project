@@ -5,9 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { createExpertConversation } from "../../services/expertService";
 import { toast } from "react-toastify";
 import Expert2 from "../../assets/images/whitebg.jpg";
+import { useSelector } from "react-redux";
 
 const ExpertCard = ({ data, view }) => {
   const [enquiring, setEnquiring] = useState(false);
+  const trainee = useSelector((state)=>state.trainee.token)
   const navigate = useNavigate();
 
   const category = data.experienceAndQualifications?.teachingCategory?.name || "Not specified";
@@ -26,7 +28,11 @@ const ExpertCard = ({ data, view }) => {
   const handleEnquire = async () => {
     const expertId = data?._id;
     if (!expertId || enquiring) return;
-
+    console.log("traine",trainee);
+    
+    if(!trainee){
+      navigate('/login')
+      return;   }
     try {
       setEnquiring(true);
       const res = await createExpertConversation(expertId);

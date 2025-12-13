@@ -3,12 +3,13 @@ import "./ExpertProfile.css";
 import LineSrc from "../../assets/images/bigline.png";
 
 // dummy imports – replace with your real images
-import pkg1 from "../../assets/images/package4.png";
+import pkg1 from "../../assets/images/forPackages.jpg";
 import Button from "../../components/Button";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { getExpertDetails, getExpertPackages, getExpertFeedbacks, createExpertConversation } from "../../services/expertService";
 import { User } from "lucide-react";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const ExpertProfile = () => {
   const [isSaved, setIsSaved] = useState(false);
@@ -28,9 +29,10 @@ const ExpertProfile = () => {
   const prevWorksSliderRef = useRef(null);
   const suggestSliderRef = useRef(null);
   const navigate = useNavigate();
+  const trainee = useSelector((state)=>state.trainee)
 
   const languages = Array.isArray(expert?.languages) ? expert.languages : [];
-
+  
   const expQual = expert?.experienceAndQualifications;
   const yearsOfExperience = expQual?.yearsOfExperience;
   const categoryName = expQual?.teachingCategory?.name;
@@ -39,6 +41,13 @@ const ExpertProfile = () => {
   const certificates = Array.isArray(expQual?.certificates)
     ? expQual.certificates
     : [];
+
+  const handlePackageClick = (id) =>{
+    if(!trainee){
+      toast.error("Please login to book a package") 
+      return;   }
+    navigate(`/expert-booking?packageId=${id}`);
+  }
 
   const expertId = searchParams.get("expertId");
 
@@ -800,7 +809,7 @@ const ExpertProfile = () => {
                         </div>
                       </div>
 
-                      <button className='ep-package-learn-btn' type='button'>
+                      <button onClick={()=>handlePackageClick(pkg.id)} className='ep-package-learn-btn' type='button'>
                         <span className='ep-package-btn-left'>
                           <svg xmlns='http://www.w3.org/2000/svg' width='8' height='25' viewBox='0 0 8 25' fill='none'>
                             <g filter='url(#filter0_f_183_5275)'>

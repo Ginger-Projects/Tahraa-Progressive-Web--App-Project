@@ -8,8 +8,7 @@ import Expert3 from "../../assets/images/expert3.png";
 import Expert4 from "../../assets/images/expert4.png";
 import Verified from "../../assets/images/verified.png";
 import Speak from "../../assets/images/speak.png";
-import Next from "../../assets/images/next.png";
-import Prev from "../../assets/images/prev.png";
+
 
 
 // Swiper Imports
@@ -25,7 +24,10 @@ import { toast } from "react-toastify";
 export const SliderTwo = () => {
   const dispatch = useDispatch()
   const {experts} = useSelector((state) => state.experts);
+  const trainee = useSelector((state)=>state.trainee.user)
   console.log("experts",experts);
+  const [showLoginWarning, setShowLoginWarning] = useState(false);
+
   
   const swiperRef = useRef(null);
   const [page, setPage] = useState(1);
@@ -117,6 +119,12 @@ export const SliderTwo = () => {
 
   const handleEnquire = async (expertId) => {
     if (!expertId) return;
+    if(!trainee){
+      console.log("hai");
+      
+      navigate('/login')
+      return;
+    }
     try {
       setEnquiringExpertId(expertId);
       const res = await createExpertConversation(expertId);
@@ -152,7 +160,11 @@ export const SliderTwo = () => {
             <Link to="/our-experts" className='label text-decoration-none'>View All</Link>
           </button>
         </div>
-
+       {showLoginWarning && !trainee && (
+  <div className="login-warning">
+    Please login to enquire
+  </div>
+)}
         <div className='experts-slider-container position-relative'>
           {/* Left Arrow */}
           <button

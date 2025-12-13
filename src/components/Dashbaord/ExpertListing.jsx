@@ -67,7 +67,7 @@ const ExpertsListing = ({
   const resultsText = isSearching
     ? "Loading..."
     : activeTab === "experts"
-    ? `${totalExpertsLabel} Vocal Experts available`
+    ? `${totalExpertsLabel} Experts available`
     : `${totalPackagesLabel} Packages available`;
 
   return (

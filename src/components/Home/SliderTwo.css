@@ -23,6 +23,53 @@
       font-size: 20px;
     }
   }
+ .login-drag-modal {
+  position: fixed;
+  top: 40%;
+  left: 40%;
+  width: 260px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  z-index: 999999;
+  cursor: move;
+}
+
+.login-drag-header {
+  background: #775da6;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: grab;
+}
+
+.login-drag-header button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.login-drag-body {
+  padding: 14px;
+  text-align: center;
+}
+
+.login-drag-body button {
+  background: #775da6;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
 
   .experts-subtitle {
     font-family: "Poppins";

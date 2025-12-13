@@ -97,15 +97,15 @@ function App() {
 />
 
         <Route path="/our-experts" element={
-          <ProtectedRoute>
+          
           <ExpertsPage />
-          </ProtectedRoute>
+         
           } />
         
         <Route path="/our-packages" element={
-          <ProtectedRoute>
+          
           <PackagesPage />
-          </ProtectedRoute>
+        
           } />
         <Route path="/expert-profile" element={
           

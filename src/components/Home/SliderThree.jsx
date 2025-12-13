@@ -10,22 +10,21 @@ import Verified from "../../assets/images/verified.png";
 import Speak from "../../assets/images/speak.png";
 import File from "../../assets/images/file.png";
 import Clock from "../../assets/images/clock.png";
-import Next from "../../assets/images/next.png";
-import Prev from "../../assets/images/prev.png";
+import { toast } from "react-toastify";
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchPackages } from "../../features/slice/packageSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export const SliderThree = () => {
   const { packages } = useSelector((state) => state.packages);
-  console.log("pack",packages);
-  
+  const trainee  = useSelector((state) => state.trainee.token);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const swiperRef = useRef(null);
   const [page, setPage] = useState(1);
@@ -50,6 +49,17 @@ export const SliderThree = () => {
     const canNext = more || !swiper.isEnd;
     setHasPrev(canPrev);
     setHasNext(canNext);
+  };
+
+  const handlePackageClick = (packageId) => {
+    console.log("package",packageId);
+    console.log("trainee",trainee);
+    
+    if(!trainee){
+      navigate('/login')
+      return;
+    }
+    navigate(`/expert-booking?packageId=${packageId}`);
   };
 
   const handlePrev = () => {
@@ -208,11 +218,8 @@ export const SliderThree = () => {
 
                     {/* BUTTON */}
                     <div className='btn-box d-flex gap-3 mt-3'>
-  <Link 
-    to={`/expert-booking?packageId=${pkg._id}`} 
-    className='text-decoration-none w-100'
-  >
-    <button type='button' className='home-package-btn'>
+ 
+    <button onClick={()=>handlePackageClick(pkg._id)} type='button' className='home-package-btn'>
 
       {/* Left Vector */}
       <span className='home-package-btn-vector-left'>
@@ -255,7 +262,7 @@ export const SliderThree = () => {
       <span className='home-package-btn-label'>Learn More</span>
 
     </button>
-  </Link>
+  
 </div>
 
 

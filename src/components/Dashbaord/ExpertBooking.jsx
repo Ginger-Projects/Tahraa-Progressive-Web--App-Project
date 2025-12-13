@@ -130,6 +130,8 @@ const ExpertBooking = ({ setLoading = () => { } }) => {
 
 
   useEffect(() => {
+    if(!id) return;
+    
     const handleResize = () => {
       if (typeof window !== "undefined") {
         setIsMobile(window.innerWidth <= 768);
@@ -150,7 +152,7 @@ const ExpertBooking = ({ setLoading = () => { } }) => {
 
   useEffect(() => {
     fetchPackageById();
-  }, []);
+  }, [id]);
 
   const fetchPackageById = async () => {
     try {
