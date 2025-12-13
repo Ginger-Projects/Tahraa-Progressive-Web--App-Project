@@ -88,7 +88,7 @@ export default function Packages({ onLoadingChange = () => {} }) {
         </div>
       </div>
 
-      {packages.length > 0 && (
+      {packages.length > 0 ? (
         <div className="saved-experts-grid">
           {packages.map((pkg, idx) => (
             <div key={pkg._id || idx} className="expert-item">
@@ -134,7 +134,9 @@ export default function Packages({ onLoadingChange = () => {} }) {
             </div>
           ))}
         </div>
-      )}
+      ):(<div className="no-packages">
+    No packages available
+  </div>)}
     </div>
   );
 }

@@ -26,7 +26,7 @@ export default function MyExperts({ onLoadingChange = () => {} }) {
       onLoadingChange(true);
       const res = await getTraineeMyExperts(page, limit);
       const list = res?.data?.myExperts || [];
-
+      console.log("llist",list);
       if (list.length === 0 && page > 1) {
         setMyHasNext(false);
         return;
@@ -127,7 +127,7 @@ export default function MyExperts({ onLoadingChange = () => {} }) {
         </div>
       </div>
 
-      {data.length > 0 && (
+      {data.length > 0 ? (
         <div className="my-experts-grid">
           {data.map((expert, idx) => (
             <div key={idx} className="expert-item">
@@ -142,12 +142,14 @@ export default function MyExperts({ onLoadingChange = () => {} }) {
                   ) : null;
                 })()}
               </div>
-              <p className="expert-name">{expert.name}</p>
-              <p className="expert-role">{expert.role}</p>
+              <p className="expert-name">{expert.expertName}</p>
+              <p className="expert-role">{expert.teachingCategory||"Not specified"}</p>
             </div>
           ))}
         </div>
-      )}
+      ):(<div className="no-experts">
+    There are no experts available
+  </div>)}
     </div>
   );
 

@@ -16,6 +16,16 @@
   margin-bottom: 16px;
 }
 
+.no-packages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  font-size: 15px;
+  color: #777;
+  text-align: center;
+}
+
 .saved-experts-title {
   color: #202020;
 font-family: Poppins;

@@ -308,3 +308,13 @@ text-shadow: 0 1.561px 0 rgba(0, 0, 0, 0.15);
   height: auto;
   z-index: 1;
 }
+.no-packages-available {
+  display: flex;
+  align-items: center;        /* vertical center */
+  justify-content: center;    /* horizontal center */
+  height: 100%;               /* take full container height */
+  min-height: 300px;          /* adjust based on your card height */
+  font-size: 16px;
+  color: #777;
+  text-align: center;
+}
