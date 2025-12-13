@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import "./MyExperts.css";
 import { getTraineeMyExperts, getTraineeSavedExperts } from "../../services/trainee/trainee";
+import { useNavigate } from "react-router-dom";
 
 export default function MyExperts({ onLoadingChange = () => {} }) {
+  const navigate = useNavigate();
   const [myExperts, setMyExperts] = useState([]);
   const [savedExperts, setSavedExperts] = useState([]);
 
@@ -51,7 +53,8 @@ export default function MyExperts({ onLoadingChange = () => {} }) {
       onLoadingChange(true);
       const res = await getTraineeSavedExperts(page, limit);
       const list = res?.data?.savedExperts || [];
-
+      console.log("saved",list);
+      
       if (list.length === 0 && page > 1) {
         setSavedHasNext(false);
         return;
@@ -97,6 +100,17 @@ export default function MyExperts({ onLoadingChange = () => {} }) {
     loadSavedExperts(savedPage + 1);
   };
 
+  const getExpertId = (expert) => {
+    if (!expert) return null;
+    return expert.expertId || expert._id || expert.id || expert.expert?._id || null;
+  };
+
+  const handleExpertClick = (expert) => {
+    const id = getExpertId(expert);
+    if (!id) return;
+    navigate(`/expert-profile?expertId=${id}`);
+  };
+
   const renderSection = (title, data, onPrev, onNext, hasPrev, hasNext, loading) => (
     <div className="my-experts-section">
       <div className="my-experts-header">
@@ -130,7 +144,19 @@ export default function MyExperts({ onLoadingChange = () => {} }) {
       {data.length > 0 ? (
         <div className="my-experts-grid">
           {data.map((expert, idx) => (
-            <div key={idx} className="expert-item">
+            <div
+              key={idx}
+              className="expert-item"
+              role="button"
+              tabIndex={0}
+              style={{ cursor: "pointer" }}
+              onClick={() => handleExpertClick(expert)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleExpertClick(expert);
+                }
+              }}
+            >
               <div className="expert-avatar">
                 {(() => {
                   const rawImage = expert.profileImage || expert.profilePicture;
@@ -142,8 +168,8 @@ export default function MyExperts({ onLoadingChange = () => {} }) {
                   ) : null;
                 })()}
               </div>
-              <p className="expert-name">{expert.expertName}</p>
-              <p className="expert-role">{expert.teachingCategory||"Not specified"}</p>
+              <p className="expert-name">{expert.expertName||expert.name}</p>
+              <p className="expert-role">{expert?.teachingCategory||expert?.experienceAndQualifications?.teachingCategory?.name||"Not specified"}</p>
             </div>
           ))}
         </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL:"https://api.yanmu.qa",
+    baseURL:"https://tahraa.preview.gingertechnologies.app/api",
     headers:{"Content-Type":"application/json"},
 
 })

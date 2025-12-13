@@ -10,6 +10,7 @@ import { getExpertDetails, getExpertPackages, getExpertFeedbacks, createExpertCo
 import { User } from "lucide-react";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { addToSavedExperts } from "../../services/trainee/trainee";
 
 const ExpertProfile = () => {
   const [isSaved, setIsSaved] = useState(false);
@@ -29,7 +30,7 @@ const ExpertProfile = () => {
   const prevWorksSliderRef = useRef(null);
   const suggestSliderRef = useRef(null);
   const navigate = useNavigate();
-  const trainee = useSelector((state)=>state.trainee)
+  const trainee = useSelector((state)=>state.trainee.token)
 
   const languages = Array.isArray(expert?.languages) ? expert.languages : [];
   
@@ -349,19 +350,38 @@ const ExpertProfile = () => {
     }
   };
 
-  const handleSaveExpert = () => {
-    const next = !isSaved;
-    setIsSaved(next);
-    if (!next) {
-      // if unsaving, just hide any toast and exit
+  const handleSaveExpert = async () => {
+    if (!trainee) {
+      toast.error("Please login to save an expert");
+      return;
+    }
+   console.log("expertalkdjfl",expert);
+    const id = expert?._id || expertId;
+    if (!id) {
+      toast.error("Expert not found");
+      return;
+    }
+
+    if (isSaved) {
+      setIsSaved(false);
       setShowSavedToast(false);
       return;
     }
 
-    setShowSavedToast(true);
-    setTimeout(() => {
+    try {
+      const res = await addToSavedExperts(id);
+      setIsSaved(true);
+      setShowSavedToast(true);
+      toast.success(res?.message || "Added to saved experts");
+      setTimeout(() => {
+        setShowSavedToast(false);
+      }, 2500);
+    } catch (error) {
+      const message = error?.response?.data?.message || error?.message || "Failed to save expert";
+      toast.error(message);
+      setIsSaved(false);
       setShowSavedToast(false);
-    }, 2500);
+    }
   };
 
   if (loading) {

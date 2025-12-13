@@ -13,6 +13,17 @@ export const getTraineeSavedExperts = async (page = 1, limit = 3) => {
   }
 };
 
+export const addToSavedExperts = async (expertId) => {
+  try {
+    const response = await api.post("/api/trainee/marketplace/add-to-saved-experts", {
+      expertId,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 export const getTraineeUpcomingSchedules = async ({ fromDate, toDate, page = 1, limit = 10 }) => {
   try {
